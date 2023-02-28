@@ -12,5 +12,11 @@ code {
     monospace;
 }
 .customNavbar{
-  background-color: blueviolet;
+  background-color: #EB006F;
+}
+.customButton{
+  background-color: #173C96;
+}
+.customButton:hover{
+  background-color: #031B4E;
 }
