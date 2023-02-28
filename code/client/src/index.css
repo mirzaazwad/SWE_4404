@@ -1,3 +1,9 @@
+:root {
+  --customMagenta: #EB006F;
+  --customDarkBlue: #103686;
+  --customBlue: #3354a9;
+  --white: #fff;
+}
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -12,11 +18,16 @@ code {
     monospace;
 }
 .customNavbar{
-  background-color: #EB006F;
+  background-color: var(--customDarkBlue);
+  height: 65px !important;
 }
+/* .navbarContents{
+  display: fixed;
+  margin: 5% !important;
+} */
 .customButton{
-  background-color: #173C96;
+  background-color: var(--customMagenta) !important;
 }
 .customButton:hover{
-  background-color: #031B4E;
+  background-color: var(--customBlue) !important;
 }
