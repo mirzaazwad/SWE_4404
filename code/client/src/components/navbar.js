@@ -9,7 +9,7 @@ import '../index.css';
 function NavScrollExample() {
   return (
     <Navbar className='customNavbar' variant="dark" expand="lg">
-      <Container fluid>
+      <Container fluid className='navbarContents px-5' >
         <Navbar.Brand href="#" style={{fontsize: '100px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
@@ -34,14 +34,8 @@ function NavScrollExample() {
               Link
             </Nav.Link>
           </Nav>
-          <Form className="d-flex">
-            <Form.Control
-              type="search"
-              placeholder="Search"
-              className="me-2"
-              aria-label="Search"
-            />
-            <Button className='customButton'>Search</Button>
+          <Form className="customLogOut d-flex">
+            <Button className='customButton'>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>
