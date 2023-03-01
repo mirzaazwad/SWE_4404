@@ -1,10 +1,10 @@
-import NavbarPharmacy from './components/navbarPharmacy';
+import NavbarCustomer from './components/navbarCustomer';
 import ProfileFormPharmacy from './components/profileFormPharmacy';
 
 function App() {
   return (
     <div>
-    <NavbarPharmacy />
+    <NavbarCustomer />
 
     <section>
     <div className="container h-100">
