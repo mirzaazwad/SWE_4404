@@ -1,5 +1,5 @@
 import NavbarCustomer from './components/navbarCustomer';
-import ProfileFormPharmacy from './components/profileFormPharmacy';
+import ProfileFormCustomer from './components/profileFormCustomer';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
     <div className="container h-100">
       <div className="d-flex justify-content-center h-100 mx-auto my-5 w-100">
         <div className="profile-form-outer w-50 mt-5">
-          <ProfileFormPharmacy />
+          <ProfileFormCustomer />
         </div>
       </div>
     </div>
