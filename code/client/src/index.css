@@ -20,6 +20,7 @@ code {
 .customNavbar{
   background-color: var(--customDarkBlue);
   height: 65px !important;
+  
 }
 /* .navbarContents{
   display: fixed;
@@ -31,3 +32,8 @@ code {
 .customButton:hover{
   background-color: var(--customBlue) !important;
 }
+.navbar-nav{
+  background-color: var(--customDarkBlue);
+}
+
+

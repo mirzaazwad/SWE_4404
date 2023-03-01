@@ -6,7 +6,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import '../index.css';
 
-function NavScrollExample() {
+function navbarPharmacy() {
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents' >
@@ -19,7 +19,10 @@ function NavScrollExample() {
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Medicine</Nav.Link>
+            <Nav.Link href="#action1">Profile</Nav.Link>
+            <Nav.Link href="#action2">Inventory</Nav.Link>
+            <Nav.Link href="#action2">Orders</Nav.Link>
+            <Nav.Link href="#action2">Accounts</Nav.Link>
             
           </Nav>
           <Form className="customLogOut d-flex">
@@ -31,4 +34,4 @@ function NavScrollExample() {
   );
 }
 
-export default NavScrollExample;
+export default navbarPharmacy;
