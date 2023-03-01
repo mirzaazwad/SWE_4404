@@ -28,6 +28,7 @@ code {
 } */
 .customButton{
   background-color: var(--customMagenta) !important;
+  height: 40px;
 }
 .customButton:hover{
   background-color: var(--customBlue) !important;
@@ -35,5 +36,54 @@ code {
 .navbar-nav{
   background-color: var(--customDarkBlue);
 }
+.btn-editProfile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.customCart{
+  border-color: transparent !important;
+}
+
+
+.btn-editProfile i {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.profile-picture-container {
+  position: relative;
+  width: 200px; /* set the width and height to the desired size of the circle */
+  height: 200px;
+  border-radius: 50%; /* set the border radius to 50% to create a circle */
+  overflow: hidden; /* hide any content that overflows the circle */
+  vertical-align: middle;
+}
+
+.profile-picture-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%; /* set the border radius to 50% to match the parent container */
+}
+
+.edit-profile-picture {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px;
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  text-decoration: none;
+  border-radius: 50%;
+}
+
+.edit-profile-picture i {
+  font-size: 1.5rem;
+}
+
+
 
 

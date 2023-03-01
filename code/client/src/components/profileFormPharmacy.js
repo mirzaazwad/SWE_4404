@@ -5,6 +5,12 @@ import "../index.css";
 
 function profileFormPharmacy() {
   return (
+    <div>
+    <div className="profileInfo d-flex justify-content-between">
+      <h3 className="InfoHeader mb-4">Personal Information</h3>
+      <button className="btn btn-outline-dark btn-editProfile">Edit Profile
+      <i class='bx bx-cog bx-sm' ></i></button>
+    </div>
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
         <Form.Label>Pharmacy Name</Form.Label>
@@ -40,6 +46,7 @@ function profileFormPharmacy() {
         Submit
       </Button>
     </Form>
+    </div>
   );
 }
 
