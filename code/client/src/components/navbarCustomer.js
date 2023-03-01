@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import Badge from 'react-bootstrap/Badge';
 import '../index.css';
 
 function navbarCustomer() {
@@ -19,10 +20,13 @@ function navbarCustomer() {
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Medicine</Nav.Link>
+            <Nav.Link href="#action2">Pharmacies</Nav.Link>
+            <Nav.Link href="#action2">Medicines</Nav.Link>
+            <Nav.Link href="#action2">My Orders</Nav.Link>
             <Nav.Link className="d-block d-lg-none" href="#action2">Log Out</Nav.Link>
             
           </Nav>
+          <button className='customCart bg-transparent me-3'><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '15px'}}></i></button>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
             <Button className='customButton'>Log Out</Button>
           </Form>
