@@ -4,7 +4,7 @@ function ProfilePicture() {
   return (
     <div className="profile-picture-container">
       <img src={require('../test.jpg')} alt="Profile Picture" />
-      <a href="#" className="edit-profile-picture"><i className="bx bx-pencil"></i></a>
+      <a href="#" className="edit-profile-picture">Edit</a>
     </div>
   );
 }

@@ -20,7 +20,7 @@ code {
 .customNavbar{
   background-color: var(--customDarkBlue);
   height: 65px !important;
-  
+
 }
 /* .navbarContents{
   display: fixed;
@@ -44,6 +44,15 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn-save{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 25%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
 .customCart{
   border-color: transparent !important;
 }
@@ -55,11 +64,11 @@ code {
 }
 .profile-picture-container {
   position: relative;
-  width: 200px; /* set the width and height to the desired size of the circle */
+  display: inline-block;
+  width: 200px; 
   height: 200px;
-  border-radius: 50%; /* set the border radius to 50% to create a circle */
-  overflow: hidden; /* hide any content that overflows the circle */
-  vertical-align: middle;
+  border-radius: 50%; 
+  overflow: hidden;
 }
 
 .profile-picture-container img {
@@ -69,19 +78,24 @@ code {
   border-radius: 50%; /* set the border radius to 50% to match the parent container */
 }
 
-.edit-profile-picture {
-  position: absolute;
-  top: 0;
-  right: 0;
-  padding: 5px;
-  background-color: rgba(0, 0, 0, 0.5);
-  color: white;
-  text-decoration: none;
-  border-radius: 50%;
+.profile-picture-container:hover .edit-profile-picture {
+  display: block;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  text-align: center;
+  font-size: 1.3rem;
+  text-decoration:double;
 }
 
-.edit-profile-picture i {
-  font-size: 1.5rem;
+.edit-profile-picture {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 25%;
+  color: white !important;
 }
 
 
