@@ -8,9 +8,9 @@ import '../index.css';
 
 function NavScrollExample() {
   return (
-    <Navbar className='customNavbar' variant="dark" expand="lg">
-      <Container fluid className='navbarContents px-5' >
-        <Navbar.Brand href="#" style={{fontsize: '100px'}}>M e d G u a r d</Navbar.Brand>
+    <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
+      <Container fluid className='navbarContents' >
+        <Navbar.Brand href="#" style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
@@ -20,19 +20,7 @@ function NavScrollExample() {
           >
             <Nav.Link href="#action1">Home</Nav.Link>
             <Nav.Link href="#action2">Medicine</Nav.Link>
-            <NavDropdown title="Link" id="navbarScrollingDropdown">
-              <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
-              <NavDropdown.Item href="#action4">
-                Another action
-              </NavDropdown.Item>
-              <NavDropdown.Divider />
-              <NavDropdown.Item href="#action5">
-                Something else here
-              </NavDropdown.Item>
-            </NavDropdown>
-            <Nav.Link href="#" disabled>
-              Link
-            </Nav.Link>
+            
           </Nav>
           <Form className="customLogOut d-flex">
             <Button className='customButton'>Log Out</Button>
