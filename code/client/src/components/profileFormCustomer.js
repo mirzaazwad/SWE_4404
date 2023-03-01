@@ -3,7 +3,7 @@ import Form from 'react-bootstrap/Form';
 import "../index.css";
 
 
-function profileFormPharmacy() {
+function profileFormCustomer() {
   return (
     <Form>
       <Form.Group className="mb-3" controlId="formBasicEmail">
@@ -39,6 +39,9 @@ function profileFormPharmacy() {
         <Form.Control type="password" placeholder="Password" />
         
       </Form.Group>
+      <Form.Group className="mb-3" controlId="formBasicCheckbox">
+        <Form.Check type="checkbox" label="Check me out" />
+      </Form.Group>
       <Button variant="primary" type="submit">
         Submit
       </Button>
@@ -46,4 +49,4 @@ function profileFormPharmacy() {
   );
 }
 
-export default profileFormPharmacy;
+export default profileFormCustomer;

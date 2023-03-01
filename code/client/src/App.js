@@ -1,10 +1,10 @@
-import NavScrollExample from "./components/navbar"
+import NavbarPharmacy from './components/navbarPharmacy';
 import ProfileFormPharmacy from './components/profileFormPharmacy';
 
 function App() {
   return (
     <div>
-    <NavScrollExample />
+    <NavbarPharmacy />
 
     <section>
     <div className="container h-100">
