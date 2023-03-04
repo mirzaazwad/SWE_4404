@@ -1,60 +1,101 @@
-import { Container, Card, Form, Button } from "react-bootstrap";
+import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
+import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
+import { useDispatch } from "react-redux";
+import { setLogin } from "./loginRedux/action";
 import { Link } from "react-router-dom";
-import { Envelope, Lock } from "react-bootstrap-icons";
+import { useState } from "react";
 const Login = () => {
+  const dispatch = useDispatch();
+  const [passwordVisibility,setPasswordVisibility] = useState("password");
+  const [password_eyeSlash,eyeSlash]=useState(false);
+  const changePassword = () =>{
+    if(passwordVisibility==="password"){
+      setPasswordVisibility("text");
+    }
+    else{
+      setPasswordVisibility("password");
+    }
+    eyeSlash(password_eyeSlash^true);
+  }
   return (
     <Container>
-      <Card className="myCard myLeftCtn">
+      <Card className="d-flex float-end mobView logSignCard">
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
           <Card.Text>
-            <Form className="myForm text-center">
+            <Form>
+              <InputGroup className="mt-3 mb-3">
+              <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
               <Form.Group controlId="Email">
-                <Form.Label>
-                  <Envelope color="#eb006f" />
-                </Form.Label>
                 <Form.Control
                   type="email"
                   required
-                  className="myInput"
                   placeholder="Email"
+                  className="float-end"
+                  style={{paddingLeft:'75px',paddingRight:'75px'}}
                 />
               </Form.Group>
+              </InputGroup>
+              <InputGroup  className="mt-3 mb-3" size="sm">
+              <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
               <Form.Group controlId="Password">
-                <Form.Label>
-                  <Lock color="#eb006f" />
-                </Form.Label>
                 <Form.Control
-                  type="password"
+                  type={passwordVisibility}
                   placeholder="Password"
                   required
-                  className="myInput"
+                  className="float-end"
+                  style={{paddingLeft:'65px',paddingRight:'65px'}}
                 />
               </Form.Group>
-              <Button type="submit" className="butt submitButton">
+              <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword}/>)||(!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword}/>)}</InputGroup.Text>
+              </InputGroup>
+              
+              <Button
+                type="submit"
+                variant="outline-primary"
+                size="sm"
+                style={{
+                  marginLeft:'40%'
+                }}
+              >
                 Login
               </Button>
-              <hr/>
+              <hr />
               <Form.Group controlId="LoginWithGoogle">
-                <Button className="butt">
-                  <FaGoogle /> Login with Google
+              <Button variant="outline-primary" size="lg" style={{marginLeft:'30%'}}>
+                  <FaGoogle />
                 </Button>
-                <Button className="butt">
-                  <FaFacebook /> Login with Facebook
+                <Button variant="outline-primary" size="lg" className="mx-5">
+                  <FaFacebook />
                 </Button>
               </Form.Group>
             </Form>
             <div className="noExistingAccount landingText">
               Don't have an account?
-              <Link to="/1" style={{ color: "#eb006f" }}>
+              <Link
+                to='/'
+                style={{
+                  all: "unset",
+                  color: "#3354a9",
+                  textDecoration: "underline",
+                }}
+                onClick={() => dispatch(setLogin())}
+              >
                 REGISTER NOW!
               </Link>
             </div>
             <div className="forgotPassword landingText">
-              <a href="" style={{ color: "#eb006f" }}>
+              <Link
+                to='/'
+                style={{
+                  all: "unset",
+                  color: "#3354a9",
+                  textDecoration: "underline",
+                }}
+              >
                 FORGOT PASSWORD?
-              </a>
+              </Link>
             </div>
           </Card.Text>
         </Card.Body>

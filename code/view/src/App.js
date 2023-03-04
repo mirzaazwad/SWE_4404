@@ -8,7 +8,6 @@ function App() {
       <div className="content">
         <Routes>
           <Route path='/' element={<Landing/>}/>
-          <Route path='/:id' element={<Landing/>}/>
         </Routes>
       </div>
     </div>
