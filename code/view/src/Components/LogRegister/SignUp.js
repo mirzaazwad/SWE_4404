@@ -26,6 +26,7 @@ const SignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setCFPassword] = useState("");
+  const [username, setUsername] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState("password");
   const [password_eyeSlash, eyeSlash] = useState(false);
   const changePassword = () => {
@@ -40,6 +41,12 @@ const SignUp = () => {
     const sanitizedValue = DOMPurify.sanitize(event.target.value);
     setEmail(sanitizedValue);
   };
+
+  const usernameChange = (event) => {
+    const sanitizedValue = DOMPurify.sanitize(event.target.value);
+    setUsername(sanitizedValue);
+  };
+
   const passwordChange = (event) => {
     const sanitizedValue = DOMPurify.sanitize(event.target.value);
     setPassword(sanitizedValue);
@@ -92,6 +99,22 @@ const SignUp = () => {
                   ))}
                 </ButtonGroup>
               </Form.Group>
+              <InputGroup className="mt-3 mb-3" size="sm">
+                <InputGroup.Text>
+                  <Envelope color="#3354a9" />
+                </InputGroup.Text>
+                <Form.Group controlId="Username">
+                  <Form.Control
+                    type="text"
+                    required
+                    placeholder="Username"
+                    className="float-end"
+                    style={{paddingLeft:'75px',paddingRight:'75px'}}
+                    value={username}
+                    onChange={(e) => usernameChange(e)}
+                  />
+                </Form.Group>
+              </InputGroup>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Envelope color="#3354a9" />
