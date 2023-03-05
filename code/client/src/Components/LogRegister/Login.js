@@ -4,8 +4,12 @@ import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
 import { setSignUp } from "./loginRedux/action";
 import { Link } from "react-router-dom";
+import CryptoJS from 'crypto-js';
 import { useState } from "react";
 const Login = () => {
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
+  const [error,setError]=useState("");
   const dispatch = useDispatch();
   const [passwordVisibility,setPasswordVisibility] = useState("password");
   const [password_eyeSlash,eyeSlash]=useState(false);
@@ -18,6 +22,27 @@ const Login = () => {
     }
     eyeSlash(password_eyeSlash^true);
   }
+  const handleSubmit = async(e) =>{
+    e.preventDefault();
+    const user={email:email,password:CryptoJS.SHA512(password).toString()};
+    console.log(user);
+    const response = await fetch('api/login',{
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers:{
+        'Content-Type': 'application/json'
+      },
+    })
+    const json=await response.json();
+    if(!response.ok){
+      console.log('login failed');
+    }else{
+      if(json.success===false){
+        console.log('login failed');
+      }
+      console.log('logged in successfully');
+    }
+  }
   return (
     <div className="loginPage">
       <Container className="login-container"  style={{ marginTop: '5%' }}>
@@ -25,7 +50,7 @@ const Login = () => {
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>
-              <Form>
+              <Form onSubmit={handleSubmit}>
                 <InputGroup className="mt-3 mb-3">
                   <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
                   <Form.Group controlId="Email">
@@ -34,7 +59,9 @@ const Login = () => {
                       required
                       placeholder="Email"
                       className="float-end"
+                      value={email}
                       style={{ paddingLeft: '75px', paddingRight: '75px' }}
+                      onChange={(e)=>setEmail(e.target.value)}
                     />
                   </Form.Group>
                 </InputGroup>
@@ -46,6 +73,8 @@ const Login = () => {
                       placeholder="Password"
                       required
                       className="float-end"
+                      value={password}
+                      onChange={(e)=>setPassword(e.target.value)}
                       style={{ paddingLeft: '65px', paddingRight: '65px' }}
                     />
                   </Form.Group>
