@@ -1,10 +1,12 @@
 import { Container, Card, Form, Button, InputGroup,ToggleButton,ButtonGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { setLogin } from "./loginRedux/action";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import DOMPurify from 'dompurify';
+import CryptoJS from 'crypto-js';
+// import zxcvbn from 'zxcvbn';
 
 import {
   Envelope,
@@ -12,16 +14,17 @@ import {
   Calendar2,
   EyeFill,
   EyeSlashFill,
+  Person
 } from "react-bootstrap-icons";
 
 const SignUp = () => {
-  const [checked, setChecked] = useState(false);
   const [radioValue, setRadioValue] = useState('1');
-
+  const [radioName, setRadioName] = useState("Buyer");
   const radios = [
-    { name: 'Buyer', value: '1' },
-    { name: 'Seller', value: '2' },
+    { name: "Buyer", value: '1' },
+    { name: "Seller", value: '2' },
   ];
+  const [isLocked,setisLocked]=useState(true);
   const dispatch = useDispatch();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +32,31 @@ const SignUp = () => {
   const [username, setUsername] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState("password");
   const [password_eyeSlash, eyeSlash] = useState(false);
+  const [error, setError] = useState(null);
+  const [dob, setDOB] = useState("");
+  const [errorEmail, setErrorEmail] = useState("");
+  const [errorPassword, setErrorPassword]=useState("");
+  const [errorCPassword,setErrorCPassword]=useState("");
+  const [confirmPassword_eyeSlash, cpeyeSlash] = useState(false);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =useState("password");
+  useEffect(()=>{
+    if(password!=="" && confirmPassword!=="" && username!=="" && email!=="" && dob!=="" && errorEmail==="" && errorPassword==="" && errorCPassword===""){
+      setisLocked(false);
+    }
+    else{
+      setisLocked(true);
+    }
+  },[password,username,email,confirmPassword,dob,errorEmail,errorPassword,errorCPassword])
+
+  useEffect(()=>{
+    const fetchUsers = async ()=>{
+      const response = await fetch('api/signup/email/'+email);
+      if(response.ok){
+        setErrorEmail('account already exists with email');
+      }
+    }
+    if(!errorEmail)fetchUsers();
+  },[email,errorEmail])
   const changePassword = () => {
     if (passwordVisibility === "password") {
       setPasswordVisibility("text");
@@ -39,25 +67,67 @@ const SignUp = () => {
   };
   const emailChange = (event) => {
     const sanitizedValue = DOMPurify.sanitize(event.target.value);
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if(!regex.test(sanitizedValue) && sanitizedValue!=="") {
+      setErrorEmail('Not a valid email');
+    }
+    else{
+      setErrorEmail('');
+    }
     setEmail(sanitizedValue);
   };
-
-  const usernameChange = (event) => {
-    const sanitizedValue = DOMPurify.sanitize(event.target.value);
-    setUsername(sanitizedValue);
-  };
-
   const passwordChange = (event) => {
     const sanitizedValue = DOMPurify.sanitize(event.target.value);
     setPassword(sanitizedValue);
+    const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^\da-zA-Z]).{8,}$/;
+    if(!regex.test(event.target.value) || event.target.value.length<8){
+      if(sanitizedValue!==""){
+        setErrorPassword('Password must be at least 8 characters with numbers, symbols and letters of upper case and lower case');
+      }
+      else {
+        setErrorPassword("");
+      }
+    }
+    else if(sanitizedValue!==confirmPassword){
+      setErrorCPassword("passwords do not match");
+      setErrorPassword("");
+    }
+    else{
+      setErrorPassword("");
+    }
   };
+  const radioChange = (event) => {
+    setRadioValue(event.target.value);
+    if(event.target.value==='1'){
+      setRadioName('Buyer');
+    }
+    else{
+      setRadioName('Seller');
+    }
+  }
   const confirmPasswordChange = (event) => {
     const sanitizedValue = DOMPurify.sanitize(event.target.value);
     setCFPassword(sanitizedValue);
+    if(password===event.target.value) {
+      setErrorCPassword("");
+    }
+    else{
+      if(sanitizedValue!==""){
+        setErrorCPassword("passwords do not match");
+      }
+      else{
+        setErrorCPassword("");
+      }
+    }
   };
-  const [confirmPassword_eyeSlash, cpeyeSlash] = useState(false);
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
-    useState("password");
+  const usernameChange = (event)=>{
+    const sanitizedValue = DOMPurify.sanitize(event.target.value);
+    setUsername(sanitizedValue);
+  }
+
+  const dobChange =(event)=>{
+    setDOB(event.target.value);
+  }
   const changeCPassword = () => {
     if (confirmPasswordVisibility === "password") {
       setConfirmPasswordVisibility("text");
@@ -66,18 +136,38 @@ const SignUp = () => {
     }
     cpeyeSlash(confirmPassword_eyeSlash ^ true);
   };
-  const [error, setError] = useState("");
-  const [dob, setDOB] = useState();
-
+  const maxDate = new Date();
+  maxDate.setFullYear(maxDate.getFullYear() - 13);
+  const maxDateString = maxDate.toISOString().split('T')[0];
+  const handleSubmit = async (e) =>{
+    e.preventDefault();
+    const user={userType:radioName,username:username,email:email,password:CryptoJS.SHA512(password).toString(),dob:dob};
+    console.log(user);
+    const response = await fetch('api/signup',{
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers:{
+        'Content-Type': 'application/json'
+      },
+    })
+    const json=await response.json();
+    if(!response.ok){
+      console.log('sign in unsuccessful');
+      console.log(json.error);
+    }else{
+      console.log('signed up successfully');
+      console.log(json);
+    }
+  }
   return (
-    <Container>
-      <Card className="mt-5 float-end mobView logSignCard">
+    <Container style={{marginTop:'12%',width:'33%'}}>
+      <Card className="mt-5 float-end"  style={{ maxWidth: '100%' }}>
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>SignUp</Card.Title>
           <Card.Text>
-            <Form>
-              <Form.Group controlId="error messages">
-                <p>{error}</p>
+            <Form onSubmit={handleSubmit}>
+            <Form.Group controlId="errorMessageEmail">
+                <p style={{color:"red"}}>{error}</p>
               </Form.Group>
               <Form.Group controlId="UserType" style={{
                         marginLeft:'33%'
@@ -92,7 +182,7 @@ const SignUp = () => {
                       name="radio"
                       value={radio.value}
                       checked={radioValue === radio.value}
-                      onChange={(e) => setRadioValue(e.currentTarget.value)}
+                      onChange={radioChange}
                     >
                       {radio.name}
                     </ToggleButton>
@@ -101,7 +191,7 @@ const SignUp = () => {
               </Form.Group>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
-                  <Envelope color="#3354a9" />
+                  <Person color="#3354a9" />
                 </InputGroup.Text>
                 <Form.Group controlId="Username">
                   <Form.Control
@@ -111,10 +201,13 @@ const SignUp = () => {
                     className="float-end"
                     style={{paddingLeft:'75px',paddingRight:'75px'}}
                     value={username}
-                    onChange={(e) => usernameChange(e)}
+                    onChange={usernameChange}
                   />
                 </Form.Group>
               </InputGroup>
+              <Form.Group controlId="errorMessageEmail">
+                <p style={{color:"red"}}>{errorEmail}</p>
+              </Form.Group>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Envelope color="#3354a9" />
@@ -131,6 +224,9 @@ const SignUp = () => {
                   />
                 </Form.Group>
               </InputGroup>
+              <Form.Group controlId="errorPassword" style={{overflowWrap:'anywhere'}}>
+                <p style={{color:"red"}}>{errorPassword}</p>
+              </Form.Group>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
@@ -141,8 +237,8 @@ const SignUp = () => {
                     placeholder="Password"
                     required
                     className="float-end"
+                    onChange={passwordChange}
                     value={password}
-                    onChange={(e) => passwordChange(e)}
                     style={{paddingLeft:'65px',paddingRight:'65px'}}
                   />
                 </Form.Group>
@@ -155,6 +251,9 @@ const SignUp = () => {
                     ))}
                 </InputGroup.Text>
               </InputGroup>
+              <Form.Group controlId="errorCPassword" > 
+                <p style={{color:"red"}}>{errorCPassword}</p>
+              </Form.Group>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
@@ -166,7 +265,7 @@ const SignUp = () => {
                     required
                     className="float-end"
                     value={confirmPassword}
-                    onChange={(e) => confirmPasswordChange(e)}
+                    onChange={confirmPasswordChange}
                     style={{paddingLeft:'65px',paddingRight:'65px'}}
                   />
                 </Form.Group>
@@ -190,7 +289,8 @@ const SignUp = () => {
                     className="float-end"
                     style={{paddingLeft:'100px',paddingRight:'100px'}}
                     value={dob}
-                    onChange={(e) => setDOB(e.target.value)}
+                    onChange={dobChange}
+                    max={maxDateString}
                   />
                 </Form.Group>
               </InputGroup>
@@ -201,6 +301,7 @@ const SignUp = () => {
                 style={{
                   marginLeft:'40%'
                 }}
+                disabled={isLocked}
               >
                 SignUp
               </Button>

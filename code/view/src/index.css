@@ -233,29 +233,15 @@ code {
   box-shadow : 0px 10px 40px -10px rgba(0,0,0,0.7);
 }
 
-.logSignCard{
-  width:33%;
-}
-
-@media (max-width: 900px) {
-  .container {
-      height: auto !important;
-      width:100% !important;
-      padding: 25px;
-  }
-  
-  .mobView {
-      width: 100% !important;
-      padding-left: 25px !important;
-      padding-right: 25px !important;
-      margin-bottom: 50px !important;
+@media only screen and (max-width: 767px) {
+  .login-container {
+    width: 100%;
+    max-width: none;
   }
 
-  .unmobView{
-    display:none !important;
+  .container-1,
+  .container-2,
+  .container-3 {
+    width: 100%;
   }
-
-
-
-
 }

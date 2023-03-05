@@ -4,9 +4,7 @@ const LandingImage = () => {
     <div className="LandingImage">
       <Image
       src="background.jpg"
-      className="mt-5 unmobView"
-      width='55%'
-      flex-wrap="wrap"
+      className="mt-5"
       alt="bootstrap"
       fluid
     />

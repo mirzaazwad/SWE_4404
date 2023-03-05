@@ -19,89 +19,91 @@ const Login = () => {
     eyeSlash(password_eyeSlash^true);
   }
   return (
-    <Container>
-      <Card className="d-flex float-end mobView logSignCard">
-        <Card.Body>
-          <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
-          <Card.Text>
-            <Form>
-              <InputGroup className="mt-3 mb-3">
-              <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
-              <Form.Group controlId="Email">
-                <Form.Control
-                  type="email"
-                  required
-                  placeholder="Email"
-                  className="float-end"
-                  style={{paddingLeft:'75px',paddingRight:'75px'}}
-                />
-              </Form.Group>
-              </InputGroup>
-              <InputGroup  className="mt-3 mb-3" size="sm">
-              <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
-              <Form.Group controlId="Password">
-                <Form.Control
-                  type={passwordVisibility}
-                  placeholder="Password"
-                  required
-                  className="float-end"
-                  style={{paddingLeft:'65px',paddingRight:'65px'}}
-                />
-              </Form.Group>
-              <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword}/>)||(!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword}/>)}</InputGroup.Text>
-              </InputGroup>
-              
-              <Button
-                type="submit"
-                variant="outline-primary"
-                size="sm"
-                style={{
-                  marginLeft:'40%'
-                }}
-              >
-                Login
+    <div className="loginPage">
+      <Container className="login-container"  style={{ marginTop: '5%' }}>
+        <Card className="d-flex float-end" style={{ maxWidth: '50%' }}>
+          <Card.Body>
+            <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
+            <Card.Text>
+              <Form>
+                <InputGroup className="mt-3 mb-3">
+                  <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
+                  <Form.Group controlId="Email">
+                    <Form.Control
+                      type="email"
+                      required
+                      placeholder="Email"
+                      className="float-end"
+                      style={{ paddingLeft: '75px', paddingRight: '75px' }}
+                    />
+                  </Form.Group>
+                </InputGroup>
+                <InputGroup className="mt-3 mb-3" size="sm">
+                  <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
+                  <Form.Group controlId="Password">
+                    <Form.Control
+                      type={passwordVisibility}
+                      placeholder="Password"
+                      required
+                      className="float-end"
+                      style={{ paddingLeft: '65px', paddingRight: '65px' }}
+                    />
+                  </Form.Group>
+                  <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword} />) || (!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword} />)}</InputGroup.Text>
+                </InputGroup>
+
+                <Button
+                  type="submit"
+                  variant="outline-primary"
+                  size="sm"
+                  style={{
+                    marginLeft: '40%'
+                  }}
+                >
+                  Login
               </Button>
-              <hr />
-              <Form.Group controlId="LoginWithGoogle">
-              <Button variant="outline-primary" size="lg" style={{marginLeft:'30%'}}>
-                  <FaGoogle />
-                </Button>
-                <Button variant="outline-primary" size="lg" className="mx-5">
-                  <FaFacebook />
-                </Button>
-              </Form.Group>
-            </Form>
-            <div className="noExistingAccount landingText">
-              Don't have an account?
+                <hr />
+                <Form.Group controlId="LoginWithGoogle">
+                  <Button variant="outline-primary" size="lg" style={{ marginLeft: '30%' }}>
+                    <FaGoogle />
+                  </Button>
+                  <Button variant="outline-primary" size="lg" className="mx-5">
+                    <FaFacebook />
+                  </Button>
+                </Form.Group>
+              </Form>
+              <div className="noExistingAccount landingText">
+                Don't have an account?
               <Link
-                to='/'
-                style={{
-                  all: "unset",
-                  color: "#3354a9",
-                  textDecoration: "underline",
-                }}
-                onClick={() => dispatch(setLogin())}
-              >
-                REGISTER NOW!
+                  to='/'
+                  style={{
+                    all: "unset",
+                    color: "#3354a9",
+                    textDecoration: "underline",
+                  }}
+                  onClick={() => dispatch(setLogin())}
+                >
+                  REGISTER NOW!
               </Link>
-            </div>
-            <div className="forgotPassword landingText">
-              <Link
-                to='/'
-                style={{
-                  all: "unset",
-                  color: "#3354a9",
-                  textDecoration: "underline",
-                }}
-              >
-                FORGOT PASSWORD?
+              </div>
+              <div className="forgotPassword landingText">
+                <Link
+                  to='/'
+                  style={{
+                    all: "unset",
+                    color: "#3354a9",
+                    textDecoration: "underline",
+                  }}
+                >
+                  FORGOT PASSWORD?
               </Link>
-            </div>
-          </Card.Text>
-        </Card.Body>
-      </Card>
-    </Container>
+              </div>
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Container>
+    </div>
   );
-};
+}
 
 export default Login;
