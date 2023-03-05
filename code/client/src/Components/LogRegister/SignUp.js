@@ -1,12 +1,11 @@
 import { Container, Card, Form, Button, InputGroup,ToggleButton,ButtonGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { setLogin } from "./loginRedux/action";
+import { setLogin,setSignUpPhone} from "./loginRedux/action";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import DOMPurify from 'dompurify';
 import CryptoJS from 'crypto-js';
-// import zxcvbn from 'zxcvbn';
 
 import {
   Envelope,
@@ -152,11 +151,10 @@ const SignUp = () => {
     })
     const json=await response.json();
     if(!response.ok){
-      console.log('sign in unsuccessful');
-      console.log(json.error);
+      setError(json.error);
     }else{
       console.log('signed up successfully');
-      console.log(json);
+      dispatch(setSignUpPhone(json._id));
     }
   }
   return (

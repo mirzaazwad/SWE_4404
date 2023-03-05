@@ -5,12 +5,10 @@ require("dotenv").config();
 const signUpRoutes = require("./routes/loginSignUp/signUpRoutes");
 const app=express();
 const dbURI = process.env.ConnectionString;
-
 mongoose
   .connect(dbURI, { useNewURLParser: true, useUnifiedTopology: true })
   .then((result) => {
     app.listen(process.env.PORT);
-    console.log(result);
   })
   .catch((err) => console.error(err));
 

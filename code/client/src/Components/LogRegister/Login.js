@@ -2,7 +2,7 @@ import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
-import { setLogin } from "./loginRedux/action";
+import { setSignUp } from "./loginRedux/action";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 const Login = () => {
@@ -81,7 +81,7 @@ const Login = () => {
                     color: "#3354a9",
                     textDecoration: "underline",
                   }}
-                  onClick={() => dispatch(setLogin())}
+                  onClick={() => dispatch(setSignUp())}
                 >
                   REGISTER NOW!
               </Link>

@@ -22,6 +22,9 @@ const userSchema = new Schema({
   dob:{
     type:Date,
     required: true
+  },
+  phone:{
+    type:String
   }
 },{timestamps:true});
 
