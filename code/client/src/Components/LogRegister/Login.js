@@ -36,9 +36,11 @@ const Login = () => {
     const json=await response.json();
     if(!response.ok){
       console.log('login failed');
+      setError(json.error);
     }else{
       if(json.success===false){
         console.log('login failed');
+        setError(json.error);
       }
       console.log('logged in successfully');
     }
@@ -51,6 +53,11 @@ const Login = () => {
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>
               <Form onSubmit={handleSubmit}>
+                <Form.Group>
+                  <div className="errorMessage" style={{color:"red"}}>
+                    {error}
+                  </div>
+                </Form.Group>
                 <InputGroup className="mt-3 mb-3">
                   <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
                   <Form.Group controlId="Email">

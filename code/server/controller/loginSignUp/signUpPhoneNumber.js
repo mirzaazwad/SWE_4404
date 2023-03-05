@@ -16,7 +16,7 @@ const updateUserPhoneNumber = async (req, res) => {
     if (!users) {
       return res.status(404).json({ error: "No such User" });
     }
-    res.status(200).json(users);
+    res.status(200).json({id:users._id,userType:users.userType,email:users.email});
   } catch (err) {
     res.status(404).json({ error: err.message });
   }
