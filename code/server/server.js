@@ -2,8 +2,10 @@ const express = require("express");
 const mongoose = require("mongoose");
 require("dotenv").config();
 
-const signUpRoutes = require("./routes/loginSignUp/signUpRoutes");
-const loginRoutes = require("./routes/loginSignUp/loginRoutes");
+const signUpRoutesBuyer = require("./routes/loginSignUp/buyer/signUpRoutes");
+const loginRoutesBuyer = require("./routes/loginSignUp/buyer/loginRoutes");
+const signUpRoutesSeller = require("./routes/loginSignUp/seller/signUpRoutes");
+const loginRoutesSeller = require("./routes/loginSignUp/seller/loginRoutes");
 const app=express();
 const dbURI = process.env.ConnectionString;
 mongoose
@@ -20,5 +22,7 @@ app.use((req, res, next) => {
 
 app.use(express.json());
 
-app.use("/api/signup", signUpRoutes);
-app.use("/api/login", loginRoutes);
+app.use("/api/buyer/signup", signUpRoutesBuyer);
+app.use("/api/buyer/login", loginRoutesBuyer);
+app.use("/api/seller/signup", signUpRoutesSeller);
+app.use("/api/seller/login", loginRoutesSeller);

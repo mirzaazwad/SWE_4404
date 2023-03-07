@@ -2,7 +2,7 @@ import {createSlice} from '@reduxjs/toolkit';
 
 const initialState = {
   value: 0,
-  id:"0"
+  ID_UserType:null
 }
 
 export const loginSlice=createSlice({
@@ -17,7 +17,7 @@ export const loginSlice=createSlice({
     },
     setSignUpPhone:(state,action)=>{
       state.value=2
-      state.id=action.payload
+      state.ID_UserType=action.payload
     }
   }
 });

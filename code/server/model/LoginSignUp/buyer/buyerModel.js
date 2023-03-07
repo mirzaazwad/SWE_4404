@@ -2,11 +2,7 @@ const mongoose = require('mongoose');
 
 const Schema=mongoose.Schema;
 
-const userSchema = new Schema({
-  userType: {
-    type: String,
-    required: true
-  },
+const buyerSchema = new Schema({
   username:{
     type: String,
     required: true
@@ -29,6 +25,6 @@ const userSchema = new Schema({
 },{timestamps:true});
 
 
-module.exports=mongoose.model("User",userSchema);
+module.exports=mongoose.model("Buyer",buyerSchema);
 
 

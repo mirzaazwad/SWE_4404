@@ -1,4 +1,4 @@
-const userModel = require("../../model/LoginSignUp/userModel");
+const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
 const mongoose = require("mongoose");
 
 const updateUserPhoneNumber = async (req, res) => {
@@ -7,7 +7,7 @@ const updateUserPhoneNumber = async (req, res) => {
     return res.status(404).json({ error: "No Such User" });
   }
   try {
-    const users = await userModel.findOneAndUpdate(
+    const users = await sellerModel.findOneAndUpdate(
       { _id: id },
       {
         ...req.body,
@@ -16,7 +16,7 @@ const updateUserPhoneNumber = async (req, res) => {
     if (!users) {
       return res.status(404).json({ error: "No such User" });
     }
-    res.status(200).json({id:users._id,userType:users.userType,email:users.email});
+    res.status(200).json({id:users._id,email:users.email});
   } catch (err) {
     res.status(404).json({ error: err.message });
   }

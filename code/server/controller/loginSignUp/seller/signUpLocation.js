@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const userLocation = require("../../model/LoginSignUp/userLocation");
-const userModel = require("../../model/LoginSignUp/userModel");
+const sellerLocation = require("../../../model/LoginSignUp/seller/sellerLocation");
+const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
 
 const updateUserLocation = async (req, res) => {
   const { id } = req.params;
@@ -8,7 +8,7 @@ const updateUserLocation = async (req, res) => {
     return res.status(404).json({ error: "No Such User" });
   }
   try {
-    const users = await userLocation.findOneAndUpdate(
+    const users = await sellerLocation.findOneAndUpdate(
       { user_id: id },
       {
         ...req.body,
@@ -28,16 +28,16 @@ const createUserLocation = async (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(user_id)) {
     return res.status(404).json({ error: "No Such User" });
   }
-  const searchUser = await userModel.findById(user_id);
+  const searchUser = await sellerModel.findById(user_id);
   if (!searchUser) {
     return res.status(404).json({ error: "user does not exist" });
   }
-  const searchRecord=await userLocation.find({user_id:user_id});
+  const searchRecord=await sellerLocation.find({user_id:user_id});
   if(searchRecord.length!==0){
     return res.status(404).json({ error: "user location already set" });
   }
   try {
-    const user = await userLocation.create({ user_id:user_id,latitude:latitude,longitude:longitude});
+    const user = await sellerLocation.create({ user_id:user_id,latitude:latitude,longitude:longitude});
     console.log('user location');
     console.log(user);
     try {

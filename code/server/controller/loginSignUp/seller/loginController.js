@@ -1,9 +1,9 @@
-const userModel = require("../../model/LoginSignUp/userModel");
+const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
 const bcrypt = require("bcryptjs");
 
 const findUser = async (req, res) => {
   const { email, password } = req.body;
-  const searchUser = await userModel.find({ email: email });
+  const searchUser = await sellerModel.find({ email: email });
   if (searchUser.length == 0) {
     return res.status(404).json({ error: "user account does not exist" });
   }
