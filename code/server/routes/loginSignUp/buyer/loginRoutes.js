@@ -1,5 +1,5 @@
 const express=require('express');
-const {findUser} = require('../../controller/loginSignUp/loginController');
+const {findUser} = require('../../../controller/loginSignUp/buyer/loginController');
 const router=express.Router();
 
 router.post('/',findUser);

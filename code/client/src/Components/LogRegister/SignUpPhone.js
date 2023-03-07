@@ -6,7 +6,8 @@ import { useSelector } from "react-redux";
 import { useGeolocated } from "react-geolocated";
 
 const PhoneNumber = () => {
-  const id = useSelector((state) => state.loginState.id);
+  const {id,userType} = useSelector((state) => state.loginState.ID_UserType);
+  const url=userType==='seller'?'api/seller/signup/':'api/buyer/signup/';
   const { coords, isGeolocationAvailable, isGeolocationEnabled } =
     useGeolocated({
       positionOptions: {
@@ -19,7 +20,7 @@ const PhoneNumber = () => {
   const handleSubmit = async (e) => {
     const user = { phone: value };
     e.preventDefault();
-    const response = await fetch("api/signup/phone/" + id, {
+    const response = await fetch(url+"phone/" + id, {
       method: "PATCH",
       body: JSON.stringify(user),
       headers: {
@@ -31,7 +32,7 @@ const PhoneNumber = () => {
       setError(json.error);
     } else {
       if (
-        json.userType === "Seller" &&
+        userType==='buyer' &&
         isGeolocationAvailable &&
         isGeolocationEnabled
       ) {
@@ -42,7 +43,7 @@ const PhoneNumber = () => {
             latitude: coords.latitude,
             longitude: coords.longitude
           };
-          const resp = await fetch("api/signup/location", {
+          const resp = await fetch("api/seller/signup/location", {
             method: "POST",
             body: JSON.stringify(data),
             headers: {

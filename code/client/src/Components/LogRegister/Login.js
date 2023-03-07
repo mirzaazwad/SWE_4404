@@ -26,7 +26,7 @@ const Login = () => {
     e.preventDefault();
     const user={email:email,password:CryptoJS.SHA512(password).toString()};
     console.log(user);
-    const response = await fetch('api/login',{
+    const response = await fetch('api/seller/login',{
       method: 'POST',
       body: JSON.stringify(user),
       headers:{
