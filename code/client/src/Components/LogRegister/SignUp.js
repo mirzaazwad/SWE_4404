@@ -169,7 +169,7 @@ const SignUp = () => {
       username: username,
       email: email,
       password: CryptoJS.SHA512(password).toString(),
-      dob: dob,
+      dob: dob
     };
     const url =
       radioName === "Seller" ? "api/seller/signup" : "api/buyer/signup";
