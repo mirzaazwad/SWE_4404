@@ -1,5 +1,5 @@
 :root {
-  --customMagenta: #3354a9;
+  --customMagenta: #EB006F;
   --customDarkBlue: #103686;
   --customBlue: #3354a9;
   --white: #fff;
@@ -22,7 +22,10 @@ code {
   height: 65px !important;
 
 }
-
+/* .navbarContents{
+  display: fixed;
+  margin: 5% !important;
+} */
 .customButton{
   background-color: var(--customMagenta) !important;
   height: 40px;
@@ -50,8 +53,6 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
-
-
 .customCart{
   border-color: transparent !important;
 }
@@ -87,37 +88,16 @@ code {
   text-decoration:double;
 }
 
-.landingText{
-  margin-top: 13px;
-  margin-bottom: 13px;
-}
-
-.container{
+.edit-profile-picture {
   position: absolute;
-  max-width: 30%;
-  width:60%;
-  height: 500;
-  margin: auto;
-  top: 60%;
-  right: 7.5%;
-  transform: translateY(-70%);
+  bottom: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 25%;
+  color: white !important;
 }
-
-.myLeftCtn .bx{
-  position: relative;
-  color: #3354a9;
-   
-}
-
-.btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:visited {
-  color: #3354a9 !important;
-  border-color: #3354a9 !important;
-}
-
-.btn-outline-primary:hover{
-  background-color: #3354a9 !important;
-  color: #fff !important;
-}
+/* Arpa-Apurbo css */
 
 .myLeftCtn{
   position: relative;

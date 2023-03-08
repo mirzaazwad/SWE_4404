@@ -9,28 +9,31 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Landing = () => {
   return (
-    <div className="Landing">
-        <NavbarLanding />
-      <Container>
-      <Provider store={store}>
-        <Row>
-          <Col md={8}>
-            <Row>
-              <Col xs={12} sm={6} md={12} lg={9}>
-                <div className="container-1" style={{ height: '100%',width:'100%'}}><LandingImage /></div>
-              </Col>
-              <Col xs={12} sm={6} md={12} lg={6}>
-                <div className="container-2" style={{ height: '100px'}}><Introduction/></div>
-              </Col>
-            </Row>
-          </Col>
-          <Col xs={12} md={4}>
-            <div className="container-3"><LoginSignUp/></div>
-          </Col>
-        </Row>
-        </Provider>
-      </Container>
+    <Provider store={store}>
+    <div>
+    <NavbarLanding />
+    <section>
+    <div className="container h-100">
+      <div className="pt-5">
+    <div className="mt-5 d-lg-none d-flex justify-content-between"><LandingImage/></div></div>
+      <div className="d-flex justify-content-around h-100 mx-auto my-5 w-75" style={{alignItems : 'left'}}>
+      <div className="my-3 d-none d-lg-flex"><LandingImage/></div>
+        <div className="profile-form-outer w-50 mt-5">
+          <LoginSignUp />
+        </div>
+      </div>
     </div>
+    
+    </section>
+          
+    </div>
+   </Provider>
+    // <div className="Landing">
+    //     <NavbarLanding />
+    //   <Container>
+    //   <div className="mt-5 d-lg-none d-flex justify-content-center"><LandingImage/></div>
+    //   </Container>
+    // </div> 
   );
 };
 
