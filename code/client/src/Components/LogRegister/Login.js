@@ -24,9 +24,16 @@ const Login = () => {
   }
   const handleSubmit = async(e) =>{
     e.preventDefault();
+    await login('seller');
+    setError('');
+    await login('buyer');
+    
+  }
+
+  const login = async(type) =>{
     const user={email:email,password:CryptoJS.SHA512(password).toString()};
     console.log(user);
-    const response = await fetch('api/seller/login',{
+    const response = await fetch('api/'+type+'/login',{
       method: 'POST',
       body: JSON.stringify(user),
       headers:{
@@ -35,14 +42,11 @@ const Login = () => {
     })
     const json=await response.json();
     if(!response.ok){
-      console.log('login failed');
       setError(json.error);
     }else{
       if(json.success===false){
-        console.log('login failed');
         setError(json.error);
       }
-      console.log('logged in successfully');
     }
   }
   return (
@@ -101,7 +105,7 @@ const Login = () => {
                 <hr />
                 <Form.Group controlId="LoginWithGoogle">
                   <Button variant="outline-primary" size="lg" style={{ marginLeft: '30%' }}>
-                    <FaGoogle />
+                    <FaGoogle/>
                   </Button>
                   <Button variant="outline-primary" size="lg" className="mx-5">
                     <FaFacebook />

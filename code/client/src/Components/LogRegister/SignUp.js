@@ -194,6 +194,14 @@ const SignUp = () => {
       }
     }
   };
+
+  const handleGoogle = async(e) =>{
+    e.preventDefault();
+    const url =radioName === "Seller" ? "api/seller/signup/google" : "api/buyer/signup/google";
+    const resp = await fetch(url);
+    console.log(resp);
+  }
+
   return (
     <Container style={{ marginTop: "12%", width: "33%" }}>
       <Card className="mt-5 float-end" style={{ maxWidth: "100%" }}>
@@ -353,7 +361,7 @@ const SignUp = () => {
                   size="lg"
                   style={{ marginLeft: "30%" }}
                 >
-                  <FaGoogle />
+                  <FaGoogle onClick={handleGoogle}/>
                 </Button>
                 <Button variant="outline-primary" size="lg" className="mx-5">
                   <FaFacebook />

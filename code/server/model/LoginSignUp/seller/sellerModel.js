@@ -21,6 +21,12 @@ const sellerSchema = new Schema({
   },
   phone:{
     type:String
+  },
+  googleId:{
+    type:String
+  },
+  facebookId:{
+    type:String
   }
 },{timestamps:true});
 

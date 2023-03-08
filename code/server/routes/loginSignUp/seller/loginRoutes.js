@@ -3,5 +3,6 @@ const {findUser} = require('../../../controller/loginSignUp/seller/loginControll
 const router=express.Router();
 
 router.post('/',findUser);
+router.get('auth/google')
 
 module.exports = router;
