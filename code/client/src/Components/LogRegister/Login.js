@@ -48,7 +48,7 @@ const Login = () => {
   return (
     <div className="loginPage">
       <Container className="login-container"  style={{ marginTop: '5%' }}>
-        <Card className="d-flex float-start justify-items center" style={{ maxWidth: '100%' }}>
+        <Card className="d-flex float-start justify-items-center" style={{ maxWidth: '100%' }}>
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>

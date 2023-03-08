@@ -195,8 +195,8 @@ const SignUp = () => {
     }
   };
   return (
-    <Container style={{ marginTop: "12%", width: "33%" }}>
-      <Card className="mt-5 float-end" style={{ maxWidth: "100%" }}>
+    <Container style={{ width: "75%" }}>
+      <Card className="mt-3 float-start" style={{ maxWidth: "100%" }}>
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>SignUp</Card.Title>
           <Card.Text>
@@ -227,11 +227,11 @@ const SignUp = () => {
                   ))}
                 </ButtonGroup>
               </Form.Group>
-              <InputGroup className="mt-3 mb-3" size="sm">
+                <Form.Group controlId="Username">
+                <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Person color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Username">
                   <Form.Control
                     type="text"
                     required
@@ -241,16 +241,16 @@ const SignUp = () => {
                     value={username}
                     onChange={usernameChange}
                   />
-                </Form.Group>
               </InputGroup>
+                </Form.Group>
               <Form.Group controlId="errorMessageEmail">
                 <p style={{ color: "red" }}>{errorEmail}</p>
               </Form.Group>
+                <Form.Group controlId="Email">
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Envelope color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Email">
                   <Form.Control
                     type="email"
                     required
@@ -260,19 +260,19 @@ const SignUp = () => {
                     value={email}
                     onChange={(e) => emailChange(e)}
                   />
-                </Form.Group>
               </InputGroup>
+                </Form.Group>
               <Form.Group
                 controlId="errorPassword"
                 style={{ overflowWrap: "anywhere" }}
               >
                 <p style={{ color: "red" }}>{errorPassword}</p>
               </Form.Group>
+                <Form.Group controlId="Password">
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Password">
                   <Form.Control
                     type={passwordVisibility}
                     placeholder="Password"
@@ -282,7 +282,6 @@ const SignUp = () => {
                     value={password}
                     style={{ paddingLeft: "65px", paddingRight: "65px" }}
                   />
-                </Form.Group>
                 <InputGroup.Text>
                   {(password_eyeSlash && (
                     <EyeFill color="#3354a9" onClick={changePassword} />
@@ -292,14 +291,15 @@ const SignUp = () => {
                     ))}
                 </InputGroup.Text>
               </InputGroup>
+                </Form.Group>
               <Form.Group controlId="errorCPassword">
                 <p style={{ color: "red" }}>{errorCPassword}</p>
+                <Form.Group controlId="ConfirmPassword">
               </Form.Group>
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="ConfirmPassword">
                   <Form.Control
                     type={confirmPasswordVisibility}
                     placeholder="Confirm Password"
@@ -309,7 +309,6 @@ const SignUp = () => {
                     onChange={confirmPasswordChange}
                     style={{ paddingLeft: "65px", paddingRight: "65px" }}
                   />
-                </Form.Group>
                 <InputGroup.Text>
                   {(confirmPassword_eyeSlash && (
                     <EyeFill color="#3354a9" onClick={changeCPassword} />
@@ -319,11 +318,12 @@ const SignUp = () => {
                     ))}
                 </InputGroup.Text>
               </InputGroup>
+                </Form.Group>
+                <Form.Group controlId="DOB">
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Calendar2 color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="DOB">
                   <Form.Control
                     type="date"
                     required
@@ -333,8 +333,8 @@ const SignUp = () => {
                     onChange={dobChange}
                     max={maxDateString}
                   />
-                </Form.Group>
               </InputGroup>
+                </Form.Group>
               <Button
                 type="submit"
                 variant="outline-primary"
