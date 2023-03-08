@@ -17,7 +17,6 @@ const sellerSchema = new Schema({
   },
   dob:{
     type:Date,
-    required: true
   },
   phone:{
     type:String

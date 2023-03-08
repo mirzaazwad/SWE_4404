@@ -13,11 +13,9 @@ const buyerSchema = new Schema({
   },
   password:{
     type:String,
-    required: true
   },
   dob:{
     type:Date,
-    required: true
   },
   phone:{
     type:String

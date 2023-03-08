@@ -2,7 +2,7 @@ import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
-import { setSignUp } from "./loginRedux/action";
+import { setSignUp } from "../../Contexts/loginRedux/action";
 import { Link } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import { useState } from "react";
@@ -11,23 +11,15 @@ const Login = () => {
   const [password,setPassword]=useState("");
   const [error,setError]=useState("");
   const dispatch = useDispatch();
-  const [passwordVisibility,setPasswordVisibility] = useState("password");
-  const [password_eyeSlash,eyeSlash]=useState(false);
-  const changePassword = () =>{
-    if(passwordVisibility==="password"){
-      setPasswordVisibility("text");
-    }
-    else{
-      setPasswordVisibility("password");
-    }
-    eyeSlash(password_eyeSlash^true);
-  }
+  const [passwordVisibility,setPasswordVisibility] = useState(false);
   const handleSubmit = async(e) =>{
     e.preventDefault();
-    await login('seller');
-    setError('');
-    await login('buyer');
-    
+    if(login("seller") || login("buyer")){
+      setError("");
+    }
+    else{
+      setError("account does not exist");
+    }
   }
 
   const login = async(type) =>{
@@ -42,12 +34,13 @@ const Login = () => {
     })
     const json=await response.json();
     if(!response.ok){
-      setError(json.error);
+      return false;
     }else{
       if(json.success===false){
-        setError(json.error);
+        return false;
       }
     }
+    return true;
   }
   return (
     <div className="loginPage">
@@ -80,7 +73,7 @@ const Login = () => {
                   <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
                   <Form.Group controlId="Password">
                     <Form.Control
-                      type={passwordVisibility}
+                      type={passwordVisibility?"text":"password"}
                       placeholder="Password"
                       required
                       className="float-end"
@@ -89,7 +82,7 @@ const Login = () => {
                       style={{ paddingLeft: '65px', paddingRight: '65px' }}
                     />
                   </Form.Group>
-                  <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword} />) || (!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword} />)}</InputGroup.Text>
+                  <InputGroup.Text>{(passwordVisibility && <EyeFill color="#3354a9" onClick={(e)=>setPasswordVisibility(false)} />) || (!passwordVisibility && <EyeSlashFill color="#3354a9" onClick={(e)=>setPasswordVisibility(true)} />)}</InputGroup.Text>
                 </InputGroup>
 
                 <Button
