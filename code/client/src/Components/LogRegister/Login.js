@@ -48,7 +48,7 @@ const Login = () => {
   return (
     <div className="loginPage">
       <Container className="login-container"  style={{ marginTop: '5%' }}>
-        <Card className="d-flex float-end" style={{ maxWidth: '50%' }}>
+        <Card className="d-flex float-start justify-items center" style={{ maxWidth: '100%' }}>
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>
@@ -58,9 +58,10 @@ const Login = () => {
                     {error}
                   </div>
                 </Form.Group>
-                <InputGroup className="mt-3 mb-3">
-                  <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
+
                   <Form.Group controlId="Email">
+                  <InputGroup className="mt-3 mb-3">
+                  <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
                     <Form.Control
                       type="email"
                       required
@@ -70,11 +71,14 @@ const Login = () => {
                       style={{ paddingLeft: '75px', paddingRight: '75px' }}
                       onChange={(e)=>setEmail(e.target.value)}
                     />
+                    </InputGroup>
                   </Form.Group>
-                </InputGroup>
-                <InputGroup className="mt-3 mb-3" size="sm">
-                  <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
+                  
+
+                
                   <Form.Group controlId="Password">
+                  <InputGroup className="mt-3 mb-3" size="sm">
+                  <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
                     <Form.Control
                       type={passwordVisibility}
                       placeholder="Password"
@@ -84,9 +88,12 @@ const Login = () => {
                       onChange={(e)=>setPassword(e.target.value)}
                       style={{ paddingLeft: '65px', paddingRight: '65px' }}
                     />
+                     <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword} />) || (!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword} />)}</InputGroup.Text>
+
+                    </InputGroup>
                   </Form.Group>
-                  <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword} />) || (!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword} />)}</InputGroup.Text>
-                </InputGroup>
+
+                
 
                 <Button
                   type="submit"

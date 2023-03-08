@@ -9,31 +9,30 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const Landing = () => {
   return (
-    <Provider store={store}>
-    <div>
+<Provider store={store}>
+  <div>
     <NavbarLanding />
-    <section>
-    <div className="container h-100">
-      <div className="pt-5">
-    <div className="mt-5 d-lg-none d-flex justify-content-between"><LandingImage/></div></div>
-      <div className="d-flex justify-content-around h-100 mx-auto my-5 w-75" style={{alignItems : 'left'}}>
-      <div className="my-3 d-none d-lg-flex"><LandingImage/></div>
-        <div className="profile-form-outer w-50 mt-5">
-          <LoginSignUp />
+    <section className="container">
+      <div className="landing-signup-container d-flex justify-content-between">
+        <div className="landing-image-container">
+          <div className="mt-5 d-lg-none d-flex justify-content-between">
+            <LandingImage />
+          </div>
+          <div className="d-none d-lg-flex">
+            <LandingImage />
+          </div>
+        </div>
+        <div className="signup-container d-flex justify-content-center">
+          <div className="profile-form-outer mt-5" style={{ width: '80%' }}>
+            <LoginSignUp />
+          </div>
         </div>
       </div>
-    </div>
-    
     </section>
-          
-    </div>
-   </Provider>
-    // <div className="Landing">
-    //     <NavbarLanding />
-    //   <Container>
-    //   <div className="mt-5 d-lg-none d-flex justify-content-center"><LandingImage/></div>
-    //   </Container>
-    // </div> 
+  </div>
+</Provider>
+
+
   );
 };
 

@@ -98,6 +98,29 @@ code {
   color: white !important;
 }
 /* Arpa-Apurbo css */
+.landing-signup-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-top: 10%;
+  height: 100%;
+}
+
+.landing-image-container {
+  flex-basis: 50%;
+  width: 100%;
+}
+
+.signup-container {
+  flex: 1;
+  flex-basis: 50%;
+  width: 100%;
+
+}
+.profile-form-outer {
+  margin: auto;
+}
+
 
 .myLeftCtn{
   position: relative;
