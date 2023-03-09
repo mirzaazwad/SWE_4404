@@ -1,7 +1,8 @@
 import Landing from "./Components/LogRegister/Landing";
 import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import { BuyerContextProvider } from "./Contexts/Profile/buyer/buyerContext";
+import { Provider } from "react-redux";
+import { store } from "./Contexts/Profile/buyer/store";
 
 function App() {
   return (
@@ -11,9 +12,9 @@ function App() {
         <Routes>
           <Route path='/' element={<Landing />} />
           <Route exact path='/profileBuyer/:id' element={
-          <BuyerContextProvider>
+            <Provider store={store}>
           <ProfilePageForCustomers/>
-          </BuyerContextProvider>
+            </Provider>
           }/>
         </Routes>
       </div>
