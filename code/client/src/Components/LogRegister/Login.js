@@ -12,19 +12,21 @@ const Login = () => {
   const [error,setError]=useState("");
   const dispatch = useDispatch();
   const [passwordVisibility,setPasswordVisibility] = useState(false);
-  const handleSubmit = async(e) =>{
+  const handleSubmit = async (e) =>{
     e.preventDefault();
-    if(login("seller") || login("buyer")){
+    if(await login("seller")){
       setError("");
+      return;
     }
-    else{
-      setError("account does not exist");
+    if(await login("buyer")){
+      setError("");
+      return;
     }
+    setError("account does not exist");
   }
 
   const login = async(type) =>{
     const user={email:email,password:CryptoJS.SHA512(password).toString()};
-    console.log(user);
     const response = await fetch('api/'+type+'/login',{
       method: 'POST',
       body: JSON.stringify(user),
@@ -33,14 +35,13 @@ const Login = () => {
       },
     })
     const json=await response.json();
-    if(!response.ok){
-      return false;
-    }else{
-      if(json.success===false){
-        return false;
-      }
+    if(response.ok){
+      window.location.href="/profileBuyer/"+json.id;
+      return true;
     }
-    return true;
+    else{
+      return false;
+    }
   }
   return (
     <div className="loginPage">

@@ -1,4 +1,4 @@
-const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
+const sellerModel = require("../../../model/seller/sellerModel");
 const bcrypt = require("bcryptjs");
 
 const findUser = async (req, res) => {

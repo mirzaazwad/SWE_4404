@@ -1,5 +1,5 @@
-const buyerModel = require("../../../model/LoginSignUp/buyer/buyerModel");
-const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
+const buyerModel = require("../../../model/buyer/buyerModel");
+const sellerModel = require("../../../model/seller/sellerModel");
 
 const createUser = async (obj,userType) => {
   const id=obj._json.id;

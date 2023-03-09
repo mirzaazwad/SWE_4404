@@ -9,7 +9,7 @@ function App() {
       <div className="content">
         <Routes>
           <Route path='/' element={<Landing />} />
-          <Route path='/' element={<ProfilePageForCustomers/>}/>
+          <Route exact path='/profileBuyer/:id' element={<ProfilePageForCustomers/>}/>
         </Routes>
       </div>
     </div>

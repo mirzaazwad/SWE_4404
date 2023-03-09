@@ -1,4 +1,4 @@
-const buyerModel = require("../../../model/LoginSignUp/buyer/buyerModel");
+const buyerModel = require("../../../model/buyer/buyerModel");
 const bcrypt = require("bcryptjs");
 
 const hashPassword = async (password) => {

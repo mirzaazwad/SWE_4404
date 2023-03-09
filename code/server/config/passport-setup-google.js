@@ -1,7 +1,6 @@
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 require('dotenv').config();
-const buyerModel = require("../model/LoginSignUp/buyer/buyerModel");
 const buyerController = require('../controller/loginSignUp/google/googleSignUp');
 
 
