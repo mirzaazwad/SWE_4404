@@ -1,9 +1,9 @@
-const buyerModel = require("../../../model/seller/sellerModel");
+const sellerModel = require("../../../model/seller/sellerModel");
 
 const getUserByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const users = await buyerModel.findById(id);
+    const users = await sellerModel.findById(id);
     if (users.length == 0) {
       return res.status(404).json({ error: "User not found" });
     }
