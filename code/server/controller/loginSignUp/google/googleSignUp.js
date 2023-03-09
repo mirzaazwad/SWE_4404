@@ -19,7 +19,6 @@ const createUser = async (obj,userType) => {
       console.log(err);
       return null;
     }
-
     return user;
   } catch (err) {
     console.log(err);

@@ -101,7 +101,10 @@ const SignUp = () => {
   const handleGoogle = async(e) =>{
       e.preventDefault();
       setisGlobalLocked(true)
-      await fetch("api/signup/google")
+      await fetch("api/signup/google",{
+        method:"GET",
+        state:(radioName==='Seller'?'seller':'buyer')
+      })
   .then((result)=>{
     console.log(result);
     window.location.href=result.url;

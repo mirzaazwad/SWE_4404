@@ -11,9 +11,10 @@ passport.use(
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret:process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'http://localhost:4000/api/signup/google/redirect',
-        scope: ['profile', 'email']
+        scope: ['profile', 'email'],
+        state: null
     }, (accessToken, refreshToken, profile, done) => {
-        console.log(profile);
+        console.log(profile.state);
         const user=buyerController.createUser(profile);
         if(user){
             console.log(user);
