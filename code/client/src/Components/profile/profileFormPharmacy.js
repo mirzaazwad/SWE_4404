@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
-import "../../boxicons-2.1.4/css/boxicons.min.css";
 
 function ProfileFormPharmacy() {
   const [isDisabled, setIsDisabled] = useState(true);

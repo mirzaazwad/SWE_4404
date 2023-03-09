@@ -2,12 +2,11 @@ import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
-import "../../boxicons-2.1.4/css/boxicons.min.css";
 
-function ProfileFormCustomer() {
+function ProfileFormCustomer(props) {
+  const user=props;
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-
 
   const turnOnEdit = () => {
     setIsDisabled(false);
@@ -28,11 +27,11 @@ function ProfileFormCustomer() {
       <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
-          <Form.Control type="Name" placeholder="Enter your name" disabled={isDisabled}/>
+          <Form.Control type="Name" placeholder="Enter your name"  disabled={isDisabled} value={user.data.username}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Contact No.</Form.Label>
-          <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled} />
+          <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Address</Form.Label>
@@ -40,7 +39,7 @@ function ProfileFormCustomer() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"  disabled={isDisabled}/>
+          <Form.Control type="email" placeholder="Enter email"  disabled={isDisabled}   value={user.data.email}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>

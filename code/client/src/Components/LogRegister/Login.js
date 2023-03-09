@@ -2,7 +2,7 @@ import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
-import { setSignUp } from "./loginRedux/action";
+import { setSignUp } from "../../Contexts/loginRedux/action";
 import { Link } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import { useState } from "react";
@@ -11,22 +11,23 @@ const Login = () => {
   const [password,setPassword]=useState("");
   const [error,setError]=useState("");
   const dispatch = useDispatch();
-  const [passwordVisibility,setPasswordVisibility] = useState("password");
-  const [password_eyeSlash,eyeSlash]=useState(false);
-  const changePassword = () =>{
-    if(passwordVisibility==="password"){
-      setPasswordVisibility("text");
-    }
-    else{
-      setPasswordVisibility("password");
-    }
-    eyeSlash(password_eyeSlash^true);
-  }
-  const handleSubmit = async(e) =>{
+  const [passwordVisibility,setPasswordVisibility] = useState(false);
+  const handleSubmit = async (e) =>{
     e.preventDefault();
+    if(await login("seller")){
+      setError("");
+      return;
+    }
+    if(await login("buyer")){
+      setError("");
+      return;
+    }
+    setError("account does not exist");
+  }
+
+  const login = async(type) =>{
     const user={email:email,password:CryptoJS.SHA512(password).toString()};
-    console.log(user);
-    const response = await fetch('api/seller/login',{
+    const response = await fetch('api/'+type+'/login',{
       method: 'POST',
       body: JSON.stringify(user),
       headers:{
@@ -34,21 +35,18 @@ const Login = () => {
       },
     })
     const json=await response.json();
-    if(!response.ok){
-      console.log('login failed');
-      setError(json.error);
-    }else{
-      if(json.success===false){
-        console.log('login failed');
-        setError(json.error);
-      }
-      console.log('logged in successfully');
+    if(response.ok){
+      window.location.href="/profileBuyer/"+json.id;
+      return true;
+    }
+    else{
+      return false;
     }
   }
   return (
     <div className="loginPage">
       <Container className="login-container"  style={{ marginTop: '5%' }}>
-        <Card className="d-flex float-start justify-items-center" style={{ maxWidth: '100%' }}>
+        <Card className="d-flex float-end" style={{ maxWidth: '50%' }}>
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>
@@ -58,10 +56,9 @@ const Login = () => {
                     {error}
                   </div>
                 </Form.Group>
-
-                  <Form.Group controlId="Email">
-                  <InputGroup className="mt-3 mb-3">
+                <InputGroup className="mt-3 mb-3">
                   <InputGroup.Text><Envelope color="#3354a9" /></InputGroup.Text>
+                  <Form.Group controlId="Email">
                     <Form.Control
                       type="email"
                       required
@@ -71,16 +68,13 @@ const Login = () => {
                       style={{ paddingLeft: '75px', paddingRight: '75px' }}
                       onChange={(e)=>setEmail(e.target.value)}
                     />
-                    </InputGroup>
                   </Form.Group>
-                  
-
-                
-                  <Form.Group controlId="Password">
-                  <InputGroup className="mt-3 mb-3" size="sm">
+                </InputGroup>
+                <InputGroup className="mt-3 mb-3" size="sm">
                   <InputGroup.Text><Lock color="#3354a9" /></InputGroup.Text>
+                  <Form.Group controlId="Password">
                     <Form.Control
-                      type={passwordVisibility}
+                      type={passwordVisibility?"text":"password"}
                       placeholder="Password"
                       required
                       className="float-end"
@@ -88,12 +82,9 @@ const Login = () => {
                       onChange={(e)=>setPassword(e.target.value)}
                       style={{ paddingLeft: '65px', paddingRight: '65px' }}
                     />
-                     <InputGroup.Text>{(password_eyeSlash && <EyeFill color="#3354a9" onClick={changePassword} />) || (!password_eyeSlash && <EyeSlashFill color="#3354a9" onClick={changePassword} />)}</InputGroup.Text>
-
-                    </InputGroup>
                   </Form.Group>
-
-                
+                  <InputGroup.Text>{(passwordVisibility && <EyeFill color="#3354a9" onClick={(e)=>setPasswordVisibility(false)} />) || (!passwordVisibility && <EyeSlashFill color="#3354a9" onClick={(e)=>setPasswordVisibility(true)} />)}</InputGroup.Text>
+                </InputGroup>
 
                 <Button
                   type="submit"
@@ -108,7 +99,7 @@ const Login = () => {
                 <hr />
                 <Form.Group controlId="LoginWithGoogle">
                   <Button variant="outline-primary" size="lg" style={{ marginLeft: '30%' }}>
-                    <FaGoogle />
+                    <FaGoogle/>
                   </Button>
                   <Button variant="outline-primary" size="lg" className="mx-5">
                     <FaFacebook />

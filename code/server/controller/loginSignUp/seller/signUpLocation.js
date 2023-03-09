@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const sellerLocation = require("../../../model/LoginSignUp/seller/sellerLocation");
-const sellerModel = require("../../../model/LoginSignUp/seller/sellerModel");
+const sellerLocation = require("../../../model/seller/sellerLocation");
+const sellerModel = require("../../../model/seller/sellerModel");
 
 const updateUserLocation = async (req, res) => {
   const { id } = req.params;
