@@ -1,0 +1,251 @@
+:root {
+  --customMagenta: #3354a9;
+  --customDarkBlue: #103686;
+  --customBlue: #3354a9;
+  --white: #fff;
+}
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+.customNavbar{
+  background-color: var(--customDarkBlue);
+  height: 65px !important;
+
+}
+
+.customButton{
+  background-color: var(--customMagenta) !important;
+  height: 40px;
+}
+.customButton:hover{
+  background-color: var(--customBlue) !important;
+}
+.navbar-nav{
+  background-color: var(--customDarkBlue);
+}
+.btn-editProfile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn-save{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 25%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+
+
+.customCart{
+  border-color: transparent !important;
+}
+
+
+.btn-editProfile i {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.profile-picture-container {
+  position: relative;
+  display: inline-block;
+  width: 200px; 
+  height: 200px;
+  border-radius: 50%; 
+  overflow: hidden;
+}
+
+.profile-picture-container img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 50%; /* set the border radius to 50% to match the parent container */
+}
+
+.profile-picture-container:hover .edit-profile-picture {
+  display: block;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  text-align: center;
+  font-size: 1.3rem;
+  text-decoration:double;
+}
+
+.landingText{
+  margin-top: 13px;
+  margin-bottom: 13px;
+}
+
+.container{
+  position: absolute;
+  max-width: 30%;
+  width:60%;
+  height: 500;
+  margin: auto;
+  top: 60%;
+  right: 7.5%;
+  transform: translateY(-70%);
+}
+
+.myLeftCtn .bx{
+  position: relative;
+  color: #3354a9;
+   
+}
+
+.btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:visited {
+  color: #3354a9 !important;
+  border-color: #3354a9 !important;
+}
+
+.btn-outline-primary:hover{
+  background-color: #3354a9 !important;
+  color: #fff !important;
+}
+
+.myLeftCtn{
+  position: relative;
+  background: #fff;
+  border-radius: 25px;
+  height: fit-content;
+  width: 100%;
+  padding: 25px;
+  padding-left: 10;
+  margin: auto 0 !important;
+}
+.myLeftCtn header{
+  color: #3354a9;
+  font-size: 30px;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.row{
+  height: 100%;
+}
+.myCard{
+  position: relative;
+  background: #fff;
+  height: 100%;
+  border-radius: 25px;
+  -webkit-box-shadow: 0px 10px 40px -10px rgba(0,0,0,0.7);
+  -moz-box-shadow: 0px 10px 40px -10px rgba(0,0,0,0.7);
+  box-shadow: 0px 10px 40px -10px rgba(0,0,0,0.7);
+}
+.box{
+  position: relative;
+  margin: 20px;
+  margin-bottom: 100px;
+}
+.mInput{
+  width: 75%;
+  border-radius: 25px;
+  padding: 10px;
+  padding-left: 50px;
+  height: 100%;
+  border: none;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  -webkit-box-shadow: 0px 10px 49px -14px rgba(0,0,0,0.3);
+  -moz-box-shadow: 0px 10px 49px -10px rgba(0,0,0,0.3);
+  box-shadow: 0px 10px 49px -10px rgba(0,0,0,0.3);
+}
+.mInput:focus{
+  outline: none;
+}
+.myForm{
+  position: relative;
+  margin-top: 50px;
+}
+
+.submitButton{
+  display: flex;
+  justify-content: center;
+}
+
+.mButton{
+  color: #fff;
+  background-color: #3354a9;
+  width: 50%;
+  border: 2px solid #fff;
+  border-radius: 25px;
+  padding: 10px;
+  margin-top: 10px;
+  margin-left: auto;
+  margin-right: auto;
+  -webkit-box-shadow: 0px 10px 41px -11px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 10px 41px -11px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 10px 41px -11px rgba(0, 0, 0, 0.7);
+}
+.mButton:hover{
+  background-color: #fff;
+  color: #3354a9;
+  border: 2px solid #3354a9;
+}
+.mButton:focus{
+  outline: none;
+}
+
+.butt_out{
+  background: transparent;
+  color: #fff;
+  width: 120px;
+  border: 2px solid#fff;
+  border-radius: 25px;
+  padding: 10px;
+  -webkit-box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  -moz-box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+  box-shadow: 0px 10px 49px -14px rgba(0, 0, 0, 0.7);
+}
+.butt_out:hover{
+  border: 2px solid#eecbff;
+}
+.butt_out:focus{
+  outline: none;
+}
+
+.myRightCtn{
+  position:relative;
+  background:#fff;
+  border-radius:25px;
+  height: fit-content;
+  width: 50%;
+  padding: 25px;
+  margin:auto;
+  margin-left: 20px;
+  -webkit-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
+  -moz-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
+  box-shadow : 0px 10px 40px -10px rgba(0,0,0,0.7);
+}
+.react-phone-number-input__icon {
+  width: 16px;
+  height: 16px;
+}
+
+@media only screen and (max-width: 767px) {
+  .login-container {
+    width: 100%;
+    max-width: none;
+  }
+
+  .container-1,
+  .container-2,
+  .container-3 {
+    width: 100%;
+  }
+}
