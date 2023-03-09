@@ -12,15 +12,18 @@ function App() {
       <div className="content">
         <Routes>
           <Route path='/' element={<Landing />} />
+
           <Route exact path='/profileBuyer/:id' element={
-          <BuyerContextProvider>
+          
           <ProfilePageForCustomers/>
-          </BuyerContextProvider>
+         
           }/>
+
           <Route exact path='/profileSeller/:id' element={
-          <SellerContextProvider>
+          
           <ProfilePageForPharmacy/>
-          </SellerContextProvider>
+          
+
           }/>
         </Routes>
       </div>
