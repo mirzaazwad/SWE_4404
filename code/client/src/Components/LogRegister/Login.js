@@ -36,7 +36,8 @@ const Login = () => {
     })
     const json=await response.json();
     if(response.ok){
-      window.location.href="/profileBuyer/"+json.id;
+      
+      window.location.href="/profileSeller/"+json.id;
       return true;
     }
     else{
