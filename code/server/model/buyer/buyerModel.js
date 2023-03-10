@@ -25,7 +25,10 @@ const buyerSchema = new Schema({
   },
   facebookId:{
     type:String
-  }
+  },
+  address:{
+    type:String
+  },
 },{timestamps:true});
 
 

@@ -3,16 +3,22 @@ import NavbarCustomer from './navbarCustomer';
 import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
+import {useDispatch } from 'react-redux';
+import { store } from '../../Contexts/Profile/buyer/store';
+import { setUser } from '../../Contexts/Profile/buyer/action';
 
 const  ProfilePageForCustomers = () => {
   const {id}=useParams();
-  const [user,setUser]=useState([]);
-  useEffect(()=>{
-    axios.get('/api/buyer/profile/'+id).then((result)=>{
-      setUser(result.data);
+  const dispatch=useDispatch();
+  const retrieveUser = async() =>{
+    await axios.get('/api/buyer/profile/'+id).then((result)=>{
+      dispatch(setUser(result.data));
     })
     .catch(error=>console.log(error));
+  };
+  useEffect(()=>{
+    retrieveUser();
   },[])
   return (     
   <div>
@@ -25,13 +31,11 @@ const  ProfilePageForCustomers = () => {
       <div className="d-flex justify-content-around h-100 mx-auto my-5 w-100" style={{alignItems : 'center'}}>
       <div className="my-3 d-none d-lg-flex"><ProfilePicture/></div>
         <div className="profile-form-outer w-50 mt-5">
-          <ProfileFormCustomer data={user}/>
+          <ProfileFormCustomer id={id}/>
         </div>
       </div>
     </div>
-    
-    </section>
-          
+    </section>  
     </div>
   );
 }
