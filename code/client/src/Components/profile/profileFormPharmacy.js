@@ -89,8 +89,9 @@ function ProfileFormPharmacy(id) {
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
           <Form.Control type="password" placeholder="Password" disabled={isDisabled} value={password} onChange={(e)=>setPassword(e.target.value)}/>
+          {isEditing &&(<a href='#' disabled={isLocked}>Change Password?</a>)}
         </Form.Group>
-      
+        
         {isEditing && (
           <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked} onClick={(e)=>handleSubmit(e)}>
             Save
