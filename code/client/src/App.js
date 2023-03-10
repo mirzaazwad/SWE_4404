@@ -1,27 +1,40 @@
-import NavbarCustomer from './components/navbarCustomer';
-import ProfileFormCustomer from './components/profileFormCustomer';
-import NavbarPharmacy from './components/navbarPharmacy';
-import ProfilePicture from './components/profilePictureBox';
+import Landing from "./Components/LogRegister/Landing";
+import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
+import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+
+import { BuyerContextProvider } from "./Contexts/Profile/buyer/buyerContext";
+import { SellerContextProvider } from "./Contexts/Profile/seller/sellerContext";
+import { Provider } from "react-redux";
+import { store } from "./Contexts/Profile/buyer/store";
+
+
 function App() {
   return (
-    <div>
-    <NavbarCustomer />
+    <Router>
+      <div className="App">
+      <div className="content">
+        <Routes>
+          <Route path='/' element={<Landing />} />
 
-    <section>
-    <div className="container h-100">
-      <div className="pt-5">
-    <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture/></div></div>
-      <div className="d-flex justify-content-around h-100 mx-auto my-5 w-100" style={{alignItems : 'center'}}>
-      <div className="my-3 d-none d-lg-flex"><ProfilePicture/></div>
-        <div className="profile-form-outer w-50 mt-5">
-          <ProfileFormCustomer />
-        </div>
+          <Route exact path='/profileBuyer/:id' element={
+
+          
+           <Provider store={store}>
+          <ProfilePageForCustomers/>
+            </Provider>
+         
+          }/>
+
+          <Route exact path='/profileSeller/:id' element={
+          
+          <ProfilePageForPharmacy/>
+
+          }/>
+        </Routes>
       </div>
     </div>
-    
-    </section>
-          
-    </div>
+    </Router>
   );
 }
 
