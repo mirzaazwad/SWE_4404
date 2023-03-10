@@ -22,7 +22,6 @@ const Login = () => {
       setError("");
       return;
     }
-    setError("account does not exist");
   }
 
   const login = async(type) =>{
@@ -40,6 +39,7 @@ const Login = () => {
       return true;
     }
     else{
+      setError(json.error);
       return false;
     }
   }

@@ -5,7 +5,6 @@ import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
 import { useEffect } from 'react';
 import {useDispatch } from 'react-redux';
-import { store } from '../../Contexts/Profile/buyer/store';
 import { setUser } from '../../Contexts/Profile/buyer/action';
 
 const  ProfilePageForCustomers = () => {

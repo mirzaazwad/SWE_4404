@@ -1,20 +1,43 @@
-import {Container,Card,Form,Button,InputGroup,ToggleButton,ButtonGroup,} from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Form,
+  Button,
+  InputGroup,
+  ToggleButton,
+  ButtonGroup,
+} from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { setLogin} from "../../Contexts/loginRedux/action";
+import { setLogin } from "../../Contexts/loginRedux/action";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {emailAuth,passwordAuth,confirmPasswordAuth,userNameAuth} from "../../Contexts/Auth/Auth";
+import {
+  emailAuth,
+  passwordAuth,
+  confirmPasswordAuth,
+  userNameAuth,
+} from "../../Contexts/Auth/Auth";
 import CryptoJS from "crypto-js";
-import {Envelope,Lock,EyeFill,EyeSlashFill,Person} from "react-bootstrap-icons";
+import {
+  Envelope,
+  Lock,
+  EyeFill,
+  EyeSlashFill,
+  Person,
+} from "react-bootstrap-icons";
+import axios from "axios";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const [radioValue, setRadioValue] = useState(1);
   const [radioName, setRadioName] = useState("Buyer");
-  const radios = [{ name: "Buyer", value: 1 },{ name: "Seller", value: 2 },];
+  const radios = [
+    { name: "Buyer", value: 1 },
+    { name: "Seller", value: 2 },
+  ];
   const [isLocked, setisLocked] = useState(true);
-  const [isGlobalLocked,setisGlobalLocked] = useState(false);
+  const [isGlobalLocked, setisGlobalLocked] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -24,39 +47,55 @@ const SignUp = () => {
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [errorConfirmPassword, setErrorCPassword] = useState("");
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =
+    useState(false);
   useEffect(() => {
-    if (password !== "" && confirmPassword !== "" && username !== "" && email !== "" && errorEmail === "" && errorPassword === "" && errorConfirmPassword === "") {
+    if (
+      password !== "" &&
+      confirmPassword !== "" &&
+      username !== "" &&
+      email !== "" &&
+      errorEmail === "" &&
+      errorPassword === "" &&
+      errorConfirmPassword === ""
+    ) {
       setisLocked(false);
     } else {
       setisLocked(true);
     }
   }, [
-    password,username,email,confirmPassword,errorEmail,errorPassword,errorConfirmPassword]);
-    useEffect(() => {
-      const fetchUsers = async () => {
-        const seller_response = await fetch("api/seller/signup/email/" + email);
-        if (seller_response.ok) {
-          setErrorEmail("account already exists with email");
-        }
-        const buyer_response = await fetch("api/buyer/signup/email/" + email);
-        if (buyer_response.ok) {
-          setErrorEmail("account already exists with email");
-        }
-      };
-      if (!errorEmail && email!=="")fetchUsers();
-    }, [email, errorEmail]);
-
-    const emailChange = (event) => {
-      const result=emailAuth(event.target.value);
-      setEmail(result.email);
-      if(result.error)setErrorEmail("Not valid email");
-      else setErrorEmail("");
+    password,
+    username,
+    email,
+    confirmPassword,
+    errorEmail,
+    errorPassword,
+    errorConfirmPassword,
+  ]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const seller_response = await fetch("api/seller/signup/email/" + email);
+      if (seller_response.ok) {
+        setErrorEmail("account already exists with email");
+      }
+      const buyer_response = await fetch("api/buyer/signup/email/" + email);
+      if (buyer_response.ok) {
+        setErrorEmail("account already exists with email");
+      }
     };
+    if (!errorEmail && email !== "") fetchUsers();
+  }, [email, errorEmail]);
+
+  const emailChange = (event) => {
+    const result = emailAuth(event.target.value);
+    setEmail(result.email);
+    if (result.error) setErrorEmail("Not valid email");
+    else setErrorEmail("");
+  };
 
   const passwordChange = (event) => {
-    const passwordValidation=passwordAuth(event.target.value);
-    const confirmPasswordValidation=confirmPasswordAuth(confirmPassword);
+    const passwordValidation = passwordAuth(event.target.value);
+    const confirmPasswordValidation = confirmPasswordAuth(confirmPassword);
     setErrorPassword(passwordValidation.error);
     setPassword(passwordValidation.password);
     setErrorCPassword(confirmPasswordValidation.error);
@@ -71,18 +110,25 @@ const SignUp = () => {
     }
   };
   const confirmPasswordChange = (event) => {
-    const confirmPasswordValidation=confirmPasswordAuth(password, event.target.value);
+    const confirmPasswordValidation = confirmPasswordAuth(
+      password,
+      event.target.value
+    );
     setErrorCPassword(confirmPasswordValidation.error);
     setConfirmPassword(confirmPasswordValidation.confirmPassword);
   };
 
-  const handleSubmit =  async(e) => {
+  const handleSubmit = async (e) => {
     setisLocked(true);
     setisGlobalLocked(true);
     e.preventDefault();
-    const user = {username: username, email: email, password: CryptoJS.SHA512(password).toString()
+    const user = {
+      username: username,
+      email: email,
+      password: CryptoJS.SHA512(password).toString(),
     };
-    const url = radioName === "Seller" ? "api/seller/signup" : "api/buyer/signup";
+    const url =
+      radioName === "Seller" ? "api/seller/signup" : "api/buyer/signup";
     const response = await fetch(url, {
       method: "POST",
       body: JSON.stringify(user),
@@ -94,22 +140,21 @@ const SignUp = () => {
     if (!response.ok) {
       return setError(json.error);
     } else {
-      window.location.href="/profile";
+      window.location.href = "/profile";
     }
   };
-  
-  const handleGoogle = async(e) =>{
-      e.preventDefault();
-      setisGlobalLocked(true)
-      await fetch("api/signup/google",{
-        method:"GET",
-        state:(radioName==='Seller'?'seller':'buyer')
-      })
-  .then((result)=>{
-    console.log(result);
-    window.location.href=result.url;
-  })
-  }
+
+  const handleGoogle = async (e) => {
+    e.preventDefault();
+    setisGlobalLocked(true);
+    await fetch("/api/signup/google", {
+      method: "GET",
+      
+    }).then((result) => {
+      console.log(result);
+      window.location.href = result.url;
+    });
+  };
 
   return (
     <Container style={{ marginTop: "12%", width: "33%" }}>
@@ -156,7 +201,7 @@ const SignUp = () => {
                     className="float-end"
                     style={{ paddingLeft: "75px", paddingRight: "75px" }}
                     value={username}
-                    onChange={(e)=>setUsername(userNameAuth(e.target.value))}
+                    onChange={(e) => setUsername(userNameAuth(e.target.value))}
                   />
                 </Form.Group>
               </InputGroup>
@@ -191,7 +236,7 @@ const SignUp = () => {
                 </InputGroup.Text>
                 <Form.Group controlId="Password">
                   <Form.Control
-                    type={passwordVisibility?"text":"password"}
+                    type={passwordVisibility ? "text" : "password"}
                     placeholder="Password"
                     required
                     className="float-end"
@@ -202,10 +247,16 @@ const SignUp = () => {
                 </Form.Group>
                 <InputGroup.Text>
                   {(passwordVisibility && (
-                    <EyeFill color="#3354a9" onClick={()=>setPasswordVisibility(false)} />
+                    <EyeFill
+                      color="#3354a9"
+                      onClick={() => setPasswordVisibility(false)}
+                    />
                   )) ||
                     (!passwordVisibility && (
-                      <EyeSlashFill color="#3354a9" onClick={()=>setPasswordVisibility(true)} />
+                      <EyeSlashFill
+                        color="#3354a9"
+                        onClick={() => setPasswordVisibility(true)}
+                      />
                     ))}
                 </InputGroup.Text>
               </InputGroup>
@@ -218,7 +269,7 @@ const SignUp = () => {
                 </InputGroup.Text>
                 <Form.Group controlId="ConfirmPassword">
                   <Form.Control
-                    type={confirmPasswordVisibility?"text":"password"}
+                    type={confirmPasswordVisibility ? "text" : "password"}
                     placeholder="Confirm Password"
                     required
                     className="float-end"
@@ -229,10 +280,16 @@ const SignUp = () => {
                 </Form.Group>
                 <InputGroup.Text>
                   {(confirmPasswordVisibility && (
-                    <EyeFill color="#3354a9" onClick={()=>setConfirmPasswordVisibility(false)} />
+                    <EyeFill
+                      color="#3354a9"
+                      onClick={() => setConfirmPasswordVisibility(false)}
+                    />
                   )) ||
                     (!confirmPasswordVisibility && (
-                      <EyeSlashFill color="#3354a9" onClick={()=>setConfirmPasswordVisibility(true)} />
+                      <EyeSlashFill
+                        color="#3354a9"
+                        onClick={() => setConfirmPasswordVisibility(true)}
+                      />
                     ))}
                 </InputGroup.Text>
               </InputGroup>
@@ -254,10 +311,13 @@ const SignUp = () => {
                   size="lg"
                   style={{ marginLeft: "30%" }}
                 >
-                  <FaGoogle onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}/>
+                  <FaGoogle
+                    onClick={(e) => handleGoogle(e)}
+                    disabled={isGlobalLocked}
+                  />
                 </Button>
                 <Button variant="outline-primary" size="lg" className="mx-5">
-                  <FaFacebook disabled={isGlobalLocked}/>
+                  <FaFacebook disabled={isGlobalLocked} />
                 </Button>
               </Form.Group>
             </Form>

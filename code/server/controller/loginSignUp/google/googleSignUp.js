@@ -1,17 +1,25 @@
 const buyerModel = require("../../../model/buyer/buyerModel");
 const sellerModel = require("../../../model/seller/sellerModel");
 
-const createUser = async (obj,userType) => {
+const createUserOrUpdate = (obj,userType) =>{
+  if(userType==='buyer'){
+    createUserOrUpdateProxy(obj,buyerModel);
+  }
+  else{
+    createUserOrUpdateProxy(obj,sellerModel);
+  }
+}
+
+const createUserOrUpdateProxy = async (obj,userModel) => {
   const id=obj._json.id;
   const username=obj._json.name;
   const email=obj._json.email;
-  const dob=obj._json.birthday;
-  const searchUser = await buyerModel.find({ email: email });
+  const searchUser = await userModel.find({ email: email,googleId:id });
   if (searchUser.length != 0) {
-    return null;
+    return searchUser;
   }
   try {
-    const user = await buyerModel.create({googleID:id,username:username, email:email});
+    const user = await userModel.create({googleID:id,username:username, email:email});
     console.log(user);
     try {
       await user.save();
@@ -27,5 +35,5 @@ const createUser = async (obj,userType) => {
 };
 
 module.exports={
-  createUser
+  createUserOrUpdate
 }
