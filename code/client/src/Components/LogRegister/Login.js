@@ -36,7 +36,7 @@ const Login = () => {
     })
     const json=await response.json();
     if(response.ok){
-      if(type=="seller"){
+      if(type==="seller"){
         window.location.href="/profileSeller/"+json.id;
       }
       else{
@@ -51,7 +51,7 @@ const Login = () => {
   return (
     <div className="loginPage">
       <Container className="login-container"  style={{ marginTop: '5%' }}>
-        <Card className="d-flex float-end" style={{ maxWidth: '50%' }}>
+        <Card className="d-flex " style={{ maxWidth: '50%' }}>
           <Card.Body>
             <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
             <Card.Text>

@@ -2,9 +2,6 @@ import Landing from "./Components/LogRegister/Landing";
 import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-
-import { BuyerContextProvider } from "./Contexts/Profile/buyer/buyerContext";
-import { SellerContextProvider } from "./Contexts/Profile/seller/sellerContext";
 import { Provider } from "react-redux";
 import { store } from "./Contexts/Profile/buyer/store";
 
