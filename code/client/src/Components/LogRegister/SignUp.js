@@ -112,8 +112,8 @@ const SignUp = () => {
   }
 
   return (
-    <Container style={{ marginTop: "12%", width: "33%" }}>
-      <Card className="mt-5 float-end" style={{ maxWidth: "100%" }}>
+    <div className="signup-container" style={{ marginTop: "10%" }}>
+      <Card className="w-75" style={{ maxWidth: "100%" }}>
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>SignUp</Card.Title>
           <Card.Text>
@@ -123,11 +123,9 @@ const SignUp = () => {
               </Form.Group>
               <Form.Group
                 controlId="UserType"
-                style={{
-                  marginLeft: "33%",
-                }}
               >
-                <ButtonGroup>
+                <div className="d-flex justify-content-center w-100" >
+                <ButtonGroup className="singUp-button ">
                   {radios.map((radio, idx) => (
                     <ToggleButton
                       key={idx}
@@ -143,53 +141,56 @@ const SignUp = () => {
                     </ToggleButton>
                   ))}
                 </ButtonGroup>
+                </div>
+                
               </Form.Group>
-              <InputGroup className="mt-3 mb-3" size="sm">
+
+                <Form.Group controlId="Username" className="w-100">
+                <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Person color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Username">
                   <Form.Control
                     type="text"
                     required
                     placeholder="Username"
                     className="float-end"
-                    style={{ paddingLeft: "75px", paddingRight: "75px" }}
                     value={username}
                     onChange={(e)=>setUsername(userNameAuth(e.target.value))}
                   />
-                </Form.Group>
               </InputGroup>
+                </Form.Group>
               <Form.Group controlId="errorMessageEmail">
                 <p style={{ color: "red" }}>{errorEmail}</p>
               </Form.Group>
-              <InputGroup className="mt-3 mb-3" size="sm">
+
+                <Form.Group controlId="Email" className="w-100">
+                <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Envelope color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Email">
                   <Form.Control
                     type="email"
                     required
                     placeholder="Email"
                     className="float-end"
-                    style={{ paddingLeft: "75px", paddingRight: "75px" }}
                     value={email}
                     onChange={emailChange}
                   />
-                </Form.Group>
               </InputGroup>
+                </Form.Group>
               <Form.Group
                 controlId="errorPassword"
                 style={{ overflowWrap: "anywhere" }}
               >
                 <p style={{ color: "red" }}>{errorPassword}</p>
               </Form.Group>
-              <InputGroup className="mt-3 mb-3" size="sm">
+
+                <Form.Group controlId="Password" className="w-100">
+                <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="Password">
                   <Form.Control
                     type={passwordVisibility?"text":"password"}
                     placeholder="Password"
@@ -197,9 +198,7 @@ const SignUp = () => {
                     className="float-end"
                     onChange={passwordChange}
                     value={password}
-                    style={{ paddingLeft: "65px", paddingRight: "65px" }}
                   />
-                </Form.Group>
                 <InputGroup.Text>
                   {(passwordVisibility && (
                     <EyeFill color="#3354a9" onClick={()=>setPasswordVisibility(false)} />
@@ -209,14 +208,15 @@ const SignUp = () => {
                     ))}
                 </InputGroup.Text>
               </InputGroup>
-              <Form.Group controlId="errorConfirmPassword">
+                </Form.Group>
+              <Form.Group controlId="errorConfirmPassword" className="w-100">
                 <p style={{ color: "red" }}>{errorConfirmPassword}</p>
               </Form.Group>
+                <Form.Group controlId="ConfirmPassword">
               <InputGroup className="mt-3 mb-3" size="sm">
                 <InputGroup.Text>
                   <Lock color="#3354a9" />
                 </InputGroup.Text>
-                <Form.Group controlId="ConfirmPassword">
                   <Form.Control
                     type={confirmPasswordVisibility?"text":"password"}
                     placeholder="Confirm Password"
@@ -224,9 +224,7 @@ const SignUp = () => {
                     className="float-end"
                     value={confirmPassword}
                     onChange={confirmPasswordChange}
-                    style={{ paddingLeft: "65px", paddingRight: "65px" }}
                   />
-                </Form.Group>
                 <InputGroup.Text>
                   {(confirmPasswordVisibility && (
                     <EyeFill color="#3354a9" onClick={()=>setConfirmPasswordVisibility(false)} />
@@ -236,36 +234,32 @@ const SignUp = () => {
                     ))}
                 </InputGroup.Text>
               </InputGroup>
-              <Button
+                </Form.Group>
+                <div className="d-flex justify-content-center">
+              <Button className="btn btn-login align-content-center"
                 type="submit"
-                variant="outline-primary"
-                size="sm"
-                style={{
-                  marginLeft: "40%",
-                }}
+                size="md"
                 disabled={isLocked || isGlobalLocked}
               >
                 SignUp
               </Button>
+              </div>
               <hr />
-              <Form.Group controlId="LoginWithGoogle">
-                <Button
-                  variant="outline-primary"
+              <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
+                <Button className="btn btn-login me-2"
                   size="lg"
-                  style={{ marginLeft: "30%" }}
-                >
-                  <FaGoogle onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}/>
+                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}></i>
                 </Button>
-                <Button variant="outline-primary" size="lg" className="mx-5">
-                  <FaFacebook disabled={isGlobalLocked}/>
+                <Button className="btn btn-login" size="lg">
+                <i class='bx bxl-facebook-circle' disabled={isGlobalLocked}></i>
                 </Button>
               </Form.Group>
             </Form>
-            <div className="existingAccount landingText">
+            <div className="existingAccount landingText" style={{ textAlign: "center"  }}>
               Already have an account?
               <Link
                 to="/"
-                style={{ color: "#3354a9" }}
+                style={{ color: "#3354a9", textAlign: "center"  }}
                 onClick={() => dispatch(setLogin())}
               >
                 LOG IN!
@@ -274,7 +268,7 @@ const SignUp = () => {
           </Card.Text>
         </Card.Body>
       </Card>
-    </Container>
+    </div>
   );
 };
 
