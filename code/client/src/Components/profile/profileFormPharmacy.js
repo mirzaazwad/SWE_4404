@@ -3,7 +3,8 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
 
-function ProfileFormPharmacy() {
+function ProfileFormPharmacy(props) {
+  const user = props;
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
 
@@ -31,7 +32,7 @@ function ProfileFormPharmacy() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name of Owner</Form.Label>
-          <Form.Control type="ownerName" placeholder="Enter name of owner" disabled={isDisabled}/>
+          <Form.Control type="ownerName" placeholder="Enter name of owner"  disabled={isDisabled} value = {user.data.username} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Contact No.</Form.Label>
@@ -43,7 +44,7 @@ function ProfileFormPharmacy() {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"  disabled={isDisabled}/>
+          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.data.email}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
