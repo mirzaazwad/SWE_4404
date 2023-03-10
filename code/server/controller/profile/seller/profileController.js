@@ -16,15 +16,15 @@ const getUserByID = async (req, res) => {
 const patchUserByID = async (req,res) =>{
     const {id} = req.params;
     try {
-      const users = await buyerModel.findById(id);
+      const users = await sellerModel.findById(id);
       if (!users) {
         return res.status(404).json({ error: "User not found" });
       }
-      await buyerModel.findOneAndUpdate({_id:id},{
+      await sellerModel.findOneAndUpdate({_id:id},{
         ...req.body
       })
       .then(async (result)=>{
-        const getResult=await buyerModel.findById(id);
+        const getResult=await sellerModel.findById(id);
         res.status(200).json(getResult);
       })
       .catch((err)=>{

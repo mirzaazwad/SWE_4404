@@ -84,7 +84,7 @@ function ProfileFormPharmacy(id) {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.data.email} />
+          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>

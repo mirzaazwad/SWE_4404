@@ -3,7 +3,9 @@ import ProfilePageForCustomers from "./Components/profile/profilePageForCustomer
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
-import { store } from "./Contexts/Profile/buyer/store";
+import { storeBuyer } from "./Contexts/Profile/buyer/store";
+import { storeSeller } from "./Contexts/Profile/seller/store";
+
 
 
 function App() {
@@ -17,17 +19,20 @@ function App() {
           <Route exact path='/profileBuyer/:id' element={
 
           
-           <Provider store={store}>
+           <Provider store={storeBuyer}>
           <ProfilePageForCustomers/>
             </Provider>
          
           }/>
 
-          <Route exact path='/profileSeller/:id' element={
-          
-          <ProfilePageForPharmacy/>
+        <Route exact path='/profileSeller/:id' element={
 
-          }/>
+          
+        <Provider store={storeSeller}>
+        <ProfilePageForPharmacy/>
+ </Provider>
+
+}/>
         </Routes>
       </div>
     </div>
