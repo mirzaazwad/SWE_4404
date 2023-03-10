@@ -25,7 +25,8 @@ function App() {
             </Provider>
          
           }/>
-          <Route path='/changePassword' element={<ChangePassword/>} />
+
+          <Route path='/changePassword/:id' element={<ChangePassword/>} />
 
         <Route exact path='/profileSeller/:id' element={
 
