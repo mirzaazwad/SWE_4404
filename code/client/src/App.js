@@ -1,6 +1,7 @@
 import Landing from "./Components/LogRegister/Landing";
 import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
+import ChangePassword from "./Components/profile/changePassword";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Provider } from "react-redux";
 import { storeBuyer } from "./Contexts/Profile/buyer/store";
@@ -24,6 +25,8 @@ function App() {
             </Provider>
          
           }/>
+
+          <Route path='/changePassword/:id' element={<ChangePassword/>} />
 
         <Route exact path='/profileSeller/:id' element={
 

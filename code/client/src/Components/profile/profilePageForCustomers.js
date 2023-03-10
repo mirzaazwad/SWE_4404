@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import NavbarCustomer from './navbarCustomer';
 import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
+import ChangePassword from './changePassword';
 import axios from 'axios';
 import { useEffect } from 'react';
 import {useDispatch } from 'react-redux';
