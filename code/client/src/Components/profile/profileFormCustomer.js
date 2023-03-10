@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
+import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../Contexts/Profile/buyer/store';
 import { setUser } from '../../Contexts/Profile/buyer/action';
@@ -31,6 +32,7 @@ function ProfileFormCustomer(id) {
     setIsDisabled(false);
     setIsEditing(true);
   }
+  
   const turnOffEdit = () => {
     setIsDisabled(true);
     setIsEditing(false);
@@ -60,7 +62,7 @@ function ProfileFormCustomer(id) {
       <div className="profileInfo d-flex justify-content-between">
         <h4 className="InfoHeader mb-4">Personal Information</h4>
         <button className="btn btn-outline-dark btn-editProfile " onClick={turnOnEdit}>Edit Profile
-        <i class='bx bx-cog bx-sm' ></i></button>
+        <i className='bx bx-cog bx-sm' ></i></button>
       </div>
       <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
