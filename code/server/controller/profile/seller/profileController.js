@@ -13,21 +13,28 @@ const getUserByID = async (req, res) => {
   }
 };
 
-const updateUser = async (req, res) => {
-    const { id } = req.params;
+const patchUserByID = async (req,res) =>{
+    const {id} = req.params;
     try {
-      const users = await sellerModel.findById(id);
-      if (users.length == 0) {
+      const users = await buyerModel.findById(id);
+      if (!users) {
         return res.status(404).json({ error: "User not found" });
       }
-      const user = await sellerModel.findByIdAndUpdate(id, {
+      await buyerModel.findOneAndUpdate({_id:id},{
         ...req.body
       })
-      res.status(200).json(users);
+      .then(async (result)=>{
+        const getResult=await buyerModel.findById(id);
+        res.status(200).json(getResult);
+      })
+      .catch((err)=>{
+        res.status(404).json({ error: err});
+      })
+      
     } catch (err) {
       res.status(404).json({ error: err.message });
     }
-  };
+  }
 
 
 
@@ -37,5 +44,5 @@ const updateUser = async (req, res) => {
 
 module.exports = {
   getUserByID,
-  updateUser
+  patchUserByID
 };
