@@ -248,11 +248,10 @@ const SignUp = () => {
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn btn-login me-2"
                   size="lg"
-                >
-                  <FaGoogle onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}/>
+                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}></i>
                 </Button>
                 <Button className="btn btn-login" size="lg">
-                  <FaFacebook disabled={isGlobalLocked}/>
+                <i class='bx bxl-facebook-circle' disabled={isGlobalLocked}></i>
                 </Button>
               </Form.Group>
             </Form>

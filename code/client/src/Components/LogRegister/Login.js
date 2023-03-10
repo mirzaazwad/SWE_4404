@@ -101,8 +101,7 @@ const Login = () => {
                 </div>
                 
                   <hr />
-                  <div className="d-flex justify-content-around">
-                  <Form.Group controlId="LoginWithGoogle">
+                  <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                   <Button className="btn-login me-3" size="lg" >
                   <i class='bx bxl-google'></i>
                   </Button>
@@ -110,7 +109,6 @@ const Login = () => {
                   <i class='bx bxl-facebook-circle'></i>
                   </Button>
                 </Form.Group>
-                  </div>
                 
               </Form>
               <div className="noExistingAccount landingText" style={{textAlign: 'center'}}>

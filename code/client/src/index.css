@@ -107,7 +107,7 @@ code {
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
   height: 100%;
-  width: 40%;
+  width: 35%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 
