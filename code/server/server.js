@@ -11,6 +11,7 @@ const loginRoutesSeller = require("./routes/loginSignUp/seller/loginRoutes");
 const google_auth_signup = require("./routes/loginSignUp/google_auth/signUpRoutes");
 const google_auth_login = require("./routes/loginSignUp/google_auth/loginRoutes");
 const profileRoutesBuyer=require("./routes/profile/buyer/buyerRoute");
+const profileRoutesSeller=require("./routes/profile/seller/sellerRoute");
 const app=express();
 const dbURI = process.env.ConnectionString;
 mongoose
@@ -43,3 +44,4 @@ app.use("/api/seller/login", loginRoutesSeller);
 app.use("/api/login", google_auth_login);
 app.use("/api/signup", google_auth_signup);
 app.use("/api/buyer/profile",profileRoutesBuyer);
+app.use("/api/seller/profile",profileRoutesSeller);
