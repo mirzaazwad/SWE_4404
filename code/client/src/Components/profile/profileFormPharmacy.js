@@ -106,8 +106,6 @@ const ProfileFormPharmacy=(id)=> {
           <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {seller.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" disabled={isDisabled} value={password} onChange={(e)=>setPassword(e.target.value)}/>
           {isEditing &&(<a href={"changePassword/"+user._id}>Change Password</a>)}
         </Form.Group>
         
