@@ -4,23 +4,23 @@ import ProfileFormPharmacy from './profileFormPharmacy';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import {useDispatch } from 'react-redux';
-import { setSellerUser } from '../../Contexts/action';
+import {useDispatch, useSelector } from 'react-redux';
+import { setSellerDetails, setSellerUser } from '../../Contexts/action';
 
 const  ProfilePageForPharmacy = () => {
   const {id}=useParams();
   const dispatch=useDispatch();
-  const [user,setUser]=useState(null);
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id).then((result)=>{
+    await axios.get('/api/profile/user/'+id).then(async (result)=>{
       dispatch(setSellerUser(result.data));
-      setUser(...result.data);
+      await axios.get('/api/profile/seller/'+result.data.email).then((res)=>{
+        console.log(res.data);
+        dispatch(setSellerDetails(res.data));
+      })
+      .catch(error=>console.log(error));
     })
     .catch(error=>console.log(error));
-    await axios.get('/api/profile/buyer/'+user.email).then((result)=>{
-      dispatch(setSellerUser({user,...result.data}));
-    })
-    .catch(error=>console.log(error));
+    
     
   };
   useEffect(()=>{

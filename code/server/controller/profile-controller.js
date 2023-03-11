@@ -42,7 +42,7 @@ const patchUserByID = async (req,res) =>{
 const getBuyerByEmail = async(req,res) =>{
   const email=req.params;
   try{
-    const user=await buyerModel.findOne({email});
+    const user=await buyerModel.findOne({email:email.email});
     if(!user){
       return res.status(404).json({ error: "User not found" });
     }
@@ -54,9 +54,9 @@ const getBuyerByEmail = async(req,res) =>{
 }
 
 const getSellerByEmail = async(req,res) =>{
-  const email=req.params;
+  const {email}=req.params;
   try{
-    const user=await sellerModel.findOne({email});
+    const user=await sellerModel.findOne({email:email});
     if(!user){
       return res.status(404).json({ error: "User not found" });
     }
@@ -68,17 +68,17 @@ const getSellerByEmail = async(req,res) =>{
 }
 
 const patchBuyerByEmail = async(req,res) =>{
-  const {email} = req.params;
+  const email = req.params;
   try {
-    const users = await buyerModel.findOne({email});
+    const users = await buyerModel.findOne({email:email.email});
     if (!users) {
       return res.status(404).json({ error: "User not found" });
     }
-    await buyerModel.findOneAndUpdate({email},{
+    await buyerModel.findOneAndUpdate({email:email.email},{
       ...req.body
     })
     .then(async (result)=>{
-      const getResult=await buyerModel.findOne({email});
+      const getResult=await buyerModel.findOne({email:email.email});
       res.status(200).json(getResult);
     })
     .catch((err)=>{
@@ -91,17 +91,17 @@ const patchBuyerByEmail = async(req,res) =>{
 }
 
 const patchSellerByEmail = async(req,res) =>{
-  const {email} = req.params;
+  const email = req.params;
   try {
-    const users = await sellerModel.findOne({email});
+    const users = await sellerModel.findOne({email:email.email});
     if (!users) {
       return res.status(404).json({ error: "User not found" });
     }
-    await sellerModel.findOneAndUpdate({email},{
+    await sellerModel.findOneAndUpdate({email:email.email},{
       ...req.body
     })
     .then(async (result)=>{
-      const getResult=await sellerModel.findOne({email});
+      const getResult=await sellerModel.findOne({email:email.email});
       res.status(200).json(getResult);
     })
     .catch((err)=>{

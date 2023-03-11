@@ -4,7 +4,8 @@ const initialState = {
   user: null,
   loginSignUp: 0,
   buyerState: {},
-  sellerState: {}
+  sellerState: {},
+  sellerDetails: {}
 }
 
 export const userSlice=createSlice({
@@ -29,9 +30,12 @@ export const userSlice=createSlice({
     },
     setSellerUser:(state,action)=>{
       state.sellerState=action.payload;
+    },
+    setSellerDetails:(state,action)=>{
+      state.sellerDetails=action.payload;
     }
   }
 });
 
-export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setSellerUser} =userSlice.actions;
+export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setSellerUser,setSellerDetails} =userSlice.actions;
 export default userSlice.reducer;

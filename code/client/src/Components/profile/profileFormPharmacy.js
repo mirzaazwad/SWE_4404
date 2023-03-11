@@ -5,11 +5,12 @@ import Form from 'react-bootstrap/Form';
 import "../../index.css";
 import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSellerUser } from '../../Contexts/action';
+import { setSellerDetails, setSellerUser } from '../../Contexts/action';
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
-  const user=useSelector((state) => state.userState.sellerState);
+  const seller=useSelector((state) => state.userState.sellerState);
+  const sellerDetails=useSelector((state) => state.userState.sellerDetails);
   const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -18,17 +19,16 @@ const ProfileFormPharmacy=(id)=> {
   const [phone,setPhone]=useState("");
   const [pharmacy,setPharmacy]=useState("");
   const [address,setAddress]=useState("");
-  const [userData,setuserData]=useState(null);
+
   useEffect(()=>{
-    setUsername(user.username);
-    console.log(user.phone);
-    console.log(user.address);
-    setPhone(user.phone);
-    setAddress(user.address);
-  },[user])
+    setUsername(seller.username);
+    setPhone(seller.phone);
+    setAddress(seller.address);
+    setPharmacy(sellerDetails.pharmacy);
+    console.log(sellerDetails.pharmacy);
+  },[seller,sellerDetails])
   
   const [password,setPassword]=useState(null);
-  console.log(username);
 
 
   const turnOnEdit = () => {
@@ -39,7 +39,6 @@ const ProfileFormPharmacy=(id)=> {
     setIsDisabled(true);
     setIsEditing(false);
   }
-  console.log(_id.id);
   const handleSubmit = async (e) =>{
     e.preventDefault();
     turnOffEdit();
@@ -48,18 +47,15 @@ const ProfileFormPharmacy=(id)=> {
       username:username,
       phone:phone,
       address:address
-    },{
-      headers: { 'Content-type': 'application/json' }
-  }).then((result)=>{
-      setuserData(result.data);
+    }).then((result)=>{
+      dispatch(setSellerUser(result.data));
     })
     .catch(error=>console.log(error));
-    await axios.patch('/api/profile/buyer/'+user.email,{
-      email:user.email,
+    await axios.patch('/api/profile/seller/'+seller.email,{
+      email:seller.email,
       pharmacy:pharmacy
     }).then((result)=>{
-      console.log(result);
-      dispatch(setSellerUser(...userData,...result.data));
+      dispatch(setSellerDetails(result.data));
     })
     .catch(error=>console.log(error));
     setPassword(null);
@@ -93,7 +89,7 @@ const ProfileFormPharmacy=(id)=> {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.email} />
+          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {seller.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>

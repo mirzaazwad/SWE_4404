@@ -17,8 +17,6 @@ const ProfileFormCustomer=(id)=>{
   const [address,setAddress]=useState("");
   useEffect(()=>{
     setUsername(user.username);
-    console.log(user.phone);
-    console.log(user.address);
     setPhone(user.phone);
     setAddress(user.address);
   },[user])
