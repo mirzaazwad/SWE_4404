@@ -3,9 +3,15 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useLogout } from '../../Hooks/useLogout';
 import '../../index.css';
 
-function navbarCustomer() {
+const NavbarCustomer=()=>{
+  const {logout} = useLogout();
+  const handleLogout = () =>{
+    logout();
+    return window.location.href="/";
+  }
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
@@ -26,7 +32,7 @@ function navbarCustomer() {
           </Nav>
           <button className='customCart bg-transparent me-3'><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '15px'}}></i></button>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton'>Log Out</Button>
+            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>
@@ -34,4 +40,4 @@ function navbarCustomer() {
   );
 }
 
-export default navbarCustomer;
+export default NavbarCustomer;
