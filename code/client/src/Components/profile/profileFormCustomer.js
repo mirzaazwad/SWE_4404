@@ -64,9 +64,9 @@ const ProfileFormCustomer=(id)=>{
       <div className="profileInfo d-flex justify-content-between">
         <h4 className="InfoHeader mb-4">Personal Information</h4>
         <button className="btn btn-outline-dark btn-editProfile " onClick={turnOnEdit}>Edit Profile
-        <i class='bx bx-cog bx-sm' ></i></button>
+        <i className='bx bx-cog bx-sm' ></i></button>
       </div>
-      <Form onSubmit={handleSubmit}>
+      <Form>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
           <Form.Control type="text" placeholder="Enter your name"  disabled={isDisabled} value={username} onChange={(e)=>setUsername(e.target.value)}/>
@@ -80,21 +80,23 @@ const ProfileFormCustomer=(id)=>{
           <Form.Control type="address" placeholder="Address" disabled={isDisabled} value={address} onChange={(e)=>setAddress(e.target.value)}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"  disabled={true} value={buyer.email}/>
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Enter Password for Reset" disabled={isDisabled} value={password} onChange={(e)=>setPassword(e.target.value)}/>
+          <Form.Control type="password" placeholder="Password" disabled={isDisabled} value={password} onChange={(e)=>setPassword(e.target.value)}/>
+          {isEditing && (
+            <a href={"changePassword/"+user._id}>Change Password</a>
+          )}
         </Form.Group>
-      
+        
         {isEditing && (
-          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked}>
+          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked} onClick={(e)=>handleSubmit(e)}>
             Save
           </Button>
         )}</Form>
     </div>
   );
 }
-
 export default ProfileFormCustomer;

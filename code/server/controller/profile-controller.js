@@ -1,6 +1,7 @@
 const buyerModel = require("../model/buyer-model");
 const sellerModel = require("../model/seller-model");
 const userModel = require("../model/user-model");
+const bcrypt=require('bcryptjs');
 
 const getUserByID = async (req, res) => {
   const { id } = req.params;
@@ -23,8 +24,12 @@ const patchUserByID = async (req,res) =>{
     if (!users) {
       return res.status(404).json({ error: "User not found" });
     }
+    let data={...req.body};
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(data.password, salt);
+    password=hashedPassword;
     await userModel.findOneAndUpdate({_id:id},{
-      ...req.body
+      data
     })
     .then(async (result)=>{
       const getResult=await userModel.findById(id);
@@ -113,6 +118,24 @@ const patchSellerByEmail = async(req,res) =>{
   }
 }
 
+const changePassword = async(req,res) =>{
+   const {_id,password}=req.body;
+  try{
+    const User=await userModel.findById(_id);
+    console.log(User);
+    const match=await bcrypt.compare(User.password,password);
+    if(match){
+      return res.status(200).json({success:true});
+    }
+    else{
+      return res.status(200).json({success:false});
+    }
+  }
+  catch(error){
+      res.status(404).json({found:false,error:error.message});
+  }
+}
+
 
 module.exports ={
   getUserByID,
@@ -120,5 +143,6 @@ module.exports ={
   getBuyerByEmail,
   getSellerByEmail,
   patchBuyerByEmail,
-  patchSellerByEmail
+  patchSellerByEmail,
+  changePassword
 }

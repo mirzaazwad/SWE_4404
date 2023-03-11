@@ -75,7 +75,7 @@ const Login = () => {
                 <Button className="btn-login me-3" size="lg" >
                 <i class='bx bxl-google'></i>
                 </Button>
-                <Button className="btn-login " size="lg">
+                <Button className="btn-login " size="lg" disable={isLoading}>
                 <i class='bx bxl-facebook-circle'></i>
                 </Button>
               </Form.Group>

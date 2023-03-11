@@ -13,16 +13,15 @@ export const useLogin = () =>{
     setisLoading(true);
     setError(null);
     password=CryptoJS.SHA512(password).toString();
-    const response = await axios.post('/api/login',{email,password});
-    if(response.status!==200){
+    await axios.post('/api/login',{email,password}).then((result)=>{
+      dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token}));
+      localStorage.setItem('user',JSON.stringify({_id:result.data._id,userType:result.data.userType,token:result.data.token}));
       setisLoading(false);
-      setError(response);
-    }
-    else{
-      dispatch(LOGIN({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
-      localStorage.setItem('user',JSON.stringify({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
+    })
+    .catch((error)=>{
+      setError("Incorrect email or password");
       setisLoading(false);
-    }
+    })
   }
 
   return {login,error,isLoading};

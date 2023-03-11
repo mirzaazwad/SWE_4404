@@ -3,12 +3,12 @@ import ProfilePageForCustomers from "./Components/profile/profilePageForCustomer
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
+import ChangePassword from "./Components/profile/changePassword";
 
 
 
 function App() {
   const user=useSelector((state)=>state.userState.user);
-  console.log(user);
   return (
     <Router>
       <div className="App">
@@ -19,6 +19,9 @@ function App() {
           <Route exact path='/profileBuyer/:id' element={user?<ProfilePageForCustomers/>:<Navigate to='/'/>}/>
 
           <Route exact path='/profileSeller/:id' element={user?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
+
+          <Route exact path='/profileBuyer/changePassword/:id' element={<ChangePassword/>} />
+          <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
         </Routes>
       </div>
     </div>

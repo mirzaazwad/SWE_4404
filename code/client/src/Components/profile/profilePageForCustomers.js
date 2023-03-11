@@ -18,6 +18,7 @@ const  ProfilePageForCustomers = () => {
       dispatch(setBuyerUser(result.data));
     })
     .catch((error)=>{
+      console.log(error);
       if(error.status===401){
         localStorage.removeItem('user');
         dispatch(LOGOUT);
