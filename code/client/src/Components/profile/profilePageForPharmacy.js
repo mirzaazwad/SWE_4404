@@ -5,21 +5,39 @@ import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
-import { setSellerDetails, setSellerUser } from '../../Contexts/action';
+import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 
 const  ProfilePageForPharmacy = () => {
+  const user=useSelector((state)=>state.userState.user);
+  console.log(user.token);
+  console.log(user);
   const {id}=useParams();
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id).then(async (result)=>{
+    await axios.get('/api/profile/user/'+id,{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then(async (result)=>{
       dispatch(setSellerUser(result.data));
-      await axios.get('/api/profile/seller/'+result.data.email).then((res)=>{
+      await axios.get('/api/profile/seller/'+result.data.email,{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }}).then((res)=>{
         console.log(res.data);
         dispatch(setSellerDetails(res.data));
       })
-      .catch(error=>console.log(error));
-    })
-    .catch(error=>console.log(error));
+      .catch((error)=>{
+        if(error.status===401){
+          localStorage.removeItem('user');
+          dispatch(LOGOUT);
+        }
+      });
+    },{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }})
+    .catch((error)=>{
+      if(error.status===401){
+        localStorage.removeItem('user');
+      }
+    });
     
     
   };

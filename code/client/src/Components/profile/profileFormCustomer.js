@@ -4,10 +4,11 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { setBuyerUser } from '../../Contexts/action';
+import { setBuyerUser,LOGOUT } from '../../Contexts/action';
 
 const ProfileFormCustomer=(id)=>{
-  const user=useSelector((state) => state.userState.buyerState);
+  const buyer=useSelector((state) => state.userState.buyerState);
+  const user=useSelector((state) => state.userState.user);
   const dispatch=useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -16,10 +17,10 @@ const ProfileFormCustomer=(id)=>{
   const [phone,setPhone]=useState("");
   const [address,setAddress]=useState("");
   useEffect(()=>{
-    setUsername(user.username);
-    setPhone(user.phone);
-    setAddress(user.address);
-  },[user])
+    setUsername(buyer.username);
+    setPhone(buyer.phone);
+    setAddress(buyer.address);
+  },[buyer])
   
   const [password,setPassword]=useState(null);
   const turnOnEdit = () => {
@@ -40,12 +41,19 @@ const ProfileFormCustomer=(id)=>{
       phone:phone,
       address:address
     },{
-      headers: { 'Content-type': 'application/json' }
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+      }
   }).then((result)=>{
       console.log(result);
       dispatch(setBuyerUser(result.data));
     })
-    .catch(error=>console.log(error));
+    .catch((error)=>{
+      if(error.response.status===401){
+        localStorage.removeItem('user');
+        dispatch(LOGOUT);
+      }
+    });
     setPassword(null);
     setIsEditing(false);
     setisLocked(false);
@@ -73,7 +81,7 @@ const ProfileFormCustomer=(id)=>{
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email Address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"  disabled={true} value={user.email}/>
+          <Form.Control type="email" placeholder="Enter email"  disabled={true} value={buyer.email}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           <Form.Label>Password</Form.Label>

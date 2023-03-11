@@ -9,8 +9,10 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { passwordAuth, confirmPasswordAuth } from '../../Authentication/Auth'; 
+import { useSelector } from 'react-redux';
 
 const ChangePassword = () => {
+    const user=useSelector((state) => state.userState.user);
     const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
     const [NewPasswordVisibility, setNewPasswordVisibility] = useState(false);
     const [confirmNewPasswordVisibility, setConfirmNewPasswordVisibility] = useState(false);
@@ -27,10 +29,9 @@ const ChangePassword = () => {
         await axios.patch('/api/profile/changePassword/' + id, 
       {
         password:CryptoJS.SHA512(newPassword).toString()
-      }, {
-        headers: { 'Content-Type' : 'application/json'}
-
-      }).then((result)=>{
+      },{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }}).then((result)=>{
         setNewPassword(result.data);
       })
       .catch((error) =>setError(error));

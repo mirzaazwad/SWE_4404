@@ -12,17 +12,8 @@ const LoginSignUp = () => {
     if(user){
       dispatch(LOGIN(user));
     }
-  },[])
+  },[dispatch])
   const login=useSelector((state) => state.userState.loginSignUp);
-  const user = useSelector((state) => state.userState.user);
-  if(user){
-    if(user.userType==='buyer'){
-      return window.location.href='/profileBuyer/'+user._id;
-    }
-    else{
-      return window.location.href='/profileSeller/'+user._id;
-    }
-  }
   return ( 
     <div className="LoginSignUp">
       {(login===0 && <Login/>)||(login===1 && <SignUp/>)}

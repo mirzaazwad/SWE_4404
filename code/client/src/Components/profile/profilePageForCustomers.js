@@ -4,18 +4,25 @@ import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
 import { useEffect } from 'react';
-import {useDispatch } from 'react-redux';
-import { setBuyerUser } from '../../Contexts/action';
+import {useDispatch, useSelector } from 'react-redux';
+import { LOGOUT, setBuyerUser } from '../../Contexts/action';
 
 const  ProfilePageForCustomers = () => {
+  const user=useSelector((state)=>state.userState.user);
   const {id}=useParams();
-  console.log(id);
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id).then((result)=>{
+    await axios.get('/api/profile/user/'+id,{
+      headers:{'Authorization': `Bearer ${user.token}`}
+    }).then((result)=>{
       dispatch(setBuyerUser(result.data));
     })
-    .catch(error=>console.log(error));
+    .catch((error)=>{
+      if(error.status===401){
+        localStorage.removeItem('user');
+        dispatch(LOGOUT);
+      }
+    });
   };
   useEffect(()=>{
     retrieveUser();

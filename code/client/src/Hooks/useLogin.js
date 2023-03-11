@@ -16,7 +16,7 @@ export const useLogin = () =>{
     const response = await axios.post('/api/login',{email,password});
     if(response.status!==200){
       setisLoading(false);
-      setError(response.data.error);
+      setError(response);
     }
     else{
       dispatch(LOGIN({_id:response.data._id,userType:response.data.userType,token:response.data.token}));

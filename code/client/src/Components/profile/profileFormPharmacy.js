@@ -5,10 +5,11 @@ import Form from 'react-bootstrap/Form';
 import "../../index.css";
 import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { setSellerDetails, setSellerUser } from '../../Contexts/action';
+import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
+  const user=useSelector((state)=>state.userState.user);
   const seller=useSelector((state) => state.userState.sellerState);
   const sellerDetails=useSelector((state) => state.userState.sellerDetails);
   const dispatch = useDispatch();
@@ -47,17 +48,30 @@ const ProfileFormPharmacy=(id)=> {
       username:username,
       phone:phone,
       address:address
-    }).then((result)=>{
+    },{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       dispatch(setSellerUser(result.data));
     })
-    .catch(error=>console.log(error));
+    .catch((error)=>{
+      if(error.status===401){
+        localStorage.removeItem('user');
+      }
+    });
     await axios.patch('/api/profile/seller/'+seller.email,{
       email:seller.email,
       pharmacy:pharmacy
-    }).then((result)=>{
+    },{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       dispatch(setSellerDetails(result.data));
     })
-    .catch(error=>console.log(error));
+    .catch((error)=>{
+      if(error.status===401){
+        localStorage.removeItem('user');
+        dispatch(LOGOUT);
+      }
+    });
     setPassword(null);
     setIsEditing(false);
     setisLocked(false);
