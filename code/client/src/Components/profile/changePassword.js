@@ -23,26 +23,36 @@ const ChangePassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const handleSubmit = async(e) =>{
       e.preventDefault();
-      if(await verify()){
-        await axios.patch('/api/profile/changePassword/' + id, 
-      {
-        password:CryptoJS.SHA512(newPassword).toString()
-      }, {
-        headers: { 'Content-Type' : 'application/json'}
 
-      }).then((result)=>{
-        setNewPassword(result.data);
-      })
-      .catch((error) =>console.log("new passwords does not match"));
-        return;
+      if (await verify()) {
+        try {
+          const response = await fetch(`http://localhost:4000/api/profile/changePassword/` + id, {
+            method: 'PATCH',
+            headers: {
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              password: CryptoJS.SHA512(newPassword).toString()
+            })
+          });
+          
+          if (response.ok) {
+            setNewPassword(newPassword);
+          } else {
+            console.log("new passwords does not match");
+          }
+        } catch (error) {
+          console.error(error);
+        }
       }
+      
       setError("account does not exist");
       
 
     }
     const verify = async() =>{
       const user={id:id, password:CryptoJS.SHA512(password).toString()};
-      const response = await fetch('api/profile/changePassword/' + id, {
+      const response = await fetch('http://localhost:4000/api/profile/changePassword/' + id, {
         method: 'POST',
         body: JSON.stringify(user),
         headers:{
@@ -59,18 +69,32 @@ const ChangePassword = () => {
         return false;
       }
     }
-    const passwordChange = (event) => {
-      const passwordValidation=passwordAuth(event.target.value);
-      const confirmPasswordValidation=confirmPasswordAuth(confirmPassword);
-      setErrorPassword(passwordValidation.error);
-      setNewPassword(passwordValidation.newPassword);
-      setErrorCPassword(confirmPasswordValidation.error);
-    };
-    const confirmPasswordChange = (event) => {
-      const confirmPasswordValidation=confirmPasswordAuth(newPassword, event.target.value);
-      setErrorCPassword(confirmPasswordValidation.error);
-      setConfirmPassword(confirmPasswordValidation.confirmPassword);
-    };
+    const [disableButton, setDisableButton] = useState(true);
+
+  const handleNewPasswordChange = (e) => {
+    setNewPassword(e.target.value);
+    setDisableButton(e.target.value !== confirmPassword);
+  };
+
+  const handleConfirmPasswordChange = (e) => {
+    setConfirmPassword(e.target.value);
+    
+  };
+    // const passwordChange = (event) => {
+    //   setDisableButton(event.target.value !== confirmPassword);
+    //   const passwordValidation=passwordAuth(event.target.value);
+    //   const confirmPasswordValidation=confirmPasswordAuth(confirmPassword,newPassword);
+    //   setErrorPassword(passwordValidation.error);
+    //   setNewPassword(passwordValidation.newPassword);
+    //   setErrorCPassword(confirmPasswordValidation.error);
+    // };
+    // const confirmPasswordChange = (event) => {
+    //   setDisableButton(event.target.value !== newPassword);
+    //   const confirmPasswordValidation=confirmPasswordAuth(newPassword, event.target.value);
+    //   setErrorCPassword(confirmPasswordValidation.error);
+    //   setConfirmPassword(confirmPasswordValidation.confirmPassword);
+    // };
+
     return ( 
         <div>
             <NavbarLanding/>
@@ -99,7 +123,7 @@ const ChangePassword = () => {
             
           <Form.Label>New Password</Form.Label>
           <InputGroup>
-          <Form.Control  type={NewPasswordVisibility?"text":"password"} placeholder="Password" onChange={passwordChange}
+          <Form.Control  type={NewPasswordVisibility?"text":"password"} placeholder="Password" onChange={ handleNewPasswordChange}
                     value={newPassword} />                 
           <InputGroup.Text>
                   {(NewPasswordVisibility && (
@@ -116,7 +140,7 @@ const ChangePassword = () => {
           <Form.Label>Confirm New Password</Form.Label>
           <InputGroup>
           <Form.Control  type={confirmNewPasswordVisibility?"text":"password"} placeholder="Password" value={confirmPassword}
-                    onChange={confirmPasswordChange}/>                 
+                    onChange={handleConfirmPasswordChange}/>                 
           <InputGroup.Text>
                   {(confirmNewPasswordVisibility && (
                     <EyeFill color="#3354a9" onClick={()=>setConfirmNewPasswordVisibility(false)} />
@@ -128,7 +152,7 @@ const ChangePassword = () => {
                 </InputGroup>
         </Form.Group>
         <div className='d-flex justify-content-between'>
-        <Button variant="primary" type="submit">
+        <Button variant="primary" type="submit" disabled = {disableButton}  >
           Confirm
         </Button>
             <a href='#'>Back To Profile</a>

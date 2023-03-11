@@ -54,6 +54,8 @@ const patchPasswordByID = async (req,res) =>{
     try {
       const usersBuyer = await buyerModel.findById(id);
       const userSeller = await sellerModel.findById(id);
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(req.body.password, salt);
       if (!usersBuyer && !userSeller) {
         return res.status(404).json({ error: "User not found" });
       }
@@ -61,7 +63,8 @@ const patchPasswordByID = async (req,res) =>{
       {
 
         await buyerModel.findOneAndUpdate({_id:id},{
-            ...req.body
+
+            password: hashedPassword
           })
           .then(async (result)=>{
             const getResult=await buyerModel.findById(id);
@@ -74,7 +77,7 @@ const patchPasswordByID = async (req,res) =>{
       else
       {
         await sellerModel.findOneAndUpdate({_id:id},{
-            ...req.body
+          password: hashedPassword
           })
           .then(async (result)=>{
             const getResult=await sellerModel.findById(id);
