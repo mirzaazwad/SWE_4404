@@ -2,11 +2,15 @@ import axios from 'axios';
 import { useEffect , useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { InputGroup } from 'react-bootstrap';
+import {EyeFill,EyeSlashFill} from "react-bootstrap-icons";
 import "../../index.css";
 import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { store } from '../../Contexts/Profile/seller/store';
 import { setUser } from '../../Contexts/Profile/seller/action';
+import CryptoJS from 'crypto-js';
 
 function ProfileFormPharmacy(id) {
   const _id=id;
@@ -18,6 +22,7 @@ function ProfileFormPharmacy(id) {
   const [username,setUsername]=useState("");
   const [phone,setPhone]=useState("");
   const [address,setAddress]=useState("");
+  const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
   useEffect(()=>{
     setUsername(user.username);
     console.log(user.phone);
@@ -38,10 +43,21 @@ function ProfileFormPharmacy(id) {
     setIsDisabled(true);
     setIsEditing(false);
   }
+  const [show, setShow] = useState(false);
+  
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   console.log(_id.id);
   const handleSubmit = async (e) =>{
+    console.log(id, password);
+
+    if (!await verify()) {
+      console.log("Password doesn't match");
+      return false;
+    }
     turnOffEdit();
     setisLocked(true);
+    handleClose(true);
     await axios.patch('/api/seller/profile/'+_id.id,{
       username:username,
       phone:phone,
@@ -57,7 +73,25 @@ function ProfileFormPharmacy(id) {
     setIsEditing(false);
     setisLocked(false);
   }
-
+  const verify = async() =>{
+    const user={id:_id.id, password:CryptoJS.SHA512(password).toString()};
+    const response = await fetch('http://localhost:4000/api/profile/changePassword/' + _id.id, {
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers:{
+        'Content-Type': 'application/json'
+      },
+    })
+    if(response.ok){
+      console.log("ok");
+      return true;
+    }
+    else{
+      console.log(password);  
+      console.log("current password is incorrect");
+      return false;
+    }
+  }
   return (
     <div>
       <div className="profileInfo d-flex justify-content-between">
@@ -87,16 +121,46 @@ function ProfileFormPharmacy(id) {
           <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
-          <Form.Label>Password</Form.Label>
-          <Form.Control type="password" placeholder="Password" disabled={isDisabled} value={password} onChange={(e)=>setPassword(e.target.value)}/>
           {isEditing &&(<a href='#' disabled={isLocked}>Change Password?</a>)}
         </Form.Group>
         
         {isEditing && (
-          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked} onClick={(e)=>handleSubmit(e)}>
+          <Button className="btn btn-outline-dark btn-save" disabled={isLocked} onClick={handleShow}>
             Save
           </Button>
         )}</Form>
+        <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Enter password to confirm changes</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                  <Form.Group className="mb-3" controlId="enterPassword">
+            
+            <Form.Label>Enter Password</Form.Label>
+            <InputGroup>
+            <Form.Control  type={currentPasswordVisibility?"text":"password"} placeholder="Password" value={password}  onChange={(e)=>setPassword(e.target.value)}/>                 
+            <InputGroup.Text>
+                    {(currentPasswordVisibility && (
+                      <EyeFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(false)} />
+                    )) ||
+                      (!currentPasswordVisibility && (
+                        <EyeSlashFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(true)} />
+                      ))}
+                  </InputGroup.Text>
+                  </InputGroup>
+          </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant="primary"  onClick={handleSubmit}>
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
     </div>
   );
 }
