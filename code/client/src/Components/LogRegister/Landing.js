@@ -2,7 +2,7 @@ import LandingImage from "../partials/landing/image";
 import Introduction from "../partials/landing/introduction";
 import NavbarLanding from "../partials/landing/navbarLanding";
 import { Provider} from "react-redux";
-import { store } from "../../Contexts/loginRedux/store";
+import { store } from "../../Contexts/store";
 import LoginSignUp from "./LoginSignUp";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Login from "./Login";

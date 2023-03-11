@@ -1,62 +1,64 @@
-import {Container,Card,Form,Button,InputGroup,ToggleButton,ButtonGroup,} from "react-bootstrap";
+import {
+  Container,
+  Card,
+  Form,
+  Button,
+  InputGroup,
+  ToggleButton,
+  ButtonGroup,
+} from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { setLogin} from "../../Contexts/loginRedux/action";
+import { setLogin } from "../../Contexts/action";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import {emailAuth,passwordAuth,confirmPasswordAuth,userNameAuth} from "../../Contexts/Auth/Auth";
+import {
+  emailAuth,
+  passwordAuth,
+  confirmPasswordAuth,
+  userNameAuth,
+} from "../../Authentication/Auth";
 import CryptoJS from "crypto-js";
-import {Envelope,Lock,EyeFill,EyeSlashFill,Person} from "react-bootstrap-icons";
+import {
+  Envelope,
+  Lock,
+  EyeFill,
+  EyeSlashFill,
+  Person,
+} from "react-bootstrap-icons";
+import axios from "axios";
+import '../../boxicons-2.1.4/css/boxicons.min.css';
+import { useSignUp } from "../../Hooks/useSignUp";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const [radioValue, setRadioValue] = useState(1);
   const [radioName, setRadioName] = useState("Buyer");
-  const radios = [{ name: "Buyer", value: 1 },{ name: "Seller", value: 2 },];
-  const [isLocked, setisLocked] = useState(true);
-  const [isGlobalLocked,setisGlobalLocked] = useState(false);
+  const radios = [
+    { name: "Buyer", value: 1 },
+    { name: "Seller", value: 2 },
+  ];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
-  const [error, setError] = useState(null);
   const [errorEmail, setErrorEmail] = useState("");
   const [errorPassword, setErrorPassword] = useState("");
   const [errorConfirmPassword, setErrorCPassword] = useState("");
-  const [confirmPasswordVisibility, setConfirmPasswordVisibility] = useState(false);
-  useEffect(() => {
-    if (password !== "" && confirmPassword !== "" && username !== "" && email !== "" && errorEmail === "" && errorPassword === "" && errorConfirmPassword === "") {
-      setisLocked(false);
-    } else {
-      setisLocked(true);
-    }
-  }, [
-    password,username,email,confirmPassword,errorEmail,errorPassword,errorConfirmPassword]);
-    useEffect(() => {
-      const fetchUsers = async () => {
-        const seller_response = await fetch("api/seller/signup/email/" + email);
-        if (seller_response.ok) {
-          setErrorEmail("account already exists with email");
-        }
-        const buyer_response = await fetch("api/buyer/signup/email/" + email);
-        if (buyer_response.ok) {
-          setErrorEmail("account already exists with email");
-        }
-      };
-      if (!errorEmail && email!=="")fetchUsers();
-    }, [email, errorEmail]);
+  const [confirmPasswordVisibility, setConfirmPasswordVisibility] =useState(false);
+  const {signup,error,isLoading}= useSignUp();
 
-    const emailChange = (event) => {
-      const result=emailAuth(event.target.value);
-      setEmail(result.email);
-      if(result.error)setErrorEmail("Not valid email");
-      else setErrorEmail("");
-    };
+  const emailChange = (event) => {
+    const result = emailAuth(event.target.value);
+    setEmail(result.email);
+    if (result.error) setErrorEmail("Not valid email");
+    else setErrorEmail("");
+  };
 
   const passwordChange = (event) => {
-    const passwordValidation=passwordAuth(event.target.value);
-    const confirmPasswordValidation=confirmPasswordAuth(confirmPassword);
+    const passwordValidation = passwordAuth(event.target.value);
+    const confirmPasswordValidation = confirmPasswordAuth(confirmPassword);
     setErrorPassword(passwordValidation.error);
     setPassword(passwordValidation.password);
     setErrorCPassword(confirmPasswordValidation.error);
@@ -71,45 +73,30 @@ const SignUp = () => {
     }
   };
   const confirmPasswordChange = (event) => {
-    const confirmPasswordValidation=confirmPasswordAuth(password, event.target.value);
+    const confirmPasswordValidation = confirmPasswordAuth(
+      password,
+      event.target.value
+    );
     setErrorCPassword(confirmPasswordValidation.error);
     setConfirmPassword(confirmPasswordValidation.confirmPassword);
   };
 
-  const handleSubmit =  async(e) => {
-    setisLocked(true);
-    setisGlobalLocked(true);
-    e.preventDefault();
-    const user = {username: username, email: email, password: CryptoJS.SHA512(password).toString()
-    };
-    const url = radioName === "Seller" ? "api/seller/signup" : "api/buyer/signup";
-    const response = await fetch(url, {
-      method: "POST",
-      body: JSON.stringify(user),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const json = await response.json();
-    if (!response.ok) {
-      return setError(json.error);
-    } else {
-      window.location.href="/profile";
-    }
-  };
   
-  const handleGoogle = async(e) =>{
-      e.preventDefault();
-      setisGlobalLocked(true)
-      await fetch("api/signup/google",{
-        method:"GET",
-        state:(radioName==='Seller'?'seller':'buyer')
-      })
-  .then((result)=>{
-    console.log(result);
-    window.location.href=result.url;
-  })
+  const handleSubmit =async (e) =>{
+    e.preventDefault();
+    await signup(radioName==='Seller'?'seller':'buyer',username,email,password);
   }
+  const handleGoogle = async (e) => {
+    e.preventDefault();
+    //setisGlobalLocked(true);
+    await fetch("/api/signup/google", {
+      method: "GET",
+      
+    }).then((result) => {
+      console.log(result);
+      window.location.href = result.url;
+    });
+  };
 
   return (
     <div className="signup-container" style={{ marginTop: "10%" }}>
@@ -239,7 +226,7 @@ const SignUp = () => {
               <Button className="btn btn-login align-content-center"
                 type="submit"
                 size="md"
-                disabled={isLocked || isGlobalLocked}
+                disabled={isLoading}
               >
                 SignUp
               </Button>
@@ -248,10 +235,10 @@ const SignUp = () => {
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn btn-login me-2"
                   size="lg"
-                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isGlobalLocked}></i>
+                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
                 </Button>
                 <Button className="btn btn-login" size="lg">
-                <i class='bx bxl-facebook-circle' disabled={isGlobalLocked}></i>
+                <i class='bx bxl-facebook-circle' disabled={isLoading}></i>
                 </Button>
               </Form.Group>
             </Form>

@@ -8,13 +8,11 @@ import {EyeFill,EyeSlashFill} from "react-bootstrap-icons";
 import "../../index.css";
 import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../../Contexts/Profile/buyer/store';
-import { setUser } from '../../Contexts/Profile/buyer/action';
-import CryptoJS from 'crypto-js';
+import { setBuyerUser,LOGOUT } from '../../Contexts/action';
 
-function ProfileFormCustomer(id) {
-  const _id=id;
-  const user=useSelector((state) => state.buyerState.value);
+const ProfileFormCustomer=(id)=>{
+  const buyer=useSelector((state) => state.userState.buyerState);
+  const user=useSelector((state) => state.userState.user);
   const dispatch=useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -24,15 +22,12 @@ function ProfileFormCustomer(id) {
   const [address,setAddress]=useState("");
   const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
   useEffect(()=>{
-    setUsername(user.username);
-    console.log(user.phone);
-    console.log(user.address);
-    setPhone(user.phone);
-    setAddress(user.address);
-  },[user])
+    setUsername(buyer.username);
+    setPhone(buyer.phone);
+    setAddress(buyer.address);
+  },[buyer])
   
   const [password,setPassword]=useState(null);
-  console.log(username);
   const turnOnEdit = () => {
     setIsDisabled(false);
     setIsEditing(true);
@@ -42,32 +37,29 @@ function ProfileFormCustomer(id) {
     setIsDisabled(true);
     setIsEditing(false);
   }
-    const [show, setShow] = useState(false);
-  
-    const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
-  console.log(_id.id);
+
   const handleSubmit = async (e) =>{
     e.preventDefault();
-
-    if (await verify()) {
-      console.log("Password doesn't match");
-      return false;
-    }
     turnOffEdit();
     setisLocked(true);
-    handleClose(true);
-    await axios.patch('/api/buyer/profile/'+_id.id,{
+    await axios.patch('/api/profile/user/'+id.id,{
       username:username,
       phone:phone,
       address:address
     },{
-      headers: { 'Content-type': 'application/json' }
+      headers: {
+        'Authorization': `Bearer ${user.token}`
+      }
   }).then((result)=>{
       console.log(result);
-      dispatch(setUser(result.data));
+      dispatch(setBuyerUser(result.data));
     })
-    .catch(error=>console.log(error));
+    .catch((error)=>{
+      if(error.response.status===401){
+        localStorage.removeItem('user');
+        dispatch(LOGOUT);
+      }
+    });
     setPassword(null);
     setIsEditing(false);
     setisLocked(false);
@@ -113,13 +105,15 @@ function ProfileFormCustomer(id) {
           <Form.Control type="address" placeholder="Address" disabled={isDisabled} value={address} onChange={(e)=>setAddress(e.target.value)}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"  disabled={true} value={user.email}/>
+          <Form.Label>Email address</Form.Label>
+          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {user.email} />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword"> 
-        {isEditing &&(<a href='#' disabled={isLocked}>Change Password?</a>)}
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          {isEditing && (
+            <a href={"changePassword/"+user._id}>Change Password</a>
+          )}
         </Form.Group>
-      
+        
         {isEditing && (
           <Button className="btn btn-outline-dark btn-save" disabled={isLocked}  onClick={handleShow} >
             Save
@@ -161,6 +155,5 @@ function ProfileFormCustomer(id) {
     </div>
   );
 }
-
 export default ProfileFormCustomer;
 // onClick={(e)=>handleSubmit(e)}
