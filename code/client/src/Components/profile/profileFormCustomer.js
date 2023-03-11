@@ -2,7 +2,11 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Modal from 'react-bootstrap/Modal';
+import { InputGroup } from 'react-bootstrap';
+import {EyeFill,EyeSlashFill} from "react-bootstrap-icons";
 import "../../index.css";
+import 'boxicons';
 import { useDispatch, useSelector } from 'react-redux';
 import { setBuyerUser,LOGOUT } from '../../Contexts/action';
 
@@ -16,6 +20,7 @@ const ProfileFormCustomer=(id)=>{
   const [username,setUsername]=useState("");
   const [phone,setPhone]=useState("");
   const [address,setAddress]=useState("");
+  const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
   useEffect(()=>{
     setUsername(buyer.username);
     setPhone(buyer.phone);
@@ -27,6 +32,7 @@ const ProfileFormCustomer=(id)=>{
     setIsDisabled(false);
     setIsEditing(true);
   }
+  
   const turnOffEdit = () => {
     setIsDisabled(true);
     setIsEditing(false);
@@ -57,6 +63,25 @@ const ProfileFormCustomer=(id)=>{
     setPassword(null);
     setIsEditing(false);
     setisLocked(false);
+  }
+  const verify = async() =>{
+    const user={id:_id.id, password:CryptoJS.SHA512(password).toString()};
+    const response = await fetch('http://localhost:4000/api/profile/changePassword/' + _id.id, {
+      method: 'POST',
+      body: JSON.stringify(user),
+      headers:{
+        'Content-Type': 'application/json'
+      },
+    })
+    if(response.ok){
+      console.log("ok");
+      return true;
+    }
+    else{
+      console.log(password);  
+      console.log("current password is incorrect");
+      return false;
+    }
   }
 
   return (
@@ -90,11 +115,45 @@ const ProfileFormCustomer=(id)=>{
         </Form.Group>
         
         {isEditing && (
-          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked} onClick={(e)=>handleSubmit(e)}>
+          <Button className="btn btn-outline-dark btn-save" disabled={isLocked}  onClick={handleShow} >
             Save
           </Button>
+
         )}</Form>
+                <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                  <Modal.Title>Enter Password to Confirm Changes</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  <Form>
+                  <Form.Group className="mb-3" controlId="enterPassword">
+            
+            <Form.Label>Enter Password</Form.Label>
+            <InputGroup>
+            <Form.Control  type={currentPasswordVisibility?"text":"password"} placeholder="Password" value={password}  onChange={(e)=>setPassword(e.target.value)}/>                 
+            <InputGroup.Text>
+                    {(currentPasswordVisibility && (
+                      <EyeFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(false)} />
+                    )) ||
+                      (!currentPasswordVisibility && (
+                        <EyeSlashFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(true)} />
+                      ))}
+                  </InputGroup.Text>
+                  </InputGroup>
+          </Form.Group>
+                  </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button variant="secondary" onClick={handleClose}>
+                    Close
+                  </Button>
+                  <Button variant="primary"  onClick={handleSubmit}>
+                    Save Changes
+                  </Button>
+                </Modal.Footer>
+              </Modal>
     </div>
   );
 }
 export default ProfileFormCustomer;
+// onClick={(e)=>handleSubmit(e)}

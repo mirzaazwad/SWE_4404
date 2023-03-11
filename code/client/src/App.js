@@ -15,13 +15,11 @@ function App() {
       <div className="content">
         <Routes>
           <Route exact path='/' element={!user?<Landing />:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
-
           <Route exact path='/profileBuyer/:id' element={user?<ProfilePageForCustomers/>:<Navigate to='/'/>}/>
-
           <Route exact path='/profileSeller/:id' element={user?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
-
           <Route exact path='/profileBuyer/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
+          <Route path='/forgotPassword' element={<ForgotPassword/>} />
         </Routes>
       </div>
     </div>
