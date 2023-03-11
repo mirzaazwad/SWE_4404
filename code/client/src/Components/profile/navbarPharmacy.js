@@ -4,9 +4,15 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useLogout } from '../../Hooks/useLogout';
 import '../../index.css';
 
-function navbarPharmacy() {
+const NavbarPharmacy=() =>{
+  const {logout}= useLogout();
+  const handleLogout = () =>{
+    logout();
+    return window.location.href="/";
+  }
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
@@ -27,11 +33,11 @@ function navbarPharmacy() {
             <Nav.Link href="#action2">Inventory</Nav.Link>
             <Nav.Link href="#action2">Orders</Nav.Link>
             <Nav.Link href="#action2">Accounts</Nav.Link>
-            <Nav.Link className="d-block d-lg-none" href="#action2">Log Out</Nav.Link>
+            <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton'>Log Out</Button>
+            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>
@@ -39,4 +45,4 @@ function navbarPharmacy() {
   );
 }
 
-export default navbarPharmacy;
+export default NavbarPharmacy;

@@ -4,12 +4,10 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import "../../index.css";
 import { useDispatch, useSelector } from 'react-redux';
-import { store } from '../../Contexts/Profile/buyer/store';
-import { setUser } from '../../Contexts/Profile/buyer/action';
+import { setBuyerUser } from '../../Contexts/action';
 
-function ProfileFormCustomer(id) {
-  const _id=id;
-  const user=useSelector((state) => state.buyerState.value);
+const ProfileFormCustomer=(id)=>{
+  const user=useSelector((state) => state.userState.buyerState);
   const dispatch=useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -26,7 +24,6 @@ function ProfileFormCustomer(id) {
   },[user])
   
   const [password,setPassword]=useState(null);
-  console.log(username);
   const turnOnEdit = () => {
     setIsDisabled(false);
     setIsEditing(true);
@@ -35,11 +32,12 @@ function ProfileFormCustomer(id) {
     setIsDisabled(true);
     setIsEditing(false);
   }
-  console.log(_id.id);
+
   const handleSubmit = async (e) =>{
+    e.preventDefault();
     turnOffEdit();
     setisLocked(true);
-    await axios.patch('/api/buyer/profile/'+_id.id,{
+    await axios.patch('/api/profile/user/'+id.id,{
       username:username,
       phone:phone,
       address:address
@@ -47,7 +45,7 @@ function ProfileFormCustomer(id) {
       headers: { 'Content-type': 'application/json' }
   }).then((result)=>{
       console.log(result);
-      dispatch(setUser(result.data));
+      dispatch(setBuyerUser(result.data));
     })
     .catch(error=>console.log(error));
     setPassword(null);
@@ -62,7 +60,7 @@ function ProfileFormCustomer(id) {
         <button className="btn btn-outline-dark btn-editProfile " onClick={turnOnEdit}>Edit Profile
         <i class='bx bx-cog bx-sm' ></i></button>
       </div>
-      <Form>
+      <Form onSubmit={handleSubmit}>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Name</Form.Label>
           <Form.Control type="text" placeholder="Enter your name"  disabled={isDisabled} value={username} onChange={(e)=>setUsername(e.target.value)}/>
@@ -85,7 +83,7 @@ function ProfileFormCustomer(id) {
         </Form.Group>
       
         {isEditing && (
-          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked} onClick={(e)=>handleSubmit(e)}>
+          <Button className="btn btn-outline-dark btn-save" type="submit" disabled={isLocked}>
             Save
           </Button>
         )}</Form>
