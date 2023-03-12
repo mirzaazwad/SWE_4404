@@ -30,26 +30,10 @@ const ChangePassword = () => {
     const handleSubmit = async(e) =>{
       e.preventDefault();
       setDisableButton(true);
-      await axios.post('/api/profile/user/',{
-        _id:user._id,
-        password:CryptoJS.SHA512(currentPassword).toString()
-      },{
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
-    }).then((result)=>{
-      if(result.data.success===false){
-        setErrorCurrentPassword("Incorrect Password");
-        setDisableButton(false);
-        return;
-      }
-    }).catch((error)=>{
-      setErrorCurrentPassword(error.message);
-      setDisableButton(false);
-      return;
-    })
+      console.log(user._id);
       if(newPassword===confirmPassword){
         await axios.patch('/api/profile/user/'+user._id,{
+          currentPassword:CryptoJS.SHA512(currentPassword).toString(),
           password:CryptoJS.SHA512(newPassword).toString()
         },{
           headers: {
