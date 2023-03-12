@@ -7,6 +7,9 @@ import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-d
 import { useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
 import { useEffect } from "react";
+import AddMedicine from "./Components/inventoryManagementSystem/addMedicine";
+import Inventory from "./Components/inventoryManagementSystem/inventory";
+
 
 
 
@@ -25,6 +28,8 @@ function App() {
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/forgotPassword' element={!user?<ForgotPassword/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
           <Route exact path='/emailVerify/:email' element={!user?<EmailVerification/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
+          <Route exact path='/inventoryManagementSystem/inventory/:id' element={<Inventory/>}/>
+          <Route exact path='/inventoryManagementSystem/addMedicine/:id' element={<AddMedicine/>}/>
         </Routes>
       </div>
     </div>
