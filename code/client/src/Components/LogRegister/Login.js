@@ -3,13 +3,14 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
 import { setSignUp } from "../../Contexts/action";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import { useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 const Login = () => {
+  const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
@@ -73,10 +74,10 @@ const Login = () => {
                 <hr />
                 <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn-login me-3" size="lg" >
-                <i class='bx bxl-google'></i>
+                <i className='bx bxl-google'></i>
                 </Button>
                 <Button className="btn-login " size="lg" disable={isLoading}>
-                <i class='bx bxl-facebook-circle'></i>
+                <i className='bx bxl-facebook-circle'></i>
                 </Button>
               </Form.Group>
               
@@ -84,14 +85,13 @@ const Login = () => {
             <div className="noExistingAccount landingText" style={{textAlign: 'center'}}>
               Don't have an account?
             <Link
-                to='/'
+                to='/signup'
                 style={{
                   all: "unset",
                   color: "#3354a9",
                   textDecoration: "underline",
 
                 }}
-                onClick={() => dispatch(setSignUp())}
               >
                 REGISTER NOW!
             </Link>
