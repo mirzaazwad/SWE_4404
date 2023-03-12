@@ -43,7 +43,6 @@ userSchema.statics.signUp = async function(userType,username,email,password){
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
   const user=await this.create({username:username,email:email,password:hashedPassword});
-  console.log(user);
   if(userType==='buyer'){
     const buyer=await buyerModel.create({email});
     return {user,buyer};
@@ -53,6 +52,32 @@ userSchema.statics.signUp = async function(userType,username,email,password){
     return {user,seller};
   }
 }
+
+userSchema.statics.getEmail = async function(email){
+  if(!email){
+    throw Error('Email is required');
+  }
+  const exists = await this.findOne({email});
+  if(!exists){
+    throw Error('Email does not exist');
+  }
+  return exists;
+}
+
+userSchema.statics.verifyPassword = async function(_id,password){
+  if(!_id || !password){
+    throw Error('A database error occurred');
+  }
+  const result = await this.findById(_id);
+  const match = await bcrypt.compare(password,result.password);
+  if(!match){
+    throw Error('Password does not match');
+  }
+  else{
+    return {success: true};
+  }
+}
+
 
 userSchema.statics.login = async function(email,password){
   if(!email || !password){
