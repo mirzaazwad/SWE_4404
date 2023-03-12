@@ -32,9 +32,10 @@ const generateMailAndOTP = async (email) => {
   return mailOptions;
 };
 
-const sendVerificationMail = async (email) => {
+const sendVerificationMail = async(email) => {
   const mailOptions = await generateMailAndOTP(email);
-  await transporter.sendMail(mailOptions, function (error, info) {
+  transporter.sendMail(mailOptions, function (error, info) {
+    console.log(info);
     if (error) {
       throw Error('SMTP Client Error');
     }

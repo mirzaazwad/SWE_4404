@@ -67,9 +67,6 @@ const PasswordReset = (props) => {
     })
     .then(async (result)=>{
       await login(email,password);
-      if(error){
-        console.log(error);
-      }
     })
     .catch((err)=>{
       console.log(err);

@@ -13,7 +13,7 @@ const  ProfilePageForCustomers = () => {
   const {id}=useParams();
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id,{
+    await axios.get('/api/profile/user/getUser/'+id,{
       headers:{'Authorization': `Bearer ${user.token}`}
     }).then((result)=>{
       dispatch(setBuyerUser(result.data));
