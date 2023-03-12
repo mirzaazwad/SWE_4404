@@ -5,9 +5,12 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useLogout } from '../../Hooks/useLogout';
+import { useParams } from 'react-router';
+import {Navigate} from "react-router-dom";
 import '../../index.css';
 
 const NavbarPharmacy=() =>{
+  const {id} = useParams();
   const {logout}= useLogout();
   const handleLogout = () =>{
     logout();
@@ -30,9 +33,9 @@ const NavbarPharmacy=() =>{
           >
             <Nav.Link href="#action1">Home</Nav.Link>
             <Nav.Link href="#action1">Profile</Nav.Link>
-            <Nav.Link href="#action2">Inventory</Nav.Link>
+            <Nav.Link href={`/inventoryManagementSystem/viewMedicine/${id}`}>Inventory</Nav.Link>
             <Nav.Link href="#action2">Orders</Nav.Link>
-            <Nav.Link href="#action2">Accounts</Nav.Link>
+            <Nav.Link href="">Accounts</Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
