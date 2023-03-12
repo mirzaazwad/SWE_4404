@@ -33,7 +33,7 @@ const NavbarPharmacy=() =>{
           >
             <Nav.Link href="#action1">Home</Nav.Link>
             <Nav.Link href="#action1">Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/viewMedicine/${id}`}>Inventory</Nav.Link>
+            <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`}>Inventory</Nav.Link>
             <Nav.Link href="#action2">Orders</Nav.Link>
             <Nav.Link href="">Accounts</Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>

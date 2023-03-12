@@ -77,6 +77,18 @@ code {
   margin-left: 5px;
   vertical-align: middle;
 }
+.btn-add{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100% !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn-add i {
+  margin-left: 5px;
+  vertical-align: middle;
+}
 .profile-picture-container {
   position: relative;
   display: inline-block;
@@ -336,6 +348,11 @@ code {
     margin-bottom: 0.1%;
 
   }
+  .inventory-section{
+    margin-top: 14% !important;
+    margin-left: 30%;
+  }
+
 }
 .addMedicineCardHeader{
   background-color: var(--customBlue) !important;
@@ -352,7 +369,9 @@ code {
   content: "*";
   color: red !important;
 }
-
+.inventory-section{
+  margin-top: 6%;
+}
 /* @media only screen and (max-width: 767px) {
   .login-container {
     width: 100%;
