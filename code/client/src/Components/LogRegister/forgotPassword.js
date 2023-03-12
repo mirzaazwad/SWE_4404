@@ -6,44 +6,32 @@ import { InputGroup } from 'react-bootstrap';
 import {EyeFill,EyeSlashFill, Envelope} from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
 import axios from 'axios';
-import CryptoJS from 'crypto-js';
+import { emailAuth } from '../../Authentication/Auth';
+import { useEmail } from '../../Hooks/useEmail';
 
 const ForgotPassword = () => {
-    const [email, setEmail] = useState("");
-    const [error,setError] = useState("");
-  const onEmailChange = (e) => {
-    setEmail(e.target.value);
-  }
-    const handleSubmit = async(e) =>{
-      e.preventDefault();
-      if (await verify()) {
-        console.log("EMail found.");
-        return;
-      }
-      setError("account does not exist");
-    }
-    
-    const verify = async() =>{
-      const user={email:email};
-      const response = await fetch('http://localhost:4000/api/forgotPassword/', {
-        method: 'POST',
-        body: JSON.stringify(user),
-        headers:{
-          'Content-Type': 'application/json'
-        },
-      })
-      if(response.ok){
-        console.log("ok");
-        return true;
+    const [email,setEmail]=useState("");
+    const [errorMessage,setErrorMessage]=useState("");
+    const [isDisabled,setIsDisabled]=useState(false);
+    const changeEmail = (e) =>{
+      const result=emailAuth(e.target.value);
+      setEmail(result.email);
+      if(result.error){
+        setErrorMessage("Email is not valid");
+        setIsDisabled(true);
       }
       else{
-        console.log(email);  
-        console.log("Email is incorrect");
-        return false;
+        setErrorMessage("");
+        setIsDisabled(false);
       }
     }
-
-
+    const {isUserEmail,error,isLoading}=useEmail();
+    const handleSubmit = async (e) =>{
+      e.preventDefault();
+      setIsDisabled(true);
+      await isUserEmail(email);
+      setIsDisabled(isLoading);
+    }
 
     return ( 
         <div>
@@ -55,7 +43,7 @@ const ForgotPassword = () => {
         <Form onSubmit={handleSubmit}> 
         <Form.Group>
                   <div className="errorMessage" style={{color:"red"}}>
-                    {error}
+                    {error===""?errorMessage:error}
                   </div>
                 </Form.Group>
 
@@ -68,13 +56,13 @@ const ForgotPassword = () => {
                       placeholder="Email"
                       className="float-start"
                       value={email}
-                      onChange={onEmailChange}
+                      onChange={changeEmail}
                     />
                    </InputGroup>
                   </Form.Group>
 
                   <div className='d-flex justify-content-center'>
-        <Button variant="primary" type="submit" >
+        <Button variant="primary" type="submit" disabled={isDisabled}>
           Send Recovery Email
         </Button>
         </div>
