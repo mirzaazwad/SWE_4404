@@ -14,7 +14,7 @@ const  ProfilePageForPharmacy = () => {
   const {id}=useParams();
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id,{headers: {
+    await axios.get('/api/profile/user/getUser/'+id,{headers: {
       'Authorization': `Bearer ${user.token}`
     }}).then(async (result)=>{
       dispatch(setSellerUser(result.data));

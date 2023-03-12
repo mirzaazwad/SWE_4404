@@ -13,7 +13,6 @@ import CryptoJS from "crypto-js";
 
 const ProfileFormCustomer = (id) => {
   const _id = id;
-  console.log(_id);
   const buyer = useSelector((state) => state.userState.buyerState);
   const user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();
