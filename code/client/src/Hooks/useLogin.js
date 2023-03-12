@@ -16,6 +16,7 @@ export const useLogin = () =>{
     setError(null);
     password=CryptoJS.SHA512(password).toString();
     await axios.post('/api/login',{email,password}).then((result)=>{
+      console.log(result.data);
       if(result.data.verified===true){
         dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
         localStorage.setItem('user',JSON.stringify({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
