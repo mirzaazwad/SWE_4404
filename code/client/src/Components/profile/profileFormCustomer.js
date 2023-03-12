@@ -25,6 +25,7 @@ const ProfileFormCustomer = (id) => {
   const [error,setError]=useState("");
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =
     useState(false);
+  const [errorPassword,setErrorPassword] = useState(false);
     useEffect(() => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
@@ -32,6 +33,9 @@ const ProfileFormCustomer = (id) => {
   }, [buyer]);
 
   const [password, changePassword] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const setPassword = (e) =>{
     changePassword(e.target.value);
@@ -54,10 +58,9 @@ const ProfileFormCustomer = (id) => {
         Authorization: `Bearer ${user.token}`,
       },
     }).then((result)=>{
-      return true;
+      setErrorPassword(!result.data.success);
     }).catch((error)=>{
-      console.log(error);
-      return false;
+      setErrorPassword(true);
     })
   };
 
@@ -65,8 +68,9 @@ const ProfileFormCustomer = (id) => {
     e.preventDefault();
     turnOffEdit();
     setisLocked(true);
-    if(verify(_id.id,CryptoJS.SHA512(password).toString())===true){
-      console.log('comes here');
+    setError("");
+    await verify(_id.id,CryptoJS.SHA512(password).toString());
+    if(!errorPassword){
       await axios
       .patch(
         "/api/profile/user/" + _id.id,
@@ -82,14 +86,9 @@ const ProfileFormCustomer = (id) => {
         }
       )
       .then((result) => {
+        handleClose();
         dispatch(setBuyerUser(result.data));
       })
-      .catch((error) => {
-        if (error.response.status === 401) {
-          localStorage.removeItem("user");
-          dispatch(LOGOUT);
-        }
-      });
     }
     else{
       setError("Password is incorrect");
@@ -97,10 +96,6 @@ const ProfileFormCustomer = (id) => {
     setIsEditing(false);
     setisLocked(false);
   };
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
-
   
 
   return (
