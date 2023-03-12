@@ -22,10 +22,9 @@ const transporter = nodemailer.createTransport({
 
 const generateMailAndOTP = async (email) => {
   let OTP = Math.floor(100000 + Math.random() * 900000).toString();
-  console.log(OTP);
   await tokenModel.addRecord(email, OTP);
   const mailOptions = {
-    from: 'MED_GUARD',
+    from: 'mirzaazwad23931@gmail.com',
     to: email,
     subject: "Your OTP for verification",
     text: `Your OTP is ${OTP}`,
