@@ -10,32 +10,73 @@ import axios from 'axios';
 import 'bootstrap';
 import '../../index.css';
 import './styledVerify.css';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import OTPValidityTimer from './OTPTimer';
+import { useDispatch } from 'react-redux';
+import { LOGIN } from '../../Contexts/action';
 
 const EmailVerification = () => {
+    const navigate=useNavigate();
     const {email}=useParams();
     const [otp,setOTP]=useState("");
     const [errorMessage,setErrorMessage]=useState("");
-    const [isDisabled,setIsDisabled]=useState(false);
+    const [isDisabled,setIsDisabled]=useState(true);
+    const [isLocked,setisLocked]=useState(false);
     const [error,setError]=useState(true);
+    const dispatch=useDispatch();
 
-    // useEffect(()=>{
-    //   axios.get('/api/verifyEmail/'+email).then((result)=>{
-    //     console.log(result);
-    //   })
-    //   .catch(err=>setError(err.error));
-    // },[email]);
+    useEffect(()=>{
+      axios.get('/api/verifyEmail/'+email).then((result)=>{
+        console.log(result);
+      })
+      .catch(err=>setError(err.error));
+    },[]);
 
 
 
-    const handleSubmit = async() =>{
-      await axios.post('/api/')
+    const handleSubmit = async(e) =>{
+      setisLocked(true);
+      const result=await axios.post('/api/verifyOTP',{
+        email:email,
+        OTP:otp
+      }).catch((error)=>{
+        console.log(error);
+        setError(error.response.data.error);
+        setisLocked(false);
+      });
+      if(result){
+        const user=await axios.patch('/api/verifyEmail/'+email,{
+          verified:true
+        }).catch((err)=>{
+          setError(err.response.data.error);
+          setisLocked(false);
+        });
+        if(user){
+          const unverified=JSON.parse(localStorage.getItem('user'));
+          localStorage.removeItem('user');
+          localStorage.setItem('user',JSON.stringify({_id:unverified._id,userType:unverified.userType,token:unverified.token,verified:true}));
+          dispatch(LOGIN({_id:user.data.result._id,userType:unverified.userType,token:unverified.token,verified:true}));
+          setisLocked(false);
+        }
+        else{
+          setError('An error occured try again later');
+        }
+      }
     }
 
 
     const resend = () =>{
       window.location.reload();
+    }
+
+    const handleTimerExpire = async(e) =>{
+      setIsDisabled(false);
+      axios.delete('/api/deleteOTP/'+email).then((result)=>{
+        console.log('successfully deleted');
+      })
+      .catch((error)=>{
+        console.log(error);
+      })
     }
 
     return ( 
@@ -49,6 +90,7 @@ const EmailVerification = () => {
       <p className="p2">
         An OTP has been sent to your entered email {email}
       </p>
+      <p className="p2" style={{color:'red'}}>{error}</p>
       <div className="otpElements">
         <p className="p3">Enter your Code here</p>
         <div className="otp">
@@ -60,12 +102,12 @@ const EmailVerification = () => {
             separator={<span></span>}
           />
         </div>
-        <p>OTP is valid for: <OTPValidityTimer validityPeriodInSeconds={10} onTimerExpired={()=>console.log('timer expired')}/></p>
+        <p>OTP is valid for: <OTPValidityTimer validityPeriodInSeconds={180} onTimerExpired={handleTimerExpire}/></p>
         
       </div>
       <div style={{marginBottom:'2%'}}><p className="p3">Didn't receive the code?</p></div>
       <Button  variant="primary" disabled={isDisabled}  style={{float:'left'}} onClick={resend}>Resend</Button>
-      <Button variant="primary" disabled={isDisabled} style={{float:'right'}}>
+      <Button variant="primary" disabled={isLocked} style={{float:'right'}} onClick={handleSubmit}>
           Verify
         </Button>
 

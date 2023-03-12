@@ -82,7 +82,6 @@ const SignUp = () => {
   const handleSubmit =async (e) =>{
     e.preventDefault();
     await signup(radioName==='Seller'?'seller':'buyer',username,email,password);
-    navigate('/emailVerify/'+email);
   }
   const handleGoogle = async (e) => {
     e.preventDefault();
@@ -233,10 +232,10 @@ const SignUp = () => {
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn btn-login me-2"
                   size="lg"
-                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
+                ><i className='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
                 </Button>
                 <Button className="btn btn-login" size="lg">
-                <i class='bx bxl-facebook-circle' disabled={isLoading}></i>
+                <i className='bx bxl-facebook-circle' disabled={isLoading}></i>
                 </Button>
               </Form.Group>
             </Form>

@@ -1,30 +1,32 @@
 import axios from "axios";
 import { useState } from "react";
 import CryptoJS from "crypto-js";
+import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { LOGIN } from "../Contexts/action";
 
 export const useSignUp = () =>{
-  const dispatch = useDispatch();
   const [error,setError] = useState(null);
   const [isLoading, setisLoading] = useState(null);
-
+  const navigate =useNavigate();
+  const dispatch=useDispatch();
   const signup = async (userType,username,email,password) =>{
     setisLoading(true);
     setError(null);
     password=CryptoJS.SHA512(password).toString();
-    const response = await axios.post('/api/signup',{userType,username,email,password,verified:false});
-    if(response.status!==200){
+    await axios.post('/api/signup',{userType,username,email,password,verified:false})
+    .then((result)=>{
+      localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:false}));
+      navigate('/emailVerify/'+email);
       setisLoading(false);
-      setError(response.data.error);
-    }
-    else{
-      // dispatch(LOGIN({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
-      // localStorage.setItem('user',JSON.stringify({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
+      setError(null);
+    })
+    .catch((err)=>{
+      console.log(err.response.data.error);
+      setError(err.response.data.error);
       setisLoading(false);
-    }
+    })
   }
 
   return {signup,error,isLoading};
-
 }

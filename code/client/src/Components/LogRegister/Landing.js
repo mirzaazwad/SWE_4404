@@ -1,7 +1,7 @@
 import LandingImage from "../partials/landing/image";
 import NavbarLanding from "../partials/landing/navbarLanding";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { LOGIN } from "../../Contexts/action";
@@ -9,12 +9,14 @@ import Login from "./Login";
 import SignUp from "./SignUp";
 
 const Landing = (props) => {
-  const location=useLocation();
-  console.log(location);
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
     if (user) {
+      if(user.verified===false){
+        navigate('/emailVerify/'+user.email);
+      }
       dispatch(LOGIN(user));
     }
   }, [dispatch]);

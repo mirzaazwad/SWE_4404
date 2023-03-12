@@ -74,10 +74,10 @@ const Login = () => {
                 <hr />
                 <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn-login me-3" size="lg" >
-                <i class='bx bxl-google'></i>
+                <i className='bx bxl-google'></i>
                 </Button>
                 <Button className="btn-login " size="lg" disable={isLoading}>
-                <i class='bx bxl-facebook-circle'></i>
+                <i className='bx bxl-facebook-circle'></i>
                 </Button>
               </Form.Group>
               

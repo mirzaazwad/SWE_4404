@@ -44,12 +44,12 @@ const signUpUser = async (req, res) => {
   const { userType, username, email, password,verified } = req.body;
   try {
     const user = await userModel.signUp(userType, username, email, password,verified);
-    const token = createToken(user.user._id);
     const _id = user.user._id;
+    const token = createToken(_id);
     if ("buyer" in user) {
-      res.status(200).json({ _id, userType: "buyer", token });
+      res.status(200).json({ _id, userType: "buyer",token:token });
     } else {
-      res.status(200).json({ _id, userType: "seller", token });
+      res.status(200).json({ _id, userType: "seller",token:token });
     }
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -60,8 +60,8 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const user = await userModel.login(email, password);
-    const token = createToken(user.user._id);
     const _id = user.user._id;
+    const token = createToken(_id);
     if ("buyer" in user) {
       res.status(200).json({ _id, userType: "buyer", token });
     } else {
@@ -100,10 +100,35 @@ const verifyOTP = async(req,res) =>{
   const {email,OTP}=req.body;
   try{
     const result=await tokenModel.verifyOTP(email,OTP);
-    res.status(200).json({result,success:true});
+    res.status(200).json({success:true});
   }
   catch(error){
     res.status(400).json({error:error.message});
+  }
+}
+
+const verifySignUpInformation = async(req,res) =>{
+  const {email} = req.params;
+  try{
+    console.log(email);
+    const result=await userModel.findOneAndUpdate({email},{
+      ...req.body
+    })
+    return res.status(200).json({result});
+  }
+  catch(error){
+    return res.status(400).json({error:error.message});
+  }
+}
+
+const deleteOTP = async(req,res) =>{
+  const {email}=req.params;
+  try{
+    const result=await tokenModel.findOneAndDelete({email},{ "sort": { "_id": -1 } });
+    res.status(200).json({success:true});
+  }
+  catch(err){
+    res.status(400).json({success:false,error:err.message});
   }
 }
 
@@ -112,5 +137,7 @@ module.exports = {
   loginUser,
   forgot,
   verifyEmail,
-  verifyOTP
+  verifyOTP,
+  verifySignUpInformation,
+  deleteOTP
 };

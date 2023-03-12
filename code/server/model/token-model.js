@@ -22,11 +22,12 @@ tokenSchema.statics.verifyOTP=async function(email,OTP){
   if(!email || !OTP){
     throw Error('An error occurred in email or OTP transmission');
   }
-  const result = await this.find({email,OTP});
+  const result = await this.findOne({email,OTP});
   if(!result){
     throw Error('OTP is invalid');
   }
   else{
+    console.log(result);
     await this.deleteMany({email,OTP});
     return result;
   }
