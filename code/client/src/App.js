@@ -6,6 +6,7 @@ import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy"
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
+import { useEffect } from "react";
 
 
 

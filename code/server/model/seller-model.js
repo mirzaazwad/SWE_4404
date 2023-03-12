@@ -8,8 +8,7 @@ const sellerSchema = new Schema({
     unique: true
   },
   pharmacy:{
-    type: String,
-    unique:true
+    type: String
   }
 },{timestamps:true});
 
