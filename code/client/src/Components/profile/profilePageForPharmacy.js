@@ -3,7 +3,7 @@ import NavbarPharmacy from './navbarPharmacy';
 import ProfileFormPharmacy from './profileFormPharmacy';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 

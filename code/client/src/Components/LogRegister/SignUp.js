@@ -1,5 +1,4 @@
 import {
-  Container,
   Card,
   Form,
   Button,
@@ -7,18 +6,16 @@ import {
   ToggleButton,
   ButtonGroup,
 } from "react-bootstrap";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { setLogin } from "../../Contexts/action";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   emailAuth,
   passwordAuth,
   confirmPasswordAuth,
   userNameAuth,
 } from "../../Authentication/Auth";
-import CryptoJS from "crypto-js";
 import {
   Envelope,
   Lock,
@@ -26,13 +23,13 @@ import {
   EyeSlashFill,
   Person,
 } from "react-bootstrap-icons";
-import axios from "axios";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useSignUp } from "../../Hooks/useSignUp";
 
 const SignUp = () => {
   const dispatch = useDispatch();
   const [radioValue, setRadioValue] = useState(1);
+  const navigate=useNavigate();
   const [radioName, setRadioName] = useState("Buyer");
   const radios = [
     { name: "Buyer", value: 1 },
@@ -235,10 +232,10 @@ const SignUp = () => {
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
                 <Button className="btn btn-login me-2"
                   size="lg"
-                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
+                ><i className='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
                 </Button>
                 <Button className="btn btn-login" size="lg">
-                <i class='bx bxl-facebook-circle' disabled={isLoading}></i>
+                <i className='bx bxl-facebook-circle' disabled={isLoading}></i>
                 </Button>
               </Form.Group>
             </Form>
@@ -247,7 +244,6 @@ const SignUp = () => {
               <Link
                 to="/"
                 style={{ color: "#3354a9", textAlign: "center"  }}
-                onClick={() => dispatch(setLogin())}
               >
                 LOG IN!
               </Link>
