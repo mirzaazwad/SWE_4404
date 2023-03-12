@@ -8,7 +8,7 @@ import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import "../../index.css";
 import "boxicons";
 import { useDispatch, useSelector } from "react-redux";
-import { setBuyerUser, LOGOUT } from "../../Contexts/action";
+import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
 
 const ProfileFormCustomer = (id) => {
@@ -23,19 +23,17 @@ const ProfileFormCustomer = (id) => {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [error,setError]=useState("");
-  const [currentPasswordVisibility, setCurrentPasswordVisibility] =
-    useState(false);
+  const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [errorPassword,setErrorPassword] = useState(false);
+  const [password, changePassword] = useState(null);
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
     useEffect(() => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
     setAddress(buyer.address);
   }, [buyer]);
-
-  const [password, changePassword] = useState(null);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const setPassword = (e) =>{
     changePassword(e.target.value);
@@ -52,7 +50,6 @@ const ProfileFormCustomer = (id) => {
   };
 
   const verify = async (_id,password) => {
-    console.log(_id,' ',password);
     await axios.post("/api/profile/user/verify", {_id,password}, {
       headers: {
         Authorization: `Bearer ${user.token}`,
@@ -165,9 +162,8 @@ const ProfileFormCustomer = (id) => {
             Save
           </Button>
         )}
-      </Form>
+      
       <Modal show={show} onHide={handleClose}>
-      <Form onSubmit={handleSubmit}>
         <Modal.Header closeButton>
           <Modal.Title>Enter Password to Confirm Changes</Modal.Title>
         </Modal.Header>
@@ -204,12 +200,12 @@ const ProfileFormCustomer = (id) => {
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
-          <Button variant="primary" type="submit">
+          <Button variant="primary" onClick={handleSubmit}>
             Save Changes
           </Button>
         </Modal.Footer>
-        </Form>
       </Modal>
+    </Form>
     </div>
   );
 };

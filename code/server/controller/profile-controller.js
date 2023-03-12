@@ -93,6 +93,7 @@ const patchBuyerByEmail = async(req,res) =>{
 
 const patchSellerByEmail = async(req,res) =>{
   const email = req.params;
+  console.log('comes here');
   try {
     const users = await sellerModel.findOne({email:email.email});
     if (!users) {
