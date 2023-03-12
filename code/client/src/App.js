@@ -1,4 +1,5 @@
 import Landing from "./Components/LogRegister/Landing";
+import ForgotPassword from "./Components/LogRegister/forgotPassword";
 import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
