@@ -11,7 +11,7 @@ import { useEmail } from '../../Hooks/useEmail';
 import ForgotPasswordSendEmail from './forgotPasswordSendEmail';
 const ForgotPassword = () => {
     return ( 
-        <div>
+      <div>
             <NavbarLanding/>
             <section className='d-flex justify-content-center'>
             <Card className='forgotPasswordCard'>
@@ -22,7 +22,7 @@ const ForgotPassword = () => {
         </Card.Body>
       </Card>
       </section>
-        </div>   
+    </div>   
      );
 }
  

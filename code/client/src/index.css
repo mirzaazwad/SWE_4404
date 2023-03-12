@@ -320,6 +320,38 @@ code {
   width: 40%;
   margin-top: 12%;
 }
+.addMedicineCard{
+  width: 60%;
+  margin-top: 7%;
+  display: fit-content;
+}
+@media (max-width: 768px){
+  .addMedicineCard{
+    width: 80%;
+    margin-top: 15%;
+  }
+  .addMedicineSide{
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0.1%;
+
+  }
+}
+.addMedicineCardHeader{
+  background-color: var(--customBlue) !important;
+  color: var(--white) !important;
+  text-align: center;
+}
+.addMedicineCardTitle{
+  font-size: medium;
+  margin-left: 2%;
+  margin-top: 2% !important;
+  font-style: normal;
+}
+.required-field::after{
+  content: "*";
+  color: red !important;
+}
 
 /* @media only screen and (max-width: 767px) {
   .login-container {
