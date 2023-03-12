@@ -6,6 +6,7 @@ const router=express.Router();
 router.post('/login',loginUser);
 router.post('/signUp',signUpUser);
 router.get('/forgot/:email',forgot);
+router.post('/forgot/verifyOTP',verifyOTP);
 
 router.use(requireAuth);
 router.get('/verifyEmail/:email',verifyEmail);

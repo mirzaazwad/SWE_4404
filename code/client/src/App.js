@@ -22,7 +22,7 @@ function App() {
           <Route exact path='/profileSeller/:id' element={user?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
           <Route exact path='/profileBuyer/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
-          <Route exact path='/forgotPassword' element={<ForgotPassword/>} />
+          <Route exact path='/forgotPassword' element={<ForgotPassword emailSent={false}/>} />
           <Route exact path='/emailVerify/:email' element={!user?<EmailVerification/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
         </Routes>
       </div>

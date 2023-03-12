@@ -22,7 +22,7 @@ const generateMailAndOTP = async (email) => {
   let OTP = Math.floor(100000 + Math.random() * 900000).toString();
   await tokenModel.addRecord(email, OTP);
   const mailOptions = {
-    from: 'mirzaazwad8@iut-dhaka.edu',
+    from: 'MED_GUARD',
     to: email,
     subject: "Your OTP for verification",
     text: `Your OTP is ${OTP}`,
@@ -36,7 +36,6 @@ const sendVerificationMail = async (email) => {
     if (error) {
       throw Error('SMTP Client Error');
     }
-    console.log(info);
   });
 };
 
@@ -76,7 +75,7 @@ const forgot = async (req, res) => {
   const { email } = req.params;
   try {
     const user = await userModel.getEmail(email);
-    const result= await sendOTP(user.email);
+    const result= await sendVerificationMail(user.email);
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error: error.message });
