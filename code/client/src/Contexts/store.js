@@ -1,9 +1,8 @@
 import {configureStore} from '@reduxjs/toolkit';
 import userReducer from './action';
 
-export const storeBuyer = configureStore({
+export const store = configureStore({
   reducer:{
     userState:userReducer
   }
 });
-

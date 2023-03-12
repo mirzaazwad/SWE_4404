@@ -98,7 +98,7 @@ const Login = () => {
             </div>
             <div className="forgotPassword landingText" style={{textAlign: 'center'}}>
               <Link
-                to='/'
+                to='/forgotPassword'
                 style={{
                   all: "unset",
                   color: "#3354a9",
