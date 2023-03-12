@@ -84,12 +84,12 @@ function AddMedicine() {
               <div className='addMedicineSide w-100 pl-2'>
                 <InputGroup className="mb-1">
                   <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Quantity
+                    Manufacturer
                   </InputGroup.Text>
                   <Form.Control
                     aria-label="Default"
                     aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter number of boxes' required
+                    placeholder='Enter manufacturer name' required
                   />
                 </InputGroup>
               </div>
