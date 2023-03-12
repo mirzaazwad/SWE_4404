@@ -13,14 +13,14 @@ export const useSignUp = () =>{
     setisLoading(true);
     setError(null);
     password=CryptoJS.SHA512(password).toString();
-    const response = await axios.post('/api/signup',{userType,username,email,password});
+    const response = await axios.post('/api/signup',{userType,username,email,password,verified:false});
     if(response.status!==200){
       setisLoading(false);
       setError(response.data.error);
     }
     else{
-      dispatch(LOGIN({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
-      localStorage.setItem('user',JSON.stringify({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
+      // dispatch(LOGIN({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
+      // localStorage.setItem('user',JSON.stringify({_id:response.data._id,userType:response.data.userType,token:response.data.token}));
       setisLoading(false);
     }
   }

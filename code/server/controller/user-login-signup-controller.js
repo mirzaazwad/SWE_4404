@@ -20,33 +20,30 @@ const transporter = nodemailer.createTransport({
 
 const generateMailAndOTP = async (email) => {
   let OTP = Math.floor(100000 + Math.random() * 900000).toString();
-  while (tokenModel.findOne({ OTP })) {
-    OTP = Math.floor(100000 + Math.random() * 900000).toString();
-  }
   await tokenModel.addRecord(email, OTP);
   const mailOptions = {
-    from: process.env.SMTP_LOGIN,
+    from: 'mirzaazwad8@iut-dhaka.edu',
     to: email,
     subject: "Your OTP for verification",
     text: `Your OTP is ${OTP}`,
   };
-  return {OTP, mailOptions};
+  return mailOptions;
 };
 
-const sendVerificationMail = async (OTP, mailOptions) => {
+const sendVerificationMail = async (email) => {
+  const mailOptions = await generateMailAndOTP(email);
   await transporter.sendMail(mailOptions, function (error, info) {
     if (error) {
-      throw Error('Email could not be send due to server issues');
-    } else {
-      return {success:true};
+      throw Error('SMTP Client Error');
     }
+    console.log(info);
   });
 };
 
 const signUpUser = async (req, res) => {
-  const { userType, username, email, password } = req.body;
+  const { userType, username, email, password,verified } = req.body;
   try {
-    const user = await userModel.signUp(userType, username, email, password);
+    const user = await userModel.signUp(userType, username, email, password,verified);
     const token = createToken(user.user._id);
     const _id = user.user._id;
     if ("buyer" in user) {
@@ -75,29 +72,45 @@ const loginUser = async (req, res) => {
   }
 };
 
-const sendOTP = async (email)=>{
-  try {
-    const senderInput = generateMailAndOTP(email);
-    const sendingStatus=await sendVerificationMail(senderInput.OTP,senderInput.mailOptions);
-    res.status(200).json({user,sendingsStatus});
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-}
-
 const forgot = async (req, res) => {
   const { email } = req.params;
   try {
     const user = await userModel.getEmail(email);
     const result= await sendOTP(user.email);
-    res.status(200).json({user,sendingsStatus});
+    res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
+const verifyEmail = async(req,res) =>{
+  const {email}=req.params;
+  try{
+    const result =await sendVerificationMail(email);
+    const token=createToken(email);
+    res.status(200).json({result,success:true,token:token});
+  }
+  catch(error){
+    res.status(400).json({error:error.message});
+  }
+
+}
+
+const verifyOTP = async(req,res) =>{
+  const {email,OTP}=req.body;
+  try{
+    const result=await tokenModel.verifyOTP(email,OTP);
+    res.status(200).json({result,success:true});
+  }
+  catch(error){
+    res.status(400).json({error:error.message});
+  }
+}
+
 module.exports = {
   signUpUser,
   loginUser,
   forgot,
+  verifyEmail,
+  verifyOTP
 };

@@ -3,13 +3,14 @@ import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
 import { setSignUp } from "../../Contexts/action";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
 import { useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 const Login = () => {
+  const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
@@ -84,14 +85,13 @@ const Login = () => {
             <div className="noExistingAccount landingText" style={{textAlign: 'center'}}>
               Don't have an account?
             <Link
-                to='/'
+                to='/signup'
                 style={{
                   all: "unset",
                   color: "#3354a9",
                   textDecoration: "underline",
 
                 }}
-                onClick={() => dispatch(setSignUp())}
               >
                 REGISTER NOW!
             </Link>

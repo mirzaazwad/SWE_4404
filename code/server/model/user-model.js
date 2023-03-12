@@ -17,6 +17,9 @@ const userSchema = new Schema({
   password:{
     type:String,
   },
+  verified:{
+    type:Boolean,
+  },
   phone:{
     type:String
   },
@@ -32,7 +35,7 @@ const userSchema = new Schema({
 },{timestamps:true});
 
 
-userSchema.statics.signUp = async function(userType,username,email,password){
+userSchema.statics.signUp = async function(userType,username,email,password,verified){
   if(!email || !password){
     throw Error("All fields are required");
   }
@@ -42,7 +45,7 @@ userSchema.statics.signUp = async function(userType,username,email,password){
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const user=await this.create({username:username,email:email,password:hashedPassword});
+  const user=await this.create({username:username,email:email,password:hashedPassword,verified});
   if(userType==='buyer'){
     const buyer=await buyerModel.create({email});
     return {user,buyer};
@@ -86,6 +89,9 @@ userSchema.statics.login = async function(email,password){
   const user=await this.findOne({email});
   if(!user){
     throw Error('Account does not exist');
+  }
+  if(user.verified===false){
+    throw Error('Account is not verified');
   }
   const buyer=await buyerModel.findOne({email});
   const seller=await sellerModel.findOne({email});
