@@ -32,7 +32,7 @@ const NavbarPharmacy=() =>{
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action1">Profile</Nav.Link>
+            <Nav.Link href={`/profileSeller/${id}`}>Profile</Nav.Link>
             <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`}>Inventory</Nav.Link>
             <Nav.Link href="#action2">Orders</Nav.Link>
             <Nav.Link href="">Accounts</Nav.Link>
