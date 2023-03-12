@@ -6,6 +6,7 @@ import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy"
 import { BrowserRouter as Router, Navigate, Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
+import ViewMedicine from "./Components/inventoryManagementSystem/viewMedicine";
 
 
 
@@ -24,6 +25,7 @@ function App() {
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/forgotPassword' element={<ForgotPassword/>} />
           <Route exact path='/emailVerify/:email' element={!user?<EmailVerification/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
+          <Route exact path='/inventoryManagementSystem/viewMedicine/:id' element={<ViewMedicine/>}/>
         </Routes>
       </div>
     </div>
