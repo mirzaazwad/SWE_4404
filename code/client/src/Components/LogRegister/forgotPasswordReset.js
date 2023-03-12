@@ -10,6 +10,7 @@ import { useState } from "react";
 import { setLogin } from "../../Contexts/action";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import CryptoJS from "crypto-js";
 import {
   passwordAuth,
   confirmPasswordAuth,
@@ -58,12 +59,13 @@ const PasswordReset = (props) => {
 
   const {login,errorMsg,isLoading}=useLogin();
 
-  const handleSubmit = () =>{
-    axios.patch('/api/forgot/updatePassword/'+email,(req,res)=>{
+  const handleSubmit = async(e) =>{
+    console.log('comes here');
+    await e.preventDefault();
+    axios.patch('/api/forgot/updatePassword/'+email,{
       password:CryptoJS.SHA512(password).toString()
     })
     .then(async (result)=>{
-      console.log(result);
       await login(email,password);
       if(error){
         console.log(error);

@@ -3,6 +3,8 @@ const tokenModel = require("../model/token-model");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const nodemailer = require("nodemailer");
+const { findOneAndUpdate } = require("../model/buyer-model");
+const bcrypt = require("bcryptjs");
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "2d" });
@@ -20,6 +22,7 @@ const transporter = nodemailer.createTransport({
 
 const generateMailAndOTP = async (email) => {
   let OTP = Math.floor(100000 + Math.random() * 900000).toString();
+  console.log(OTP);
   await tokenModel.addRecord(email, OTP);
   const mailOptions = {
     from: 'MED_GUARD',
@@ -62,9 +65,9 @@ const loginUser = async (req, res) => {
     const _id = user.user._id;
     const token = createToken(_id);
     if ("buyer" in user) {
-      res.status(200).json({ _id, userType: "buyer", token });
+      res.status(200).json({ _id, userType: "buyer", token ,verified:user.user.verified});
     } else {
-      res.status(200).json({ _id, userType: "seller", token });
+      res.status(200).json({ _id, userType: "seller", token ,verified:user.user.verified});
     }
   } catch (err) {
     res.status(400).json({ error: err.message });
@@ -131,6 +134,25 @@ const deleteOTP = async(req,res) =>{
   }
 }
 
+const updatePassword = async(req,res)=>{
+  const {email}=req.params;
+  try{
+    const password=req.body.password;
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const result=await userModel.findOneAndUpdate({email},{
+      password:hashedPassword
+    }).catch((err)=>{
+      console.log(err);
+      throw Error('Password could not be updated')
+    })
+    res.status(200).json({result,success:true});
+  }
+  catch(err){
+    res.status(400).json({error:err.message,success:false});
+  }
+}
+
 module.exports = {
   signUpUser,
   loginUser,
@@ -138,5 +160,6 @@ module.exports = {
   verifyEmail,
   verifyOTP,
   verifySignUpInformation,
-  deleteOTP
+  deleteOTP,
+  updatePassword
 };
