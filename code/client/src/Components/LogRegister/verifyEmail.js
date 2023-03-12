@@ -16,17 +16,25 @@ import { useDispatch } from 'react-redux';
 import { LOGIN } from '../../Contexts/action';
 
 const EmailVerification = () => {
+    const currentUser=JSON.parse(localStorage.getItem('user'));
+    if(!currentUser){
+      navigate('/');
+    }
+    const token=currentUser.token;
     const navigate=useNavigate();
     const {email}=useParams();
     const [otp,setOTP]=useState("");
-    const [errorMessage,setErrorMessage]=useState("");
     const [isDisabled,setIsDisabled]=useState(true);
     const [isLocked,setisLocked]=useState(false);
     const [error,setError]=useState(true);
     const dispatch=useDispatch();
 
     useEffect(()=>{
-      axios.get('/api/verifyEmail/'+email).then((result)=>{
+      axios.get('/api/verifyEmail/'+email, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((result)=>{
         console.log(result);
       })
       .catch(err=>setError(err.error));
@@ -39,6 +47,10 @@ const EmailVerification = () => {
       const result=await axios.post('/api/verifyOTP',{
         email:email,
         OTP:otp
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }).catch((error)=>{
         console.log(error);
         setError(error.response.data.error);
@@ -47,6 +59,10 @@ const EmailVerification = () => {
       if(result){
         const user=await axios.patch('/api/verifyEmail/'+email,{
           verified:true
+        }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }).catch((err)=>{
           setError(err.response.data.error);
           setisLocked(false);
@@ -71,7 +87,11 @@ const EmailVerification = () => {
 
     const handleTimerExpire = async(e) =>{
       setIsDisabled(false);
-      axios.delete('/api/deleteOTP/'+email).then((result)=>{
+      axios.delete('/api/deleteOTP/'+email, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then((result)=>{
         console.log('successfully deleted');
       })
       .catch((error)=>{

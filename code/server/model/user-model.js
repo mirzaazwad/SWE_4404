@@ -90,9 +90,6 @@ userSchema.statics.login = async function(email,password){
   if(!user){
     throw Error('Account does not exist');
   }
-  if(user.verified===false){
-    throw Error('Account is not verified');
-  }
   const buyer=await buyerModel.findOne({email});
   const seller=await sellerModel.findOne({email});
   const match = await bcrypt.compare(password,user.password);
