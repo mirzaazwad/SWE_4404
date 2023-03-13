@@ -29,6 +29,9 @@ const userSchema = new Schema({
   imageURL:{
     type:String
   },
+  image_id:{
+    type:String
+  },
   facebookId:{
     type:String
   },
