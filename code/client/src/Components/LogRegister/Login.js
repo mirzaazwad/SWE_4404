@@ -11,7 +11,7 @@ import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import jwt_decode from 'jwt-decode';
 const Login = () => {
-  
+  const [errorMessage,setError]=useState("");
   useEffect(()=>{
     /* global google */
     google.accounts.id.initialize(
@@ -25,8 +25,6 @@ const Login = () => {
       {theme:'outline', size:'large'}
     )
   },[]);
-
-  const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
@@ -35,6 +33,7 @@ const Login = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
     await login(email,password);
+    setError(error);
   }
 
 
@@ -46,6 +45,7 @@ const Login = () => {
       localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:true}));
     })
     .catch((err)=>{
+      setError(err.response.data.error)
       console.log(err.response.data.error);
     })
   }
@@ -54,6 +54,7 @@ const Login = () => {
     const res= jwt_decode(response.credential);
     loginGoogle(res.email,res.sub);
   }
+
   return (
     <div className="login-container"  style={{ marginTop: '15%' }}>
       <Card className="d-flex justify-items-center w-75" >
@@ -63,7 +64,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <div className="errorMessage" style={{color:"red"}}>
-                  {error}
+                  {errorMessage!==""?errorMessage:error}
                 </div>
               </Form.Group>
 

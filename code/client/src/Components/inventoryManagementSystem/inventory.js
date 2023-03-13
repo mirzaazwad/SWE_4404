@@ -107,7 +107,7 @@ const Inventory = () => {
         <Form.Control
           className="w-auto"
           type="text"
-          placeholder="enter value"
+          placeholder="Enter value"
           onChange={handleFilterValueChange}
         />{" "}
       </div>

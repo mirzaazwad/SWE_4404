@@ -56,8 +56,10 @@ const ProfileFormPharmacy=(id)=> {
         Authorization: `Bearer ${user.token}`,
       },
     }).then((result)=>{
+      console.log(result);
       setErrorPassword(!result.data.success);
     }).catch((error)=>{
+      console.log(error);
       setErrorPassword(true);
     })
   };
@@ -69,13 +71,14 @@ const ProfileFormPharmacy=(id)=> {
     setisLocked(true);
     await verify(_id.id,CryptoJS.SHA512(password).toString());
     if(!errorPassword){
-      await axios.patch('/api/profile/user/'+id.id,{
+      await axios.patch('/api/profile/user/updateUser/'+id.id,{
         username:username,
         phone:phone,
         address:address
       },{headers: {
         'Authorization': `Bearer ${user.token}`
       }}).then((result)=>{
+        console.log(result);
         dispatch(setSellerUser(result.data));
       });
       await axios.patch('/api/profile/seller/'+seller.email,{
@@ -84,6 +87,7 @@ const ProfileFormPharmacy=(id)=> {
       },{headers: {
         'Authorization': `Bearer ${user.token}`
       }}).then((result)=>{
+        console.log(result);
         handleClose();
         dispatch(setSellerDetails(result.data));
       });
