@@ -22,7 +22,18 @@ const getType = async(req,res)=>{
   }
 }
 
+const getTypes = async(req,res)=>{
+  try{
+    const result=await medicineType.find();
+    res.status(200).json({result});
+  }
+  catch(err){
+    res.status(400).json({error:err.message});
+  }
+}
+
 module.exports={
   getMedicine,
-  getType
+  getType,
+  getTypes
 }

@@ -23,33 +23,30 @@ const Inventory = () => {
   const _id=id.id;
   //const user=useSelector((state) => state.userState.user);
   const [medicines, setMedicines] = useState([]);
+  const [types,setTypes] = useState([]);
   useEffect(()=>{
-    axios.get('/api/profile/inventory/getMedicines/'+_id).then(async(result)=>{
+    axios.get('/api/profile/inventory/getTypes').then((result)=>{
+      setTypes(result.data.result);
+    })
+    axios.get('/api/profile/inventory/getMedicines/'+_id).then((result)=>{
       let temp=result.data.Inventory;
       let res=[];
       temp.forEach(async(item)=>{
-        let Type="";
-        if(item.TypeID!=="Default"){
-          const result=await axios.get('/api/profile/inventory/getType/'+item.TypeID);
-          Type=result.data.result.Name;
-        }
         const medicine={
           _id:item._id,
           MedicineName:item.MedicineName,
           GenericName:item.GenericName,
-          Type: Type,
+          Type: item.TypeID,
           Manufacturer:item.Manufacturer,
           SellingPrice:item.SellingPrice,
           PurchasePrice:item.PurchasePrice,
           Amount:0
         }
-        if(item.TypeID!=="Default"){
-          res.push(medicine);
-        }
+        res.push(medicine);
       })
       setMedicines(res);
-    });
-  },[])
+    },[]);
+  })
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
   const handleClose = () => setShow(false);
@@ -72,8 +69,9 @@ const Inventory = () => {
     );
   };
 
-
+  let count=0;
   useEffect(() => {
+    count=0;
     setFilteredMedicines(medicines);
   }, [medicines]);
   const [filteredMedicines, setFilteredMedicines] = useState(medicines);
@@ -82,7 +80,7 @@ const Inventory = () => {
     console.log('editing medicines' + value);
   }
 
-  let count=0;
+  
   if(medicines!==null){
     return (
       <div>
@@ -124,7 +122,7 @@ const Inventory = () => {
               {filteredMedicines.map((medicine) => (
                 <tr key={medicine._id} onClick={()=>editMedicine(medicine._id)}>
                   <td> {count+=1} </td> <td> {medicine.MedicineName} </td>{" "}
-                  <td> {medicine.GenericName} </td> <td> {medicine.Type} </td>{" "}
+                  <td> {medicine.GenericName} </td> <td> {medicine.Type!=="Default"?types.find(obj=>obj._id===medicine.Type).Name:"Undefined"} </td>{" "}
                   <td> {medicine.Manufacturer} </td>{" "}
                   <td> {medicine.SellingPrice} </td>{" "}
                   <td> {medicine.PurchasePrice} </td> <td> {medicine.amount} </td>{" "}
