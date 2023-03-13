@@ -21,13 +21,6 @@ body {
   align-items: center;
 }
 
-.google{
-  width: 100% !important;
-  justify-content: center;
-  align-items: center;
-  margin-left: 13.5%;
-}
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
