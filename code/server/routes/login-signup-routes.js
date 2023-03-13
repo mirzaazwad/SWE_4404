@@ -12,7 +12,7 @@ router.post('/forgot/verifyOTP',verifyOTP);
 router.patch('/forgot/updatePassword/:email',updatePassword);
 
 
-router.use(requireAuth);
+// router.use(requireAuth);
 router.get('/verifyEmail/:email',verifyEmail);
 router.post('/verifyOTP',verifyOTP);
 router.patch('/verifyEmail/:email',verifySignUpInformation);
