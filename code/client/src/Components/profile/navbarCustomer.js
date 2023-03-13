@@ -3,14 +3,16 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
+import { useNavigate } from 'react-router-dom';
 import { useLogout } from '../../Hooks/useLogout';
 import '../../index.css';
 
 const NavbarCustomer=()=>{
   const {logout} = useLogout();
+  const navigate=useNavigate();
   const handleLogout = () =>{
     logout();
-    return window.location.href="/";
+    return navigate('/');
   }
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
