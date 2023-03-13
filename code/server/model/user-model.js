@@ -17,10 +17,19 @@ const userSchema = new Schema({
   password:{
     type:String,
   },
+  verified:{
+    type:Boolean,
+  },
   phone:{
     type:String
   },
   googleId:{
+    type:String
+  },
+  imageURL:{
+    type:String
+  },
+  image_id:{
     type:String
   },
   facebookId:{
@@ -32,7 +41,7 @@ const userSchema = new Schema({
 },{timestamps:true});
 
 
-userSchema.statics.signUp = async function(userType,username,email,password){
+userSchema.statics.signUp = async function(userType,username,email,password,verified){
   if(!email || !password){
     throw Error("All fields are required");
   }
@@ -42,7 +51,7 @@ userSchema.statics.signUp = async function(userType,username,email,password){
   }
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-  const user=await this.create({username:username,email:email,password:hashedPassword});
+  const user=await this.create({username:username,email:email,password:hashedPassword,verified});
   if(userType==='buyer'){
     const buyer=await buyerModel.create({email});
     return {user,buyer};
@@ -100,6 +109,56 @@ userSchema.statics.login = async function(email,password){
     return {user,seller};
   }
 }
+
+userSchema.statics.signUpGoogle = async function(userType,username,email,googleId,imageURL,verified){
+  if(!email || !googleId){
+    throw Error("Data is incomplete");
+  }
+  const exists=await this.findOne({email});
+  const buyer=await buyerModel.findOne({email});
+  const seller=await sellerModel.findOne({email});
+  if(exists){
+    const user=exists;
+    if(buyer){
+      return {user,buyer};
+    }
+    else{
+      return {user,seller};
+    }
+  }
+  const user=await this.create({username:username,email:email,googleId:googleId,imageURL:imageURL,verified});
+  if(userType==='buyer'){
+    const buyer=await buyerModel.create({email});
+    return {user,buyer};
+  }
+  else{
+    const seller=await sellerModel.create({email});
+    return {user,seller};
+  }
+}
+
+userSchema.statics.loginGoogle = async function(email,googleId){
+  if(!email || !googleId){
+    throw Error("Data is incomplete");
+  }
+  const exists=await this.findOne({email});
+  const buyer=await buyerModel.findOne({email});
+  const seller=await sellerModel.findOne({email});
+  if(exists){
+    const user=exists;
+    if(buyer){
+      return {user,buyer};
+    }
+    else{
+      return {user,seller};
+    }
+  }
+  else{
+    throw Error("Data is incomplete");
+  }
+}
+
+
 
 
 module.exports=mongoose.model("User",userSchema);

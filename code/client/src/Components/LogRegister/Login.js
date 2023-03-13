@@ -2,14 +2,29 @@ import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
-import { setSignUp } from "../../Contexts/action";
-import { Link } from "react-router-dom";
+import { LOGIN, setSignUp } from "../../Contexts/action";
+import { Link, useNavigate } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
+import jwt_decode from 'jwt-decode';
 const Login = () => {
+  const [errorMessage,setError]=useState("");
+  useEffect(()=>{
+    /* global google */
+    google.accounts.id.initialize(
+      {
+        client_id: "430247778721-b4hss8mpbk8qhtfkr4v7h1d2gt32me82.apps.googleusercontent.com",
+        callback: handleCallBackResponse
+      }
+    );
+    google.accounts.id.renderButton(
+      document.getElementById('googleLogin'),
+      {theme:'outline', size:'large'}
+    )
+  },[]);
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
@@ -18,7 +33,28 @@ const Login = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
     await login(email,password);
+    setError(error);
   }
+
+
+
+  const loginGoogle = async (email,googleId) =>{
+    await axios.post('/api/google/loginGoogle',{email:email,googleId:googleId})
+    .then((result)=>{
+      dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
+      localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:true}));
+    })
+    .catch((err)=>{
+      setError(err.response.data.error)
+      console.log(err.response.data.error);
+    })
+  }
+
+  async function handleCallBackResponse(response){
+    const res= jwt_decode(response.credential);
+    loginGoogle(res.email,res.sub);
+  }
+
   return (
     <div className="login-container"  style={{ marginTop: '15%' }}>
       <Card className="d-flex justify-items-center w-75" >
@@ -28,7 +64,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <div className="errorMessage" style={{color:"red"}}>
-                  {error}
+                  {errorMessage!==""?errorMessage:error}
                 </div>
               </Form.Group>
 
@@ -72,26 +108,20 @@ const Login = () => {
               
                 <hr />
                 <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-                <Button className="btn-login me-3" size="lg" >
-                <i class='bx bxl-google'></i>
-                </Button>
-                <Button className="btn-login " size="lg" disable={isLoading}>
-                <i class='bx bxl-facebook-circle'></i>
-                </Button>
+                <div id="googleLogin" className="google"></div>
               </Form.Group>
               
             </Form>
             <div className="noExistingAccount landingText" style={{textAlign: 'center'}}>
               Don't have an account?
             <Link
-                to='/'
+                to='/signup'
                 style={{
                   all: "unset",
                   color: "#3354a9",
                   textDecoration: "underline",
 
                 }}
-                onClick={() => dispatch(setSignUp())}
               >
                 REGISTER NOW!
             </Link>

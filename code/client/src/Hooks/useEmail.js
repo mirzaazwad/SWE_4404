@@ -8,7 +8,7 @@ export const useEmail = () =>{
   const isUserEmail = async (email) =>{
     setisLoading(true);
     setError(null);
-    const result = await axios.get('/api/forgot/'+email).then((result)=>{
+    await axios.get('/api/forgot/'+email).then((result)=>{
       setError(null);
       setisLoading(false);
     }).catch((err)=>{

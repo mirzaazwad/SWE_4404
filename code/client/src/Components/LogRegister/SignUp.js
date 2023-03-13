@@ -1,5 +1,4 @@
 import {
-  Container,
   Card,
   Form,
   Button,
@@ -7,18 +6,16 @@ import {
   ToggleButton,
   ButtonGroup,
 } from "react-bootstrap";
-import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { useEffect, useState } from "react";
-import { setLogin } from "../../Contexts/action";
+import { LOGIN, setLogin } from "../../Contexts/action";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   emailAuth,
   passwordAuth,
   confirmPasswordAuth,
   userNameAuth,
 } from "../../Authentication/Auth";
-import CryptoJS from "crypto-js";
 import {
   Envelope,
   Lock,
@@ -26,13 +23,29 @@ import {
   EyeSlashFill,
   Person,
 } from "react-bootstrap-icons";
-import axios from "axios";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useSignUp } from "../../Hooks/useSignUp";
+import jwt_decode from 'jwt-decode';
+import axios from "axios";
 
 const SignUp = () => {
+  useEffect(()=>{
+    /* global google */
+    google.accounts.id.initialize(
+      {
+        client_id: "430247778721-b4hss8mpbk8qhtfkr4v7h1d2gt32me82.apps.googleusercontent.com",
+        callback: handleCallBackResponse
+      }
+    );
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignIn'),
+      {theme:'outline', size:'large'}
+    )
+  },[]);
+
   const dispatch = useDispatch();
   const [radioValue, setRadioValue] = useState(1);
+  const navigate=useNavigate();
   const [radioName, setRadioName] = useState("Buyer");
   const radios = [
     { name: "Buyer", value: 1 },
@@ -86,17 +99,22 @@ const SignUp = () => {
     e.preventDefault();
     await signup(radioName==='Seller'?'seller':'buyer',username,email,password);
   }
-  const handleGoogle = async (e) => {
-    e.preventDefault();
-    //setisGlobalLocked(true);
-    await fetch("/api/signup/google", {
-      method: "GET",
-      
-    }).then((result) => {
-      console.log(result);
-      window.location.href = result.url;
-    });
-  };
+
+  const signin = async (userType,username,email,googleId,imageURL,verified) =>{
+    await axios.post('/api/google/signup',{userType:userType,username:username,email:email,googleId:googleId,imageURL:imageURL,verified:verified})
+    .then((result)=>{
+      dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
+      localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:true}));
+    })
+    .catch((err)=>{
+      console.log(err.response.data.error);
+    })
+  }
+
+  async function handleCallBackResponse(response){
+    const res= jwt_decode(response.credential);
+    signin(radioName==='Seller'?'seller':'buyer',res.name,res.email,res.sub,res.picture,res.verified);
+  }
 
   return (
     <div className="signup-container" style={{ marginTop: "10%" }}>
@@ -233,13 +251,7 @@ const SignUp = () => {
               </div>
               <hr />
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-                <Button className="btn btn-login me-2"
-                  size="lg"
-                ><i class='bx bxl-google' onClick={(e)=>handleGoogle(e)} disabled={isLoading}></i>
-                </Button>
-                <Button className="btn btn-login" size="lg">
-                <i class='bx bxl-facebook-circle' disabled={isLoading}></i>
-                </Button>
+                <div id="googleSignIn" className="google"></div>
               </Form.Group>
             </Form>
             <div className="existingAccount landingText" style={{ textAlign: "center"  }}>
@@ -247,7 +259,6 @@ const SignUp = () => {
               <Link
                 to="/"
                 style={{ color: "#3354a9", textAlign: "center"  }}
-                onClick={() => dispatch(setLogin())}
               >
                 LOG IN!
               </Link>

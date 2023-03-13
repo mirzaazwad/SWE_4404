@@ -16,6 +16,17 @@ const getUserByID = async (req, res) => {
   }
 };
 
+const verifyPassword = async(req,res) =>{
+  const {_id,password} = req.body;
+  try{
+    const result=await userModel.verifyPassword(_id,password);
+    res.status(200).json({result,success:true});
+  }
+  catch(err){
+    res.status(404).json({success:false,error:err.message});
+  }
+}
+
 
 const patchUserByID = async (req,res) =>{
   const {id} = req.params;
@@ -115,32 +126,20 @@ const patchSellerByEmail = async(req,res) =>{
   }
 }
 
-const changePassword = async(req,res) =>{
-   const {_id,password}=req.body;
+  const changePassword = async(req,res) =>{
+  const _id=req.params;
+  const {currentPassword,password}=req.body;
   try{
-    const User=await userModel.findById(_id);
-    console.log(User);
-    const match=await bcrypt.compare(User.password,password);
-    if(match){
-      return res.status(200).json({success:true});
-    }
-    else{
-      return res.status(200).json({success:false});
-    }
+    const result=await userModel.verifyPassword(_id.id,currentPassword);
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+    const users = await userModel.findByIdAndUpdate(_id.id,{
+        password:hashedPassword
+      })
+    res.status(200).json({success:true,users});
   }
   catch(error){
-      res.status(404).json({found:false,error:error.message});
-  }
-}
-
-const verifyPassword = async(req,res) =>{
-  const {_id,password} = req.body;
-  try{
-    const result=await userModel.verifyPassword(_id,password);
-    res.status(200).json({result,success:true});
-  }
-  catch(err){
-    res.status(404).json({success:false,error:err.message});
+      res.status(400).json({success:false,error:error.message});
   }
 }
 

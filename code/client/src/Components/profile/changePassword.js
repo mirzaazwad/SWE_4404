@@ -9,8 +9,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { passwordAuth, confirmPasswordAuth } from '../../Authentication/Auth'; 
-import { useDispatch, useSelector } from 'react-redux';
-import validator from 'validator';
 
 const ChangePassword = () => {
     const user=JSON.parse(localStorage.getItem('user'));
@@ -30,42 +28,20 @@ const ChangePassword = () => {
     const handleSubmit = async(e) =>{
       e.preventDefault();
       setDisableButton(true);
-      await axios.post('/api/profile/user/',{
-        _id:user._id,
-        password:CryptoJS.SHA512(currentPassword).toString()
+      await axios.patch('/api/profile/user/changePassword/'+user._id,{
+        currentPassword:CryptoJS.SHA512(currentPassword).toString(),
+        password:CryptoJS.SHA512(newPassword).toString()
       },{
         headers: {
           'Authorization': `Bearer ${user.token}`
-        }
-    }).then((result)=>{
-      if(result.data.success===false){
-        setErrorCurrentPassword("Incorrect Password");
-        setDisableButton(false);
-        return;
-      }
-    }).catch((error)=>{
-      setErrorCurrentPassword(error.message);
-      setDisableButton(false);
-      return;
-    })
-      if(newPassword===confirmPassword){
-        await axios.patch('/api/profile/user/'+user._id,{
-          password:CryptoJS.SHA512(newPassword).toString()
-        },{
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }}).then((result)=>{
-            console.log(result);
-          })
-          .catch((error)=>{
-            console.log(error);
-          }).then((result)=>{
-            navigate('./../');
-          })
-      }
-      else{
-        setErrorConfirmPassword("Passwords do not match");
-      }
+        }})
+        .then(()=>{
+          navigate('./../');
+        })
+        .catch(()=>{
+          setDisableButton(false);
+          setErrorCurrentPassword('Current password does not match the existing password');
+        })
       setDisableButton(false);
     }
 
@@ -80,6 +56,7 @@ const ChangePassword = () => {
 
 
     const changeCurrentPassword = (e) =>{
+      setErrorCurrentPassword("");
       setCurrentPassword(e.target.value);
     }
 

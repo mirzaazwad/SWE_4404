@@ -3,7 +3,7 @@ import NavbarPharmacy from './navbarPharmacy';
 import ProfileFormPharmacy from './profileFormPharmacy';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useEffect} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 
@@ -14,7 +14,7 @@ const  ProfilePageForPharmacy = () => {
   const {id}=useParams();
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/'+id,{headers: {
+    await axios.get('/api/profile/user/getUser/'+id,{headers: {
       'Authorization': `Bearer ${user.token}`
     }}).then(async (result)=>{
       dispatch(setSellerUser(result.data));
