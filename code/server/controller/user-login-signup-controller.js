@@ -153,6 +153,38 @@ const updatePassword = async(req,res)=>{
   }
 }
 
+const signUpGoogle = async (req,res) =>{
+  const { userType, username,email,googleId,imageURL,verified } = req.body;
+  try {
+    const user = await userModel.signUpGoogle(userType,username,email,googleId,imageURL,verified);
+    const _id = user.user._id;
+    const token = createToken(_id);
+    if ("buyer" in user) {
+      res.status(200).json({ _id, userType: "buyer",token:token });
+    } else {
+      res.status(200).json({ _id, userType: "seller",token:token });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
+const loginGoogle = async(req,res) =>{
+  const { email,googleId } = req.body;
+  try {
+    const user = await userModel.loginGoogle(email,googleId);
+    const _id = user.user._id;
+    const token = createToken(_id);
+    if ("buyer" in user) {
+      res.status(200).json({ _id, userType: "buyer",token:token });
+    } else {
+      res.status(200).json({ _id, userType: "seller",token:token });
+    }
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+}
+
 module.exports = {
   signUpUser,
   loginUser,
@@ -161,5 +193,7 @@ module.exports = {
   verifyOTP,
   verifySignUpInformation,
   deleteOTP,
-  updatePassword
+  updatePassword,
+  signUpGoogle,
+  loginGoogle
 };

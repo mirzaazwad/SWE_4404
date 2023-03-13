@@ -2,14 +2,30 @@ import { Container, Card, Form, Button,InputGroup } from "react-bootstrap";
 import { FaFacebook, FaGoogle } from "react-icons/fa";
 import { Envelope, EyeFill, Lock ,EyeSlashFill} from "react-bootstrap-icons";
 import { useDispatch } from "react-redux";
-import { setSignUp } from "../../Contexts/action";
+import { LOGIN, setSignUp } from "../../Contexts/action";
 import { Link, useNavigate } from "react-router-dom";
 import CryptoJS from 'crypto-js';
 import axios from 'axios';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
+import jwt_decode from 'jwt-decode';
 const Login = () => {
+  
+  useEffect(()=>{
+    /* global google */
+    google.accounts.id.initialize(
+      {
+        client_id: "430247778721-b4hss8mpbk8qhtfkr4v7h1d2gt32me82.apps.googleusercontent.com",
+        callback: handleCallBackResponse
+      }
+    );
+    google.accounts.id.renderButton(
+      document.getElementById('googleLogin'),
+      {theme:'outline', size:'large'}
+    )
+  },[]);
+
   const navigate=useNavigate();
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
@@ -19,6 +35,24 @@ const Login = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
     await login(email,password);
+  }
+
+
+
+  const loginGoogle = async (email,googleId) =>{
+    await axios.post('/api/google/loginGoogle',{email:email,googleId:googleId})
+    .then((result)=>{
+      dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
+      localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:true}));
+    })
+    .catch((err)=>{
+      console.log(err.response.data.error);
+    })
+  }
+
+  async function handleCallBackResponse(response){
+    const res= jwt_decode(response.credential);
+    loginGoogle(res.email,res.sub);
   }
   return (
     <div className="login-container"  style={{ marginTop: '15%' }}>
@@ -73,12 +107,7 @@ const Login = () => {
               
                 <hr />
                 <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-                <Button className="btn-login me-3" size="lg" >
-                <i className='bx bxl-google'></i>
-                </Button>
-                <Button className="btn-login " size="lg" disable={isLoading}>
-                <i className='bx bxl-facebook-circle'></i>
-                </Button>
+                <div id="googleLogin" className="google"></div>
               </Form.Group>
               
             </Form>
