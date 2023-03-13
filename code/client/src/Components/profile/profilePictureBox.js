@@ -8,7 +8,7 @@ function ProfilePicture() {
   return (
     <div className="profile-picture-container">
       <img src={require('../../images/321504286_673183284310305_2418389886188844738_n.jpg')} alt="Profile Picture" />
-      <a href="#" className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</a>
+      <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>
       <Modal show={modalShow}
         onHide={() => setModalShow(false)}
       size="md"

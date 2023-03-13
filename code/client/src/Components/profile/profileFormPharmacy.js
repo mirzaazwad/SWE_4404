@@ -91,6 +91,7 @@ const ProfileFormPharmacy=(id)=> {
     else{
       setError("Password is incorrect");
     }
+    
     setIsEditing(false);
     setisLocked(false);
   }
