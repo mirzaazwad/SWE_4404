@@ -5,16 +5,17 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useLogout } from '../../Hooks/useLogout';
-import { useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 import {Navigate} from "react-router-dom";
 import '../../index.css';
 
 const NavbarPharmacy=() =>{
   const {id} = useParams();
   const {logout}= useLogout();
+  const navigate=useNavigate();
   const handleLogout = () =>{
     logout();
-    return window.location.href="/";
+    return navigate('/');
   }
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">

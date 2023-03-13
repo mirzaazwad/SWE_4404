@@ -16,6 +16,17 @@ const getUserByID = async (req, res) => {
   }
 };
 
+const verifyPassword = async(req,res) =>{
+  const {_id,password} = req.body;
+  try{
+    const result=await userModel.verifyPassword(_id,password);
+    res.status(200).json({result,success:true});
+  }
+  catch(err){
+    res.status(404).json({success:false,error:err.message});
+  }
+}
+
 
 const patchUserByID = async (req,res) =>{
   const {id} = req.params;
@@ -140,5 +151,6 @@ module.exports ={
   getSellerByEmail,
   patchBuyerByEmail,
   patchSellerByEmail,
-  changePassword
+  changePassword,
+  verifyPassword
 }

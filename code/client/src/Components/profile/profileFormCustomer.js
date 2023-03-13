@@ -55,8 +55,10 @@ const ProfileFormCustomer = (id) => {
         Authorization: `Bearer ${user.token}`,
       },
     }).then((result)=>{
+      console.log(result);
       setErrorPassword(!result.data.success);
     }).catch((error)=>{
+      console.log(error);
       setErrorPassword(true);
     })
   };
@@ -70,7 +72,7 @@ const ProfileFormCustomer = (id) => {
     if(!errorPassword){
       await axios
       .patch(
-        "/api/profile/user/" + _id.id,
+        "/api/profile/user/updateUser/" + _id.id,
         {
           username: username,
           phone: phone,
@@ -88,6 +90,7 @@ const ProfileFormCustomer = (id) => {
       })
     }
     else{
+      console.log('comes here');
       setError("Password is incorrect");
     }
     setIsEditing(false);
