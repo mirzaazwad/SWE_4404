@@ -26,6 +26,12 @@ const userSchema = new Schema({
   googleId:{
     type:String
   },
+  imageURL:{
+    type:String
+  },
+  image_id:{
+    type:String
+  },
   facebookId:{
     type:String
   },
@@ -101,6 +107,54 @@ userSchema.statics.login = async function(email,password){
   }
   else{
     return {user,seller};
+  }
+}
+
+userSchema.statics.signUpGoogle = async function(userType,username,email,googleId,imageURL,verified){
+  if(!email || !googleId){
+    throw Error("Data is incomplete");
+  }
+  const exists=await this.findOne({email});
+  const buyer=await buyerModel.findOne({email});
+  const seller=await sellerModel.findOne({email});
+  if(exists){
+    const user=exists;
+    if(buyer){
+      return {user,buyer};
+    }
+    else{
+      return {user,seller};
+    }
+  }
+  const user=await this.create({username:username,email:email,googleId:googleId,imageURL:imageURL,verified});
+  if(userType==='buyer'){
+    const buyer=await buyerModel.create({email});
+    return {user,buyer};
+  }
+  else{
+    const seller=await sellerModel.create({email});
+    return {user,seller};
+  }
+}
+
+userSchema.statics.loginGoogle = async function(email,googleId){
+  if(!email || !googleId){
+    throw Error("Data is incomplete");
+  }
+  const exists=await this.findOne({email});
+  const buyer=await buyerModel.findOne({email});
+  const seller=await sellerModel.findOne({email});
+  if(exists){
+    const user=exists;
+    if(buyer){
+      return {user,buyer};
+    }
+    else{
+      return {user,seller};
+    }
+  }
+  else{
+    throw Error("Data is incomplete");
   }
 }
 
