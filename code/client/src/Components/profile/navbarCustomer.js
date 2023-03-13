@@ -29,7 +29,7 @@ const NavbarCustomer=()=>{
             <Nav.Link href="#action2">Pharmacies</Nav.Link>
             <Nav.Link href="#action2">Medicines</Nav.Link>
             <Nav.Link href="#action2">My Orders</Nav.Link>
-            <Nav.Link className="d-block d-lg-none" href="#action2">Log Out</Nav.Link>
+            <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
           <button className='customCart bg-transparent me-3'><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '15px'}}></i></button>
