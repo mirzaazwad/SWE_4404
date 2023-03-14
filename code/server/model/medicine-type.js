@@ -8,6 +8,18 @@ const medicineTypeDescription = new Schema({
   },
   Description:{
     type: String
+  },
+  hasPcs:{
+    type:Boolean,
+    required:true
+  },
+  hasBoxes:{
+    type:Boolean,
+    required:true
+  },
+  hasStrips:{
+    type:Boolean,
+    required:true
   }
 });
 
@@ -18,6 +30,22 @@ medicineTypeDescription.statics.getAll=async function(){
   }
   else{
     throw Error('Database error cannot find categories');
+  }
+}
+
+medicineTypeDescription.statics.addType=async function(name,description,strips){
+  if(!name || !description || strips===null){
+    throw Error('Fields are required');
+  }
+  else{
+    if(strips===true){
+      const result=await this.create({Name:name,Description:description,hasBoxes:true,hasPcs:true,hasStrips:true});
+      return result;
+    }
+    else{
+      const result=await this.create({Name:name,Description:description,hasBoxes:true,hasPcs:true,hasStrips:false});
+      return result;
+    }
   }
 }
 

@@ -34,8 +34,30 @@ const addMedicine = async(req,res)=>{
   }
 }
 
+const addCateogry = async(req,res)=>{
+  try{
+    const result=await medicineCategory.addCategory(req.body.name,req.body.description);
+    res.status(200).json(result);
+  }
+  catch(err){
+    res.status(400).json({error:err.message});
+  }
+}
+
+const addType=async(req,res)=>{
+  try{
+    const result=await medicineType.addType(req.body.name,req.body.description,req.body.strips);
+    res.status(200).json(result);
+  }
+  catch(err){
+    res.status(400).json({error:err.message});
+  }
+}
+
 module.exports ={
   getAllCategories,
   getAllTypes,
   addMedicine,
+  addCateogry,
+  addType
 }

@@ -17,7 +17,6 @@ const NavbarPharmacy=(props) =>{
     logout();
     return navigate('/');
   }
-  console.log('nav'+props);
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
