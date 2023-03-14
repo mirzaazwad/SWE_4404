@@ -93,39 +93,6 @@ const pharmacySchema = new Schema({
 });
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {
-  const currentMedicine=await this.findOne(
-    {pharmacyManagerID:_id,
-      Inventory: {
-      $elemMatch: {
-        $and: [
-          {MedicineName:medicine.MedicineName},
-          {GenericName:medicine.GenericName},
-          {TypeID:medicine.TypeID},
-          {CateogryID:medicine.CateogryID},
-          {Manufacturer:medicine.Manufacturer},
-        ]
-      }
-    }});
-    if(currentMedicine){
-      const updatedMedicine = await this.updateOne({Inventory: {
-        $elemMatch: {
-          $and: [
-            {MedicineName:medicine.MedicineName},
-            {GenericName:medicine.GenericName},
-            {TypeID:medicine.TypeID},
-            {CateogryID:medicine.CateogryID},
-            {Manufacturer:medicine.Manufacturer},
-          ]
-        }
-      }},{
-        $set:{
-          'Inventory.$.SellingPrice': medicine.SellingPrice,
-          'Inventory.$.PurchasePrice': medicine.PurchasePrice,
-          'Inventory.$.Description': medicine.Description,
-        }
-      });
-      return;
-    }
   try {
     const result = await this.findOne({ pharmacyManagerID: _id });
     const stockModel = mongoose.model('StockModel',stockSchema);

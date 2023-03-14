@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 
 const AddMedicine = () => {
+  const user=JSON.parse(localStorage.getItem('user'));
   const navigate = useNavigate();
   const id=useParams();
   const _id=id.id;
-  console.log(_id);
+  const [sellerId,setSellerId]=useState();
   const [categories,setCategories] =useState(null);
   const [types,setTypes] =useState(null);
   const [medicineName,setMedicineName] =useState("");
@@ -26,17 +28,28 @@ const AddMedicine = () => {
   const [medicineCateogry,setMedicineCategory]=useState("Default");
   
   useEffect(()=>{
-    axios.get('/api/profile/addMedicine/findCateogry').then((result)=>{
+    axios.get('/api/profile/user/getUserSellerId/'+_id,{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((response)=>{
+      console.log('res: ',response.data._id);
+      setSellerId(response.data._id);
+    })
+    .catch(err=>console.log(err))
+    axios.get('/api/profile/addMedicine/findCateogry',{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       setCategories(result.data);
     });
-    axios.get('/api/profile/addMedicine/findType').then((result)=>{
+    axios.get('/api/profile/addMedicine/findType',{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       setTypes(result.data);
     });
   },[]);
 
   const handleSubmit = (e) =>{
     e.preventDefault();
-    axios.patch('/api/profile/addMedicine/addNewMedicine/'+_id,{
+    axios.patch('/api/profile/addMedicine/addNewMedicine/'+sellerId,{
         MedicineName:medicineName,
         GenericName:genericName,
         TypeID:medicineType,
@@ -55,7 +68,7 @@ const AddMedicine = () => {
   if(categories!==null && types!==null){
     return (
       <div>
-        <NavbarPharmacy />
+        <NavbarPharmacy id={_id}/>
         <section className="d-flex justify-content-center">
           <Card className="addMedicineCard">
             <Card.Header

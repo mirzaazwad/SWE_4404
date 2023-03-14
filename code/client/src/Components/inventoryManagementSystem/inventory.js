@@ -11,27 +11,35 @@ import { useDispatch, useSelector } from "react-redux";
 import Table from "react-bootstrap/Table";
 import NavbarPharmacy from "../profile/navbarPharmacy";
 
-  // <tr key={medicine._id} onClick={()=>editMedicine(medicine._id)}>
-  // <td> {count+=1} </td> <td> {medicine.MedicineName} </td>{" "}
-  // <td> {medicine.GenericName} </td> <td> {medicine.TypeID} </td>{" "}
-  // <td> {medicine.Manufacturer} </td>{" "}
-  // <td> {medicine.SellingPrice} </td>{" "}
-  // <td> {medicine.PurchasePrice} </td> <td> {medicine.amount} </td>{" "}
-
 const Inventory = () => {
+  const user2=useSelector((state)=>state.userState.user);
+  console.log('retrive: ',user2);
+  const user=JSON.parse(localStorage.getItem('user'));
+  const [sellerId,setSellerId]=useState();
+  const dispatch=useDispatch();
   const id=useParams();
   const _id=id.id;
-  //const user=useSelector((state) => state.userState.user);
   const [medicines, setMedicines] = useState([]);
   const [types,setTypes] = useState([]);
   useEffect(()=>{
-    axios.get('/api/profile/inventory/getTypes').then((result)=>{
+    axios.get('/api/profile/user/getUserSellerId/'+_id,{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((response)=>{
+      console.log('res: ',response.data._id);
+      setSellerId(response.data._id);
+    })
+    .catch(err=>console.log(err))
+    axios.get('/api/profile/inventory/getTypes',{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       setTypes(result.data.result);
     })
-    axios.get('/api/profile/inventory/getMedicines/'+_id).then((result)=>{
+    axios.get('/api/profile/inventory/getMedicines/'+sellerId,{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
       let temp=result.data.Inventory;
       let res=[];
-      temp.forEach(async(item)=>{
+      temp.forEach((item)=>{
         const medicine={
           _id:item._id,
           MedicineName:item.MedicineName,
@@ -40,13 +48,17 @@ const Inventory = () => {
           Manufacturer:item.Manufacturer,
           SellingPrice:item.SellingPrice,
           PurchasePrice:item.PurchasePrice,
-          Amount:0
+          Amount:0,
+          StockID:item._id
         }
         res.push(medicine);
       })
       setMedicines(res);
-    },[]);
-  })
+    });
+    // axios.get('/api/profile/inventory/getStocks/').then((result)=>{
+    //   console.log(result);
+    // })
+  },[sellerId])
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
   const handleClose = () => setShow(false);
@@ -80,17 +92,21 @@ const Inventory = () => {
     console.log('editing medicines' + value);
   }
 
+  const addToStock = () =>{
+    
+  }
+
   
   if(medicines!==null){
     return (
       <div>
           <div>
-          <NavbarPharmacy/>
+          <NavbarPharmacy id={_id}/>
           </div>
        <section className="inventory-section">  
       <div className="d-flex w-75 m-auto  flex-column">
           <div className="d-flex justify-content-between mb-2">
-          <Link to={'/inventoryManagementSystem/addMedicine/'+ id}><Button className="btn btn-add" variant="primary">Add new medicine <i className='bx bx-plus-circle bx-sm' ></i></Button>{' '}</Link>
+          <Link to={'/inventoryManagementSystem/addMedicine/'+ id.id}><Button className="btn btn-add" variant="primary">Add new medicine <i className='bx bx-plus-circle bx-sm' ></i></Button>{' '}</Link>
         <div className="d-flex justify-content-end align-items-center">
         
           <Form.Label className="me-2 mb-0"> Filter By: </Form.Label>{" "}

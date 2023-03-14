@@ -167,6 +167,18 @@ const changePassword = async (req, res) => {
   }
 };
 
+const getSellerID = async(req,res)=>{
+  const _id=req.params.id;
+  try{
+    const email=(await userModel.findById(_id)).email;
+    const seller=(await sellerModel.findOne({email:email}))._id;
+    res.status(200).json({_id:seller});
+  }
+  catch(err){
+    res.status(400).json({ success: false,error: err.message });
+  }
+}
+
 module.exports = {
   getUserByID,
   patchUserByID,
@@ -176,4 +188,5 @@ module.exports = {
   patchSellerByEmail,
   changePassword,
   verifyPassword,
+  getSellerID
 };

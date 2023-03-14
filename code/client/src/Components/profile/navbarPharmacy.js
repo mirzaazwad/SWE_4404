@@ -9,19 +9,18 @@ import { useNavigate, useParams } from 'react-router';
 import {Navigate} from "react-router-dom";
 import '../../index.css';
 
-const NavbarPharmacy=() =>{
-  const {id} = useParams();
+const NavbarPharmacy=(props) =>{
+  const id = props.id;
   const {logout}= useLogout();
   const navigate=useNavigate();
   const handleLogout = () =>{
     logout();
     return navigate('/');
   }
+  console.log('nav'+props);
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
-        
-       
         <Navbar.Brand className='px-2' href="#"  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle className='px-2' aria-controls="navbarScroll" />
         
