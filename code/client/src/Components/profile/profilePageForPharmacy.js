@@ -9,8 +9,6 @@ import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 
 const  ProfilePageForPharmacy = () => {
   const user=useSelector((state)=>state.userState.user);
-  console.log(user.token);
-  console.log(user);
   const {id}=useParams();
   const dispatch=useDispatch();
   const retrieveUser = async() =>{
@@ -46,7 +44,7 @@ const  ProfilePageForPharmacy = () => {
   },[])
   return (     
   <div>
-    <NavbarPharmacy />
+    <NavbarPharmacy id={id}/>
 
     <section>
     <div className="container h-100">
