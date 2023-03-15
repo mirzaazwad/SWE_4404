@@ -1,35 +1,6 @@
 const mongoose = require("mongoose");
+const medicineType = require("./medicine-type");
 const Schema = mongoose.Schema;
-
-const stockSchema = new Schema({
-  Pcs: {
-    type: Number,
-    validate: {
-      validator: function(value) {
-        return value >= 0;
-      },
-      message: 'Number of pieces must be greater than zero'
-    }
-  },
-  Strips: {
-    type: Number,
-    validate: {
-      validator: function(value) {
-        return value >= 0;
-      },
-      message: 'Number of strips must be greater than zero'
-    }
-  },
-  Boxes: {
-    type: Number,
-    validate: {
-      validator: function(value) {
-        return value >= 0;
-      },
-      message: 'Number of boxes must be greater than zero'
-    }
-  },
-});
 
 const medicineSchema = new Schema({
   MedicineName: {
@@ -52,6 +23,15 @@ const medicineSchema = new Schema({
   Manufacturer: {
     type: String,
     required: true,
+  },
+  StripsPerBox:{
+    type:Number,
+  },
+  PcsPerStrip:{
+    type:Number,
+  },
+  PcsPerBox:{
+    type:Number,
   },
   SellingPrice: {
     type: Number,
@@ -76,8 +56,34 @@ const medicineSchema = new Schema({
   Description:{
     type:String
   },
-  Stock: {
-    stockSchema,
+  Stock: 
+    {Pcs: {
+      type: Number,
+      validate: {
+        validator: function(value) {
+          return value >= 0;
+        },
+        message: 'Number of pieces must be greater than zero'
+      }
+    },
+    Strips: {
+      type: Number,
+      validate: {
+        validator: function(value) {
+          return value >= 0;
+        },
+        message: 'Number of strips must be greater than zero'
+      }
+    },
+    Boxes: {
+      type: Number,
+      validate: {
+        validator: function(value) {
+          return value >= 0;
+        },
+        message: 'Number of boxes must be greater than zero'
+      }
+    },
   },
 });
 
@@ -93,16 +99,39 @@ const pharmacySchema = new Schema({
 });
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {
+  const medicineDescription=await medicineType.findById(medicine.TypeID).select('hasPcs hasStrips hasBoxes');
+  console.log(medicineDescription);
+  let stock=null;
+  if(medicineDescription.hasStrips===true && medicineDescription.hasBoxes===true){
+    stock={
+      Pcs:0,
+      Strips:0,
+      Boxes:0
+    }
+  }
+  else if(medicineDescription.hasStrips===true){
+    stock={
+      Pcs:0,
+      Strips:0,
+    }
+  }
+  else if(medicineDescription.hasBoxes===true){
+    stock={
+      Pcs:0,
+      Boxes:0,
+    }
+  }
+  else{
+    stock={
+      Pcs:0,
+      Boxes:0,
+    }
+  }
   try {
     const result = await this.findOne({ pharmacyManagerID: _id });
-    const stockModel = mongoose.model('StockModel',stockSchema);
     result.Inventory.push({
       ...medicine,
-      Stock:stockModel.create({
-        Pcs:0,
-        Strips:0,
-        Boxes:0
-      })
+      Stock:stock
     });
     await result.save();
     return await this.findOne({ pharmacyManagerID: _id });
