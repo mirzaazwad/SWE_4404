@@ -6,7 +6,6 @@ import Modal from "react-bootstrap/Modal";
 import { InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import "../../index.css";
-import "boxicons";
 import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
@@ -126,7 +125,7 @@ const ProfileFormPharmacy=(id)=> {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
-          <Form.Control type="email" placeholder="Enter email"   disabled={isDisabled} value = {seller.email} />
+          <Form.Control type="email" placeholder="Enter email"   disabled={true} value = {seller.email} />
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicPassword">
           {isEditing &&(<a href={"changePassword/" + user._id}>Change Password</a>)}
