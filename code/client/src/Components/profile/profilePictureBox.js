@@ -37,16 +37,16 @@ function ProfilePicture(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3">
+        <Form.Group controlId="formFile" className="mb-3" onSubmit={handleSubmit} enctype = 'multipart/form-data'>
         <Form.Label>Upload new profile picture</Form.Label>
-        <Form.Control type="file" />
+        <Form.Control type="file" onChange = {handlePhoto} />
       </Form.Group>
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={() => setModalShow(false)}>
                     Close
                   </Button>
-                  <Button variant="primary">
+                  <Button variant="primary" type='submit'>
                     Save Changes
                   </Button>
       </Modal.Footer>
