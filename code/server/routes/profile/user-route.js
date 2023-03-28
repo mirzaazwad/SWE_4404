@@ -1,5 +1,5 @@
 const express=require('express');
-const {getUserByID,changePassword,patchUserByID,verifyPassword,getSellerID} = require('../../controller/profile-controller');
+const {getUserByID,changePassword,patchUserByID,verifyPassword,getSellerID, getImage} = require('../../controller/profile-controller');
 const requireAuth = require('../../middleware/requireAuth');
 const router=express.Router();
 
@@ -9,5 +9,7 @@ router.get('/getUserSellerId/:id',getSellerID);
 router.get('/getUser/:id',getUserByID);
 router.post('/verify',verifyPassword);
 router.patch('/changePassword/:id',changePassword); 
+router.get('/getImage/:id',getImage);
+
 
 module.exports = router;
