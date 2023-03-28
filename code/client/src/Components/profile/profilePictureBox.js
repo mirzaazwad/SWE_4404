@@ -2,39 +2,29 @@ import '../../index.css'; // import the CSS file for styling
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import axios from 'axios';
-function ProfilePicture() {
-
+import { useSelector } from 'react-redux';
+function ProfilePicture(props) {
+  const user=useSelector((state)=>state.userState.user);
   const [modalShow, setModalShow] = useState(false);
-    const [newUser, setNewUser] = useState(
-        {
-            imageURL: '',
-        }
-    )
-      const handleSubmit = (e) => {
-        e.preventDefault();
-        const formData = new FormData();
-        formData.append('photo', newUser.imageURL);
+  const [image,setImage]=useState(null);
+  console.log(props);
+  useEffect(()=>{
+    axios.get('/api/profile/user/getImage/'+props.id,{headers: {
+      'Authorization': `Bearer ${user.token}`
+    }}).then((result)=>{
+      console.log(result.data.imageURL);
+      setImage(result.data.imageURL)
+    });
 
-        axios.post('http://localhost:4000/api/profile/profilePicture', formData)
-             .then(res => {
-                console.log(res);
-             })
-             .catch(err => {
-                console.log(err);
-             });
-    }
-    
-
-  const handlePhoto = (e) => {
-      setNewUser({...newUser, imageURL: e.target.files[0]});
-  }
+  })
+  
   return (
     <div className="profile-picture-container">
-      {console.log(newUser.imageURL.name)};
+      {<img src={require('../../images/321504286_673183284310305_2418389886188844738_n.jpg')} alt="Profile Picture" />}
       
-      <img src={newUser.imageURL} alt="Profile Picture" />
+
       <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>
       <Modal show={modalShow}
         onHide={() => setModalShow(false)}

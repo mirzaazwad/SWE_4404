@@ -6,7 +6,6 @@ import Modal from "react-bootstrap/Modal";
 import { InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import "../../index.css";
-import "boxicons";
 import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
@@ -146,7 +145,7 @@ const ProfileFormCustomer = (id) => {
           <Form.Control
             type="email"
             placeholder="Enter email"
-            disabled={isDisabled}
+            disabled={true}
             value={buyer.email}
           />
         </Form.Group>
