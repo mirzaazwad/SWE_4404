@@ -7,6 +7,7 @@ const inventoryRoutes = require("./routes/inventory-routes");
 const profileRoutesUser = require("./routes/profile/user-route");
 const profileRoutesBuyer = require("./routes/profile/buyer-route");
 const profileRoutesSeller = require("./routes/profile/seller-route");
+const profilePictureRoutes = require("./routes/profile/profilePicture-route");
 const app=express();
 const dbURI = process.env.ConnectionString;
 mongoose
@@ -18,6 +19,7 @@ mongoose
 
 app.use(express.json());
 
+app.use("/api/profile/profilePicture",profilePictureRoutes);
 app.use("/api/profile/addMedicine",medicineAddRoutes);
 app.use("/api/profile/inventory",inventoryRoutes);
 app.use("/api",loginSignUpRoutes);
