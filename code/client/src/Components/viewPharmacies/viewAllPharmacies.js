@@ -2,54 +2,47 @@ import React from 'react';
 import PharmacyCard from './pharmacyCard';
 import NavbarCustomer from '../profile/navbarCustomer';
 import { useParams } from 'react-router-dom';
-
-const Pharmacies = [
-  {
-    id: 1,
-    name: 'ABC Pharmacy',
-    location: '123 Main St, Anytown, USA',
-    image: 'https://picsum.photos/id/1/200/300',
-  },
-  {
-    id: 2,
-    name: 'XYZ Pharmacy',
-    location: '456 Oak St, Anytown, USA',
-    image: 'https://picsum.photos/id/2/200/300',
-  },
-  {
-    id: 3,
-    name: '123 Pharmacy',
-    location: '789 Maple St, Anytown, USA',
-    image: 'https://picsum.photos/id/3/200/300',
-  },
-  {
-    id: 4,
-    name: '123 Pharmacy',
-    location: '789 Maple St, Anytown, USA',
-    image: 'https://picsum.photos/id/3/200/300',
-  },
-];
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 
 const PharmacyPage = () => {
-  const {id}=useParams();
+  const [Pharmacies, setPharmacies] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get("http://localhost:4000/api/pharmacies/");
+        setPharmacies(response.data);
+        console.log(response.data);
+        console.log(typeof Pharmacies);
+        console.log(typeof response.data.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  const { id } = useParams();
   return (
     <div>
-    <NavbarCustomer id={id}/>
-    <section >
-    <div className="container-fluid pharmacy-container">
-      <div className="row">
-        {Pharmacies.map((pharmacy) => (
-          <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
-            <PharmacyCard
-              name={pharmacy.name}
-              location={pharmacy.location}
-              image={pharmacy.image}
-            />
+      <NavbarCustomer id={id} />
+      <section>
+        <div className="container-fluid pharmacy-container">
+          <div className="row">
+            
+            {Pharmacies.map((pharmacy) => (
+              <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
+                <PharmacyCard
+                  name={pharmacy.pharmacy}
+                  location={pharmacy.address}
+                  image={'https://picsum.photos/id/3/200/300'}
+                />
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-    </div>
-    </section>
+        </div>
+      </section>
     </div>
   );
 };
