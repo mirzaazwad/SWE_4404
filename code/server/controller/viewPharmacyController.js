@@ -9,12 +9,13 @@ exports.getAllPharmacies = async (req, res) => {
       const user = await User.findOne({ email: seller.email, address: { $exists: true } }, 'address').lean();
       if (user) {
         pharmacies.push({
+        id: seller._id,
           name: seller.pharmacy,
           location: user.address,
         });
       }
     }
-    res.status(200).json({ success: true, data: pharmacies });
+    res.status(200).json({pharmacies});
   } catch (error) {
     console.log(error);
     res.status(500).json({ success: false, error: 'Server error' });

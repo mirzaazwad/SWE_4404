@@ -12,10 +12,10 @@ const PharmacyPage = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/");
-        setPharmacies(response.data);
+        setPharmacies(response.data.pharmacies);
         console.log(response.data);
         console.log(typeof Pharmacies);
-        console.log(typeof response.data.data);
+        console.log(typeof response.data);
       } catch (error) {
         console.log(error);
       }
@@ -34,9 +34,9 @@ const PharmacyPage = () => {
             {Pharmacies.map((pharmacy) => (
               <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
                 <PharmacyCard
-                  name={pharmacy.pharmacy}
-                  location={pharmacy.address}
-                  image={'https://picsum.photos/id/3/200/300'}
+                  name={pharmacy.name}
+                  location={pharmacy.location}
+                  image={'https://www.mawbiz.com.bd/application/views/module/product_image/IMG_3556_1.JPG'}
                 />
               </div>
             ))}
