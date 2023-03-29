@@ -1,13 +1,36 @@
 import React from 'react';
 import PharmacyCard from './pharmacyCard';
 import NavbarCustomer from '../profile/navbarCustomer';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-
+import {useDispatch, useSelector } from 'react-redux';
+import { LOGOUT, setBuyerUser } from '../../Contexts/action';
 const PharmacyPage = () => {
   const [Pharmacies, setPharmacies] = useState([]);
+  const user=useSelector((state)=>state.userState.buyerState);
+  const {id}=useParams();
+  const dispatch=useDispatch();
+  const retrieveUser = async () => {
 
+    try {
+      console.log(user);
+      console.log("aaaaaa");
+      const response = await axios.get(`http://localhost:4000/api/profile/user/getUser/`+id, {
+        headers: { 'Authorization': `Bearer ${user.token}` }
+      });
+      console.log("aaaaaa");
+      console.log(response.data);
+      dispatch(setBuyerUser(response.data));
+    } catch (error) {
+      console.log(error);
+      if (error.status === 401) {
+        localStorage.removeItem('user');
+        dispatch(LOGOUT);
+      }
+    }
+  };
+  
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -20,10 +43,13 @@ const PharmacyPage = () => {
         console.log(error);
       }
     };
+      retrieveUser();
     fetchData();
   }, []);
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
-  const { id } = useParams();
   return (
     <div>
       <NavbarCustomer id={id} />
