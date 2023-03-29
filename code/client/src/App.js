@@ -9,10 +9,7 @@ import ChangePassword from "./Components/profile/changePassword";
 import { useEffect } from "react";
 import AddMedicine from "./Components/inventoryManagementSystem/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
-
-
-
-
+import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 function App() {
   const user=useSelector((state)=>state.userState.user);
   return (
@@ -23,6 +20,7 @@ function App() {
           <Route exact path='/' element={!user?<Landing data={'login'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
           <Route exact path='/signup' element={!user?<Landing data={'signup'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
           <Route exact path='/profileBuyer/:id' element={user?<ProfilePageForCustomers/>:<Navigate to='/'/>}/>
+          <Route exact path='/ViewPharmacies/:id' element={<ViewPharmacies/>}/>
           <Route exact path='/profileSeller/:id' element={user?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
           <Route exact path='/profileBuyer/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />

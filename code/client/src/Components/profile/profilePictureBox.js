@@ -37,9 +37,9 @@ function ProfilePicture(props) {
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3" onSubmit={handleSubmit} enctype = 'multipart/form-data'>
+        <Form.Group controlId="formFile" className="mb-3"  enctype = 'multipart/form-data'>
         <Form.Label>Upload new profile picture</Form.Label>
-        <Form.Control type="file" onChange = {handlePhoto} />
+        <Form.Control type="file"  />
       </Form.Group>
       </Modal.Body>
       <Modal.Footer>
