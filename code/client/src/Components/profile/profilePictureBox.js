@@ -32,6 +32,7 @@ function ProfilePicture(props) {
     <div className="profile-picture-container">
       {<img src={require('../../images/321504286_673183284310305_2418389886188844738_n.jpg')} alt="Profile Picture" />}
       
+
       <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>
       <Modal show={modalShow}
         onHide={() => setModalShow(false)}
@@ -47,7 +48,7 @@ function ProfilePicture(props) {
       </Modal.Header>
       <Form encType='multipart/form-data' onSubmit={handleSubmit}>
       <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3">
+        <Form.Group controlId="formFile" className="mb-3" onSubmit={handleSubmit} enctype = 'multipart/form-data'>
         <Form.Label>Upload new profile picture</Form.Label>
         <Form.Control type="file" accept=".png, .jpg, .jpeg" name="profile-picture" onChange={handleImage}/>
       </Form.Group>

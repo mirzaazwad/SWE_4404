@@ -21,6 +21,7 @@ const conn=mongoose
 
 app.use(express.json());
 
+app.use("/api/profile/profilePicture",profilePictureRoutes);
 app.use("/api/profile/addMedicine",medicineAddRoutes);
 app.use("/api/profile/inventory",inventoryRoutes);
 app.use("/api",loginSignUpRoutes);
