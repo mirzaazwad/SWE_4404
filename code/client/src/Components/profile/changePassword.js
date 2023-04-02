@@ -5,13 +5,14 @@ import NavbarLanding from '../partials/landing/navbarLanding';
 import { InputGroup } from 'react-bootstrap';
 import {EyeFill,EyeSlashFill} from "react-bootstrap-icons";
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { passwordAuth, confirmPasswordAuth } from '../../Authentication/Auth'; 
+import { useSelector } from 'react-redux';
 
 const ChangePassword = () => {
-    const user=JSON.parse(localStorage.getItem('user'));
+    const user = useSelector((state)=>state.userState.user);
     const navigate=useNavigate();
     const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
     const [NewPasswordVisibility, setNewPasswordVisibility] = useState(false);

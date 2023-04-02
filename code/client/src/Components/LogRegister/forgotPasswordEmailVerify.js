@@ -1,6 +1,6 @@
 import Button from 'react-bootstrap/Button';
 import OtpInput from 'react18-input-otp';
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import axios from 'axios';
 import 'bootstrap';
 import '../../index.css';
@@ -31,10 +31,11 @@ const ForgotPasswordEmailVerify = (props) => {
         console.log(result);
         setEnterotp(false);
       }).catch((error)=>{
-        console.log(error);
+        setIsDisabled(true);
         setError(error.response.data.error);
         setisLocked(false);
       });
+      setIsDisabled(false);
     }
     
   if(enterotp){

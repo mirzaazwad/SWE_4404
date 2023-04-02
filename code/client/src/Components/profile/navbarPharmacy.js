@@ -3,10 +3,8 @@ import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useLogout } from '../../Hooks/useLogout';
-import { useNavigate, useParams } from 'react-router';
-import {Navigate} from "react-router-dom";
+import { useNavigate } from 'react-router';
 import '../../index.css';
 
 const NavbarPharmacy=(props) =>{

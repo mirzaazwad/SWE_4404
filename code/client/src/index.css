@@ -163,6 +163,16 @@ code {
    
 }
 
+.btn-group{
+  padding:0% 0% 5% 0%;
+  
+}
+.btn.btn-outline-primary{
+  --bs-btn-active-bg:#4596be;
+  --bs-btn-border-radius: 15px;
+  --bs-btn-hover-bg:#2e6a88;
+}
+
 .btn-outline-primary, .btn-outline-primary:active, .btn-outline-primary:visited {
   color: #3354a9 !important;
   border-color: #3354a9 !important;
@@ -299,7 +309,10 @@ code {
 }
 .singUp-button{
   height: 25%;
+
 }
+
+
 .signup-container {
   flex: 1;
   flex-basis: 50%;
@@ -337,6 +350,7 @@ code {
   margin-top: 7%;
   display: fit-content;
 }
+
 @media (max-width: 768px){
   .addMedicineCard{
     width: 80%;

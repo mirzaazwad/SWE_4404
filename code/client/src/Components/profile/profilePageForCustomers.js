@@ -2,33 +2,25 @@ import { useParams } from 'react-router-dom';
 import NavbarCustomer from './navbarCustomer';
 import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
-import ChangePassword from './changePassword';
 import axios from 'axios';
 import { useEffect } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
-import { LOGOUT, setBuyerUser } from '../../Contexts/action';
+import { setBuyerUser } from '../../Contexts/action';
 
 const  ProfilePageForCustomers = () => {
-  const user=useSelector((state)=>state.userState.user);
+  const user = useSelector((state)=>state.userState.user);
   const {id}=useParams();
   const dispatch=useDispatch();
-  const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/getUser/'+id,{
-      headers:{'Authorization': `Bearer ${user.token}`}
-    }).then((result)=>{
-      dispatch(setBuyerUser(result.data));
-    })
-    .catch((error)=>{
-      console.log(error);
-      if(error.status===401){
-        localStorage.removeItem('user');
-        dispatch(LOGOUT);
-      }
-    });
-  };
   useEffect(()=>{
+    const retrieveUser = async() =>{
+      await axios.get('/api/profile/user/getUser/'+id,{
+        headers:{'Authorization': `Bearer ${user.token}`}
+      }).then((result)=>{
+        dispatch(setBuyerUser(result.data));
+      })
+    };
     retrieveUser();
-  },[])
+  },[dispatch,id,user.token])
   return (     
     <div>
       <NavbarCustomer />

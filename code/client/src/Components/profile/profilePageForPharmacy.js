@@ -8,40 +8,33 @@ import {useDispatch, useSelector } from 'react-redux';
 import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
 
 const  ProfilePageForPharmacy = () => {
-  const user=useSelector((state)=>state.userState.user);
+  const user = useSelector((state)=>state.userState.user);
   const {id}=useParams();
   const dispatch=useDispatch();
-  const retrieveUser = async() =>{
-    await axios.get('/api/profile/user/getUser/'+id,{headers: {
-      'Authorization': `Bearer ${user.token}`
-    }}).then(async (result)=>{
-      dispatch(setSellerUser(result.data));
-      await axios.get('/api/profile/seller/'+result.data.email,{headers: {
-        'Authorization': `Bearer ${user.token}`
-      }}).then((res)=>{
-        console.log(res.data);
-        dispatch(setSellerDetails(res.data));
-      })
-      .catch((error)=>{
-        if(error.status===401){
-          localStorage.removeItem('user');
-          dispatch(LOGOUT);
-        }
-      });
-    },{headers: {
-      'Authorization': `Bearer ${user.token}`
-    }})
-    .catch((error)=>{
-      if(error.status===401){
-        localStorage.removeItem('user');
-      }
-    });
-    
-    
-  };
   useEffect(()=>{
-    retrieveUser();
-  },[])
+    const retrieveUser = async() =>{
+      await axios.get('/api/profile/user/getUser/'+id,{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }}).then(async (result)=>{
+        dispatch(setSellerUser(result.data));
+        await axios.get('/api/profile/seller/'+result.data.email,{headers: {
+          'Authorization': `Bearer ${user.token}`
+        }}).then((res)=>{
+          console.log(res.data);
+          dispatch(setSellerDetails(res.data));
+        })
+        .catch((error)=>{
+          if(error.status===401){
+            localStorage.removeItem('user');
+            dispatch(LOGOUT);
+          }
+        });
+      },{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }});
+     };
+     retrieveUser();
+  },[dispatch,id,user.token])
   return (     
   <div>
     <NavbarPharmacy id={id}/>
