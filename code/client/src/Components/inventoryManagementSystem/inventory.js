@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import "../../index.css";
 import Table from "react-bootstrap/Table";
-import NavbarPharmacy from "../profile/navbarPharmacy";
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSelector } from "react-redux";
 
 const Inventory = () => {

@@ -2,7 +2,7 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { InputGroup, Form } from "react-bootstrap";
-import NavbarPharmacy from "../profile/navbarPharmacy";
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import axios from "axios";

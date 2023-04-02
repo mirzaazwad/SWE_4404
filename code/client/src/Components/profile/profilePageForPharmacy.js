@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import NavbarPharmacy from './navbarPharmacy';
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import ProfileFormPharmacy from './profileFormPharmacy';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
