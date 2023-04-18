@@ -11,6 +11,7 @@ import Inventory from "./Components/inventoryManagementSystem/inventory";
 import Error404 from "./Components/error404";
 import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
+import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 
 function App() {
   let user=useSelector((state)=>state.userState.user);
@@ -34,7 +35,8 @@ function App() {
           <Route exact path='/emailVerify/:email' element={!user || user.verified===false?<EmailVerification/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
           <Route exact path='/inventoryManagementSystem/inventory/:id' element={user && user.verified===true?<Inventory/>:<Navigate to='/'/>}/>
           <Route exact path='/inventoryManagementSystem/addMedicine/:id' element={user && user.verified===true?<AddMedicine/>:<Navigate to='/'/>}/>
-          <Route exact path='/ViewPharmacies/:id' element={<ViewPharmacies/>}/>
+          <Route exact path='/ViewPharmacies/:id' element={user && user.verified===true?<ViewPharmacies/>:<Navigate to ='/'/>}/>
+          <Route exact path='/Pharmacy/:id' element={user && user.verified===true?<Pharmacy/>:<Navigate to ='/'/>}/>
           <Route path='*' element={<Error404/>}></Route>
         </Routes>
       </div>

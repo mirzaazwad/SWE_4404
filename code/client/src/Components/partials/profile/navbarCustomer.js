@@ -5,10 +5,11 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
 import { useLogout } from '../../../Hooks/useLogout';
+import {useParams} from 'react-router-dom';
 import '../../../index.css';
 
 const NavbarCustomer=()=>{
-  const id=localStorage.getItem('id');
+  const id = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user'))._id:null;
   const {logout} = useLogout();
   const navigate=useNavigate();
   const handleLogout = () =>{
