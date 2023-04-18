@@ -4,11 +4,11 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
-import { useLogout } from '../../Hooks/useLogout';
-import '../../index.css';
+import { useLogout } from '../../../Hooks/useLogout';
+import '../../../index.css';
 
-const NavbarCustomer=(props)=>{
-  const id=props.id;
+const NavbarCustomer=()=>{
+  const id=localStorage.getItem('id');
   const {logout} = useLogout();
   const navigate=useNavigate();
   const handleLogout = () =>{
