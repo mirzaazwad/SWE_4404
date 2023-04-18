@@ -2,14 +2,11 @@ import axios from "axios";
 import { useState } from "react";
 import CryptoJS from "crypto-js";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { LOGIN } from "../Contexts/action";
 
 export const useSignUp = () =>{
   const [error,setError] = useState(null);
   const [isLoading, setisLoading] = useState(null);
   const navigate =useNavigate();
-  const dispatch=useDispatch();
   const signup = async (userType,username,email,password) =>{
     setisLoading(true);
     setError(null);

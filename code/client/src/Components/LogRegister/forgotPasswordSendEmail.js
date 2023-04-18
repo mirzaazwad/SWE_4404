@@ -1,7 +1,5 @@
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import Card from 'react-bootstrap/Card';
-import NavbarLanding from '../partials/landing/navbarLanding';
 import { InputGroup } from 'react-bootstrap';
 import {Envelope} from "react-bootstrap-icons";
 import { useState } from "react";

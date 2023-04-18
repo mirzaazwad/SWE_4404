@@ -1,56 +1,12 @@
-import {
-  Card,
-  Form,
-  Button,
-  InputGroup,
-  ToggleButton,
-  ButtonGroup,
-} from "react-bootstrap";
-import { useEffect, useState } from "react";
-import { LOGIN, setLogin } from "../../Contexts/action";
-import { useDispatch } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
-import {
-  emailAuth,
-  passwordAuth,
-  confirmPasswordAuth,
-  userNameAuth,
-} from "../../Authentication/Auth";
-import {
-  Envelope,
-  Lock,
-  EyeFill,
-  EyeSlashFill,
-  Person,
-} from "react-bootstrap-icons";
+import {Card,Form,Button,InputGroup,ToggleButton,ButtonGroup} from "react-bootstrap";
+import { useState } from "react";
+import { Link } from "react-router-dom";
+import {emailAuth,passwordAuth,confirmPasswordAuth,userNameAuth,} from "../../Authentication/Auth";
+import {Envelope,Lock,EyeFill,EyeSlashFill,Person,} from "react-bootstrap-icons";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useSignUp } from "../../Hooks/useSignUp";
-import jwt_decode from 'jwt-decode';
-import axios from "axios";
 
 const SignUp = () => {
-  useEffect(()=>{
-    /* global google */
-    google.accounts.id.initialize(
-      {
-        client_id: "430247778721-b4hss8mpbk8qhtfkr4v7h1d2gt32me82.apps.googleusercontent.com",
-        callback: handleCallBackResponse
-      }
-    );
-    google.accounts.id.renderButton(
-      document.getElementById('googleSignIn'),
-      {theme:'outline', size:'large'}
-    )
-  },[]);
-
-  const dispatch = useDispatch();
-  const [radioValue, setRadioValue] = useState(1);
-  const navigate=useNavigate();
-  const [radioName, setRadioName] = useState("Buyer");
-  const radios = [
-    { name: "Buyer", value: 1 },
-    { name: "Seller", value: 2 },
-  ];
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -61,6 +17,7 @@ const SignUp = () => {
   const [errorConfirmPassword, setErrorCPassword] = useState("");
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] =useState(false);
   const {signup,error,isLoading}= useSignUp();
+  const [radioName,setRadioName]=useState('buyer');
 
   const emailChange = (event) => {
     const result = emailAuth(event.target.value);
@@ -77,14 +34,6 @@ const SignUp = () => {
     setErrorCPassword(confirmPasswordValidation.error);
   };
 
-  const radioChange = (event) => {
-    setRadioValue(event.target.value);
-    if (event.target.value === 1) {
-      setRadioName("Buyer");
-    } else {
-      setRadioName("Seller");
-    }
-  };
   const confirmPasswordChange = (event) => {
     const confirmPasswordValidation = confirmPasswordAuth(
       password,
@@ -94,26 +43,14 @@ const SignUp = () => {
     setConfirmPassword(confirmPasswordValidation.confirmPassword);
   };
 
+  const radioChange = (e) =>{
+    setRadioName(e.target.value);
+  }
+
   
   const handleSubmit =async (e) =>{
     e.preventDefault();
-    await signup(radioName==='Seller'?'seller':'buyer',username,email,password);
-  }
-
-  const signin = async (userType,username,email,googleId,imageURL,verified) =>{
-    await axios.post('/api/google/signup',{userType:userType,username:username,email:email,googleId:googleId,imageURL:imageURL,verified:verified})
-    .then((result)=>{
-      dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
-      localStorage.setItem('user',JSON.stringify({_id:result.data._id,email:result.data.email,userType:result.data.userType,token:result.data.token,verified:true}));
-    })
-    .catch((err)=>{
-      console.log(err.response.data.error);
-    })
-  }
-
-  async function handleCallBackResponse(response){
-    const res= jwt_decode(response.credential);
-    signin(radioName==='Seller'?'seller':'buyer',res.name,res.email,res.sub,res.picture,res.verified);
+    await signup(radioName==='buyer'?'buyer':'seller',username,email,password);
   }
 
   return (
@@ -124,27 +61,35 @@ const SignUp = () => {
           <Card.Text>
             <Form onSubmit={handleSubmit}>
               <Form.Group controlId="errorMessageEmail">
-                <p style={{ color: "red" }}>{error}</p>
+                <span style={{ color: "red" }}>{error}</span>
               </Form.Group>
               <Form.Group
                 controlId="UserType"
               >
                 <div className="d-flex justify-content-center w-100" >
                 <ButtonGroup className="singUp-button ">
-                  {radios.map((radio, idx) => (
                     <ToggleButton
-                      key={idx}
-                      id={`radio-${idx}`}
+                      id={'buyer'}
                       type="radio"
-                      variant={idx % 2 ? "primary" : "primary"}
-                      name="radio"
-                      value={radio.value}
-                      checked={radioValue === radio.value}
+                      variant={radioName === 'buyer'?"primary":"outline-primary"}
+                      name="buyer"
+                      value={'buyer'}
+                      checked={radioName === 'buyer'}
                       onChange={radioChange}
                     >
-                      {radio.name}
+                      buyer
                     </ToggleButton>
-                  ))}
+                    <ToggleButton
+                      id={'seller'}
+                      type="radio"
+                      variant={radioName === 'seller'?"primary":"outline-primary"}
+                      name="seller"
+                      value={'seller'}
+                      checked={radioName === 'seller'}
+                      onChange={radioChange}
+                    >
+                      seller
+                    </ToggleButton>
                 </ButtonGroup>
                 </div>
                 
@@ -166,7 +111,7 @@ const SignUp = () => {
               </InputGroup>
                 </Form.Group>
               <Form.Group controlId="errorMessageEmail">
-                <p style={{ color: "red" }}>{errorEmail}</p>
+                <span style={{ color: "red" }}>{errorEmail}</span>
               </Form.Group>
 
                 <Form.Group controlId="Email" className="w-100">
@@ -188,7 +133,7 @@ const SignUp = () => {
                 controlId="errorPassword"
                 style={{ overflowWrap: "anywhere" }}
               >
-                <p style={{ color: "red" }}>{errorPassword}</p>
+                <span style={{ color: "red" }}>{errorPassword}</span>
               </Form.Group>
 
                 <Form.Group controlId="Password" className="w-100">
@@ -215,7 +160,7 @@ const SignUp = () => {
               </InputGroup>
                 </Form.Group>
               <Form.Group controlId="errorConfirmPassword" className="w-100">
-                <p style={{ color: "red" }}>{errorConfirmPassword}</p>
+                <span style={{ color: "red" }}>{errorConfirmPassword}</span>
               </Form.Group>
                 <Form.Group controlId="ConfirmPassword">
               <InputGroup className="mt-3 mb-3" size="sm">
@@ -251,7 +196,12 @@ const SignUp = () => {
               </div>
               <hr />
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-                <div id="googleSignIn" className="google"></div>
+              <Button className="btn-login me-3" size="lg" >
+                <i className='bx bxl-google'></i>
+                </Button>
+                <Button className="btn-login " size="lg" disable={isLoading}>
+                <i className='bx bxl-facebook-circle'></i>
+                </Button>
               </Form.Group>
             </Form>
             <div className="existingAccount landingText" style={{ textAlign: "center"  }}>

@@ -4,6 +4,7 @@ const sellerModel = require("../model/seller-model");
 const pharmacyModel = require("../model/pharmacy-model");
 const bcrypt = require("bcryptjs");
 
+
 const getUserByID = async (req, res) => {
   const { id } = req.params;
   try {
@@ -179,22 +180,6 @@ const getSellerID = async(req,res)=>{
   }
 }
 
-const getImage = async(req,res)=>{
-  const _id=req.params.id;
-  try{
-    const users=await userModel.findById(_id);
-    if(users.googleId!=null){
-      res.status(200).json(users);
-    }
-    else{
-      res.status(400).json({error:'Image not available'});
-    }
-  }
-  catch(err){
-    res.status(400).json({ success: false,error: err.message });
-  }
-}
-
 module.exports = {
   getUserByID,
   patchUserByID,
@@ -204,6 +189,5 @@ module.exports = {
   patchSellerByEmail,
   changePassword,
   verifyPassword,
-  getSellerID,
-  getImage
+  getSellerID
 };
