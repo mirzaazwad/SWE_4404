@@ -1,5 +1,7 @@
 import { useParams } from 'react-router-dom';
+
 import NavbarCustomer from "../partials/profile/navbarCustomer";
+
 import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
@@ -23,7 +25,7 @@ const  ProfilePageForCustomers = () => {
   },[dispatch,id,user.token])
   return (     
     <div>
-      <NavbarCustomer />
+      <NavbarCustomer id={id}/>
   
       <section>
       <div className="container h-100">
