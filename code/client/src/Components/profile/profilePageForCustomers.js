@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import NavbarCustomer from './navbarCustomer';
+import NavbarCustomer from '../partials/profile/navbarCustomer';
 import ProfileFormCustomer from './profileFormCustomer';
 import ProfilePicture from './profilePictureBox';
 import ChangePassword from './changePassword';

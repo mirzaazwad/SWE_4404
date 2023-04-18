@@ -1,6 +1,6 @@
 import React from 'react';
 import PharmacyCard from './pharmacyCard';
-import NavbarCustomer from '../profile/navbarCustomer';
+import NavbarCustomer from '../partials/profile/navbarCustomer';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
