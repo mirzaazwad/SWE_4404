@@ -8,8 +8,7 @@ const sellerSchema = new Schema({
     unique: true
   },
   pharmacyID:{
-    type:mongoose.Schema.ObjectId,
-    unique:true
+    type:mongoose.Schema.ObjectId
   },
   pharmacy:{
     type: String

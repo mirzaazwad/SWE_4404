@@ -6,15 +6,13 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import "../../index.css";
-import "boxicons";
-import { useDispatch, useSelector } from "react-redux";
 import Table from "react-bootstrap/Table";
-import NavbarPharmacy from "../profile/navbarPharmacy";
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
+import { useSelector } from "react-redux";
 
 const Inventory = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = useSelector((state)=>state.userState.user);
   const [sellerId, setSellerId] = useState();
-  const dispatch = useDispatch();
   const id = useParams();
   const _id = id.id;
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
@@ -24,24 +22,8 @@ const Inventory = () => {
   const [amount, setAmount] = useState(0);
   const [pharmacyID,setPharmacyID]=useState();
   const [error,setError]=useState(null);
-  const [amountState,setAmountState]=useState(0);
-  const [amountType,setAmountType]=useState("Pcs");
+  const [medicinesEmpty,setMedicinesEmpty]=useState(true);
 
-
-  const handleAmount = (e) =>{
-    setAmountState((amountState+1)%3);
-    switch(amountState){
-      case 0:
-        setAmountType("Pcs");
-        break;
-      case 1:
-        setAmountType("Strips");
-        break;
-      case 2:
-        setAmountType("Boxes");
-        break;
-    }
-  }
   const addToStock = (e) => {
     e.preventDefault();
     handleClose();
@@ -110,6 +92,11 @@ const Inventory = () => {
           if(result.data._id!==null){
             setPharmacyID(result.data._id);
           }
+          if(result.data!==null){
+            if(result.data.Inventory===null){
+              setMedicinesEmpty(true);
+            }
+          }
           let res = [];
           for (let i = 0; i < temp.length; i++) {
             const medicine = {
@@ -127,7 +114,7 @@ const Inventory = () => {
           setMedicines(res);
         }
       });
-  }, [sellerId]);
+  }, [sellerId,_id,user.token]);
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
   const handleClose = () => setShow(false);
@@ -150,7 +137,7 @@ const Inventory = () => {
     else if(filterOption==="Amount"){
       setFilteredMedicines(
         medicines.filter((medicine) =>
-          medicine[filterOption]==value
+          medicine[filterOption]===value
         )
       );
     }
@@ -174,7 +161,7 @@ const Inventory = () => {
 
   
 
-  if (medicines.length!==0) {
+  if (medicines.length!==0 || medicinesEmpty) {
     return (
       <div>
         <div>

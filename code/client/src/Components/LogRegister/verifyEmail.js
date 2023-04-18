@@ -1,9 +1,7 @@
 import Button from 'react-bootstrap/Button';
-import Form from 'react-bootstrap/Form';
 import Card from 'react-bootstrap/Card';
 import NavbarLanding from '../partials/landing/navbarLanding';
-import {EyeFill,EyeSlashFill, Envelope} from "react-bootstrap-icons";
-import { InputGroup } from 'react-bootstrap';
+import {Envelope} from "react-bootstrap-icons";
 import OtpInput from 'react18-input-otp';
 import { useEffect, useState } from "react";
 import axios from 'axios';
@@ -16,12 +14,12 @@ import { useDispatch } from 'react-redux';
 import { LOGIN } from '../../Contexts/action';
 
 const EmailVerification = () => {
-    const currentUser=JSON.parse(localStorage.getItem('user'));
+  const currentUser=JSON.parse(localStorage.getItem('user'));
+  const navigate=useNavigate();
     if(!currentUser){
       navigate('/');
     }
     const token=currentUser.token;
-    const navigate=useNavigate();
     const {email}=useParams();
     const [otp,setOTP]=useState("");
     const [isDisabled,setIsDisabled]=useState(true);
@@ -38,7 +36,7 @@ const EmailVerification = () => {
         console.log(result);
       })
       .catch(err=>setError(err.error));
-    },[]);
+    },[email,token]);
 
 
 
@@ -116,6 +114,7 @@ const EmailVerification = () => {
         <div className="otp">
           <OtpInput
             onChange={setOTP}
+            type="number"
             value={otp}
             inputStyle="inputStyle"
             numInputs={6}

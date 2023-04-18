@@ -5,9 +5,9 @@ require("dotenv").config();
 const loginSignUpRoutes = require("./routes/login-signup-routes");
 const medicineAddRoutes = require("./routes/add-medicine-routes");
 const inventoryRoutes = require("./routes/inventory-routes");
-const profileRoutesUser = require("./routes/profile/user-route");
-const profileRoutesBuyer = require("./routes/profile/buyer-route");
-const profileRoutesSeller = require("./routes/profile/seller-route");
+const profileRoutesUser = require("./routes/user-profile-route");
+const profileRoutesBuyer = require("./routes/buyer-profile-route");
+const profileRoutesSeller = require("./routes/seller-profile-route");
 const pharmaciesRoutes = require("./routes/viewPharmacies/viewPharmacies-route");
 const app=express();
 
@@ -17,8 +17,6 @@ const conn=mongoose
     app.listen(process.env.PORT);
   })
   .catch((err) => console.error(err));
-
-
 
 app.use(cors());
 app.use(express.json());

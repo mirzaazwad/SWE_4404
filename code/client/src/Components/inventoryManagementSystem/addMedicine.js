@@ -2,22 +2,20 @@ import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import { InputGroup, Form } from "react-bootstrap";
-import NavbarPharmacy from "../profile/navbarPharmacy";
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useEffect, useState } from "react";
 import DOMPurify from "dompurify";
 import axios from "axios";
-import { useNavigate, useParams } from "react-router-dom";
+import {useNavigate, useParams } from "react-router-dom";
 import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
 import FormControlLabel from "@mui/material/FormControlLabel";
-
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 
 const AddMedicine = () => {
-  const user = JSON.parse(localStorage.getItem("user"));
-  const navigate = useNavigate();
+  const user = useSelector((state)=>state.userState.user);
   const id = useParams();
   const _id = id.id;
+  const navigate=useNavigate();
   const [sellerId, setSellerId] = useState();
   const [categories, setCategories] = useState(null);
   const [types, setTypes] = useState(null);
@@ -50,10 +48,6 @@ const AddMedicine = () => {
     setShowType(true);
   };
 
-  useEffect(() => {}, [medicineType]);
-
-  useEffect(() => {}, [medicineCateogry]);
-
   useEffect(() => {
     axios
       .get("/api/profile/user/getUserSellerId/" + _id, {
@@ -83,7 +77,7 @@ const AddMedicine = () => {
       .then((result) => {
         setTypes(result.data);
       });
-  }, []);
+  }, [_id,user.token]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -114,7 +108,7 @@ const AddMedicine = () => {
           },
         })
         .then((result) => {
-          navigate("/inventoryManagementSystem/inventory/" + _id);
+          return navigate("/inventoryManagementSystem/inventory/" + _id);
         })
         .catch((err) => console.log(err));
     } else {
@@ -135,7 +129,7 @@ const AddMedicine = () => {
           },
         })
         .then((result) => {
-          navigate("/inventoryManagementSystem/inventory/" + _id);
+          return navigate("/inventoryManagementSystem/inventory/" + _id);
         })
         .catch((err) => console.log(err));
     }
@@ -163,7 +157,7 @@ const AddMedicine = () => {
         Authorization: `Bearer ${user.token}`,
       },
     }).then(result=>console.log(result));
-    //window.location.reload();
+    window.location.reload();
   }
 
   const handleCategory = (e) =>{
@@ -179,7 +173,7 @@ const AddMedicine = () => {
     }).then((result)=>{
       console.log(result)
     });
-    //window.location.reload();
+    window.location.reload();
   }
 
   if (categories !== null && types !== null) {

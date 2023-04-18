@@ -1,35 +1,25 @@
 import {
-  Card,
   Form,
   Button,
-  InputGroup,
-  ToggleButton,
-  ButtonGroup,
+  InputGroup
 } from "react-bootstrap";
 import { useState } from "react";
-import { setLogin } from "../../Contexts/action";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import CryptoJS from "crypto-js";
 import {
   passwordAuth,
   confirmPasswordAuth,
 } from "../../Authentication/Auth";
 import {
-  Envelope,
   Lock,
   EyeFill,
-  EyeSlashFill,
-  Person,
+  EyeSlashFill
 } from "react-bootstrap-icons";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
-import { useSignUp } from "../../Hooks/useSignUp";
 import axios from "axios";
 import { useLogin } from "../../Hooks/useLogin";
 
 const PasswordReset = (props) => {
   const email = props.email;
-  const [radioName, setRadioName] = useState("Buyer");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordVisibility, setPasswordVisibility] = useState(false);
@@ -38,7 +28,6 @@ const PasswordReset = (props) => {
   const [errorConfirmPassword, setErrorCPassword] = useState("");
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] =useState(false);
   const [isDisabled, setIsDisabled] =useState(false);
-  const [error,setError]=useState("");
   const passwordChange = (e) =>{
     const passwordValidation = passwordAuth(e.target.value);
     const confirmPasswordValidation = confirmPasswordAuth(confirmPassword);
@@ -65,19 +54,22 @@ const PasswordReset = (props) => {
     axios.patch('/api/forgot/updatePassword/'+email,{
       password:CryptoJS.SHA512(password).toString()
     })
-    .then(async (result)=>{
+    .then(async ()=>{
       await login(email,password);
+      setErrorMessage(errorMsg);
+      setIsDisabled(isLoading);
     })
     .catch((err)=>{
       console.log(err);
     })
+    setIsDisabled(false);
   }
 
   return ( 
         <Form onSubmit={handleSubmit}> 
         <Form.Group>
                   <div className="errorMessage" style={{color:"red"}}>
-                    {error===""?errorMessage:error}
+                    {errorMessage}
                   </div>
                 </Form.Group>
 

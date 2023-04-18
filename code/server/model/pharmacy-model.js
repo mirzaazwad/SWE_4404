@@ -93,7 +93,6 @@ const pharmacySchema = new Schema({
   },
   pharmacyManagerID: {
     type: String,
-    required: true,
   },
   Inventory: [medicineSchema],
 });
