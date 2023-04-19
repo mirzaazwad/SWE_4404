@@ -12,6 +12,7 @@ import Error404 from "./Components/error404";
 import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
+import Medicine from "./Components/viewPharmacies/medicineDetails";
 
 function App() {
   let user=useSelector((state)=>state.userState.user);
@@ -37,6 +38,7 @@ function App() {
           <Route exact path='/inventoryManagementSystem/addMedicine/:id' element={user && user.verified===true?<AddMedicine/>:<Navigate to='/'/>}/>
           <Route exact path='/ViewPharmacies/:id' element={user && user.verified===true?<ViewPharmacies/>:<Navigate to ='/'/>}/>
           <Route exact path='/Pharmacy/:id' element={user && user.verified===true?<Pharmacy/>:<Navigate to ='/'/>}/>
+          <Route exact path='pharmacy/:id/medicine/:medicineId' element={user && user.verified===true?<Medicine/>:<Navigate to ='/'/>}/>
           <Route path='*' element={<Error404/>}></Route>
         </Routes>
       </div>
