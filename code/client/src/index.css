@@ -77,6 +77,10 @@ code {
 .pharmacy-container{
   margin-top:5rem!important;
 }
+.medicine_card
+{
+  width: 25% !important;
+}
 .btn-login {
   display: flex;
   align-items: center;
