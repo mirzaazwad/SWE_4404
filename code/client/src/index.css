@@ -3,7 +3,7 @@
 :root {
   --customMagenta: #EB006F;
   --customDarkBlue: #103686;
-  --customBlue: #3354a9;
+  --customBlue: #3b6ce7;
   --white: #fff;
   font-family: 'Poppins', sans-serif;
 }
@@ -81,6 +81,16 @@ code {
 {
   width: 25% !important;
 }
+.medicine-details-card{
+  margin-top: 8%;
+  height: 100% !important;
+}
+.medicine-details-cardHeader{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
 .btn-login {
   display: flex;
   align-items: center;
@@ -98,8 +108,9 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
-
-
+.btn.btn-addToCart{
+  --bs-btn-bg: var(--customDarkBlue) !important;
+}
 .customCart{
   border-color: transparent !important;
 }
@@ -118,6 +129,20 @@ code {
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn-add i {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.btn-buyMore{
+  width: 60%;
+}
+.btn-buyMore i{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.btn-addCart{
+  width: 60%;
+}
+.btn-addCart i{
   margin-left: 5px;
   vertical-align: middle;
 }
