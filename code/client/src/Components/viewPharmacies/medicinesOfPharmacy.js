@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
+import NavbarCustomer from '../partials/profile/navbarCustomer';
 
 const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
@@ -27,6 +28,9 @@ const PharmacyMedicines = () => {
 
   return (
     <div>
+      <NavbarCustomer id={id} />
+      <section>
+     <div className='container-fluid pharmacy-container'>
       <h1>Medicines Available:</h1>
       <input
         type="text"
@@ -57,6 +61,9 @@ const PharmacyMedicines = () => {
         </div>
       ))}
     </div>
+    </section>
+    </div>
+    
   );
 };
 
