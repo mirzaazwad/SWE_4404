@@ -5,6 +5,7 @@ import Card from 'react-bootstrap/Card';
 
 const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
+  const [searchTerm, setSearchTerm] = useState('');
   const { id } = useParams();
 
   useEffect(() => {
@@ -20,10 +21,22 @@ const PharmacyMedicines = () => {
     fetchMedicines();
   }, []);
 
+  const filteredMedicines = medicines.filter((medicine) =>
+    medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medicine.GenericName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    medicine.Category.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div>
       <h1>Medicines Available:</h1>
-      {medicines.map((medicine) => (
+      <input
+        type="text"
+        placeholder="Search for a medicine..."
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+      />
+      {filteredMedicines.map((medicine) => (
         <div key={medicine._id}> 
           <Link to={`/pharmacy/${id}/medicine/${medicine._id}`}>
             <Card className='medicine_card mb-2 ms-2'>
