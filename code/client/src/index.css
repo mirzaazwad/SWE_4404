@@ -99,6 +99,10 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.search-input{
+  width: 50%;
+  margin-bottom: 3%;
+}
 .btn-save{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;

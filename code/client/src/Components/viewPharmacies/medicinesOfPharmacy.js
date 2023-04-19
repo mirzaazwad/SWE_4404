@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
 import Card from 'react-bootstrap/Card';
 import NavbarCustomer from '../partials/profile/navbarCustomer';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
@@ -31,13 +33,20 @@ const PharmacyMedicines = () => {
       <NavbarCustomer id={id} />
       <section>
      <div className='container-fluid pharmacy-container'>
-      <h1>Medicines Available:</h1>
-      <input
-        type="text"
-        placeholder="Search for a medicine..."
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
+      {/* <h1>Medicines Available:</h1> */}
+      <div className='d-flex justify-content-center'>
+      <Form className="search-input d-flex">
+            <Form.Control
+              type="search"
+              className=" me-2"
+              aria-label="Search"
+              placeholder="Search for a medicine..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <Button className='btn btn-search h-100'>Search</Button>
+          </Form>
+      </div>
       {filteredMedicines.map((medicine) => (
         <div key={medicine._id}> 
             <Card className='medicine_card mb-2 ms-2'>
