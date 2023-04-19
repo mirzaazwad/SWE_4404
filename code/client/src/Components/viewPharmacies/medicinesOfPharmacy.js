@@ -22,9 +22,7 @@ const PharmacyMedicines = () => {
   }, []);
 
   const filteredMedicines = medicines.filter((medicine) =>
-    medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medicine.GenericName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    medicine.Category.toLowerCase().includes(searchTerm.toLowerCase())
+    medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -38,8 +36,8 @@ const PharmacyMedicines = () => {
       />
       {filteredMedicines.map((medicine) => (
         <div key={medicine._id}> 
-          <Link to={`/pharmacy/${id}/medicine/${medicine._id}`}>
             <Card className='medicine_card mb-2 ms-2'>
+          <Link to={`/pharmacy/${id}/medicine/${medicine._id}`}>
               <Card.Body>
                 <Card.Title>{medicine.MedicineName}</Card.Title>
                 <Card.Subtitle className='mb-2 text-muted'>
@@ -54,8 +52,8 @@ const PharmacyMedicines = () => {
                   {medicine.Stock.Boxes && <p>{medicine.Stock.Boxes} Boxes</p>}
                 </Card.Text>
               </Card.Body>
-            </Card>
           </Link>
+            </Card>
         </div>
       ))}
     </div>
