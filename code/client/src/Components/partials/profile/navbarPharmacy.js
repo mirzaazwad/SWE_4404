@@ -5,7 +5,10 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useLogout } from '../../../Hooks/useLogout';
 import { useNavigate } from 'react-router';
-import '../../../index.css';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import { useNavigate, useParams } from 'react-router';
+import {Navigate} from "react-router-dom";
+import '../../index.css';
 
 const NavbarPharmacy=(props) =>{
   const id = props.id;

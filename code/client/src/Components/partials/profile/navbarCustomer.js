@@ -8,6 +8,7 @@ import { useLogout } from '../../../Hooks/useLogout';
 import '../../../index.css';
 
 const NavbarCustomer=()=>{
+  const id=localStorage.getItem('id');
   const {logout} = useLogout();
   const navigate=useNavigate();
   const handleLogout = () =>{
@@ -26,7 +27,7 @@ const NavbarCustomer=()=>{
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Pharmacies</Nav.Link>
+            <Nav.Link href={`/ViewPharmacies/${id}`}>Pharmacies</Nav.Link>
             <Nav.Link href="#action2">Medicines</Nav.Link>
             <Nav.Link href="#action2">My Orders</Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
@@ -42,4 +43,6 @@ const NavbarCustomer=()=>{
   );
 }
 
+
 export default NavbarCustomer;
+

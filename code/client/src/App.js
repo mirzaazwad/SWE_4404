@@ -10,9 +10,7 @@ import AddMedicine from "./Components/inventoryManagementSystem/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
 import Error404 from "./Components/error404";
 import { LOGIN } from "./Contexts/action";
-
-
-
+import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 
 function App() {
   let user=useSelector((state)=>state.userState.user);
@@ -26,7 +24,7 @@ function App() {
       <div className="App">
       <div className="content">
         <Routes>
-          <Route exact path='/' element={!user?<Landing data={'login'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
+        <Route exact path='/' element={!user?<Landing data={'login'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
           <Route exact path='/signup' element={!user?<Landing data={'signup'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
           <Route exact path='/profileBuyer/:id' element={user && user.verified===true?<ProfilePageForCustomers/>:<Navigate to='/'/>}/>
           <Route exact path='/profileSeller/:id' element={user  && user.verified===true?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
@@ -36,6 +34,7 @@ function App() {
           <Route exact path='/emailVerify/:email' element={!user || user.verified===false?<EmailVerification/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
           <Route exact path='/inventoryManagementSystem/inventory/:id' element={user && user.verified===true?<Inventory/>:<Navigate to='/'/>}/>
           <Route exact path='/inventoryManagementSystem/addMedicine/:id' element={user && user.verified===true?<AddMedicine/>:<Navigate to='/'/>}/>
+          <Route exact path='/ViewPharmacies/:id' element={<ViewPharmacies/>}/>
           <Route path='*' element={<Error404/>}></Route>
         </Routes>
       </div>
