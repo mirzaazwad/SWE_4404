@@ -85,11 +85,11 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios1"
                         />
-                        <div className="d-flex justify-content-between align-items-center">
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center">
                         <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartPcs}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityPcs}</p>
+                          <p className="m-0 p-2">{quantityPcs}</p>
                           <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartPcs}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
@@ -106,11 +106,11 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
                         />
-                        <div className="d-flex justify-content-between align-items-center">
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center">
                           <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartStrips}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityStrips}</p>
+                          <p className="m-0 p-2">{quantityStrips}</p>
                           <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartStrips}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
@@ -127,11 +127,11 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
                         />
-                        <div className="d-flex justify-content-between align-items-center">
-                        <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartBoxes}>
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
+                          <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartBoxes}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityBoxes}</p>
+                          <p className="m-0 p-2">{quantityBoxes}</p>
                           <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartBoxes}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
