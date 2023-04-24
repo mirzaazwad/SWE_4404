@@ -1,16 +1,19 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate} from "react-router-dom";
 import { Button, Card, Form } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
+import { useDispatchCart, useCart } from "../../Contexts/contextReducer";
 
 const MedicineDetails = () => {
+  let dispatch = useDispatchCart();
+  let data = useCart();
   const [medicine, setMedicine] = useState({});
   const [quantityPcs, setQuantityPcs] = useState(0);
   const [quantityStrips, setQuantityStrips] = useState(0);
   const [quantityBoxes, setQuantityBoxes] = useState(0);
   const { id, medicineId } = useParams();
-
+  const [units, setUnits] = useState(1);
   const fetchMedicine = async (id, medicineId) => {
     try {
       const response = await axios.get(
@@ -26,33 +29,93 @@ const MedicineDetails = () => {
   useEffect(() => {
     fetchMedicine(id, medicineId);
   }, []);
-  const handleAddToCartPcs = () => {
-    setQuantityPcs(quantityPcs + 1); // update quantity state
+  const navigate = useNavigate();
+	const goBack = () => {
+		navigate(-1);
+  };
+  const handleIncreasePcs = () => {
+    // update quantity state
+    if(medicine.Stock.Pcs>=quantityPcs+1)
+    {
+      setQuantityPcs(quantityPcs + 1); 
+    }
   };
 
-  const handleRemoveFromCartPcs = () => {
+  const handleDecreasePcs = () => {
     if (quantityPcs > 0) {
       setQuantityPcs(quantityPcs - 1); // update quantity state
     }
   };
-  const handleAddToCartStrips = () => {
-    setQuantityStrips(quantityStrips + 1); // update quantity state
+  const handleIncreaseStrips = () => {
+    if(medicine.Stock.Strips>=quantityStrips+1)
+    {
+
+      setQuantityStrips(quantityStrips + 1); // update quantity state
+      
+    }
   };
 
-  const handleRemoveFromCartStrips = () => {
+  const handleDecreaseStrips = () => {
     if (quantityStrips > 0) {
       setQuantityStrips(quantityStrips - 1); // update quantity state
     }
   };
-  const handleAddToCartBoxes = () => {
-    setQuantityBoxes(quantityBoxes + 1); // update quantity state
+  const handleIncreaseBoxes = () => {
+    if(medicine.Stock.Boxes>=quantityBoxes+1)
+    {
+        
+        setQuantityBoxes(quantityBoxes + 1); // update quantity state
+    }
   };
 
-  const handleRemoveFromCartBoxes = () => {
+  const handleDecreaseBoxes = () => {
     if (quantityBoxes > 0) {
       setQuantityBoxes(quantityBoxes - 1); // update quantity state
     }
   };
+  const handlePcs = () => {
+    setUnits(1);
+  };
+  const handleStrips = () => {
+    if(medicine.Stock.Strips != null)
+    {
+      setUnits(medicine.PcsPerStrip);
+    }
+  };
+  const handleBoxes = () => {
+    if(medicine.Stock.Boxes != null)
+    {
+      if(medicine.Stock.Strips != null)
+      {
+
+        setUnits(medicine.PcsPerStrip*medicine.StripsPerBox);
+      }
+      else
+      {
+        setUnits(medicine.PcsPerBox);
+      }
+    }
+
+  };
+  const handleAddToCart = async() => {
+    let medicine = null;
+    for(const item of data)
+    {
+      if(item.medicineId === medicineId && item.id === id)
+      {
+        medicine = item;
+        break;
+      }
+    }
+    if(medicine !== null)
+    {
+       await dispatch({type: "UPDATE", id: medicine.id, medicineId: medicine.medicineId, quantityPcs : quantityPcs, quantityStrips: quantityStrips, quantityBoxes: quantityBoxes});
+       return;
+    }
+    await dispatch({type: "ADD", id: id , medicineId: medicineId, quantityPcs: quantityPcs, quantityStrips: quantityStrips, quantityBoxes: quantityBoxes});
+    return;
+  };
+  console.log(data);
   return (
     <div>
       <NavbarCustomer id={id} />
@@ -72,7 +135,7 @@ const MedicineDetails = () => {
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
               </p>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice}</p>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
@@ -84,13 +147,15 @@ const MedicineDetails = () => {
                           label="Pieces"
                           name="formHorizontalRadios"
                           id="formHorizontalRadios1"
+                          onClick={handlePcs}
+                          defaultChecked={true}
                         />
-                        <div className="d-flex justify-content-between align-items-center">
-                        <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartPcs}>
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center">
+                        <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreasePcs}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityPcs}</p>
-                          <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartPcs}>
+                          <p className="m-0 p-2">{quantityPcs}</p>
+                          <Button className="btn btn-increase h-100 ms-2" onClick={handleIncreasePcs}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
                         </div>
@@ -105,13 +170,14 @@ const MedicineDetails = () => {
                           label="Strips"
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
+                          onClick={handleStrips}
                         />
-                        <div className="d-flex justify-content-between align-items-center">
-                          <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartStrips}>
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center">
+                          <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreaseStrips}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityStrips}</p>
-                          <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartStrips}>
+                          <p className="m-0 p-2">{quantityStrips}</p>
+                          <Button className="btn btn-increase h-100 ms-2" onClick={handleIncreaseStrips}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
                         </div>
@@ -126,13 +192,14 @@ const MedicineDetails = () => {
                           label="Boxes"
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
+                          onClick={handleBoxes}
                         />
-                        <div className="d-flex justify-content-between align-items-center">
-                        <Button className="btn btn-removeFromCart h-100 me-2" onClick={handleRemoveFromCartBoxes}>
+                        <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
+                          <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreaseBoxes}>
                             <i className="bx bxs-minus-circle"></i>
                           </Button>
-                          <p className="m-3">{quantityBoxes}</p>
-                          <Button className="btn btn-addToCart h-100 ms-2" onClick={handleAddToCartBoxes}>
+                          <p className="m-0 p-2">{quantityBoxes}</p>
+                          <Button className="btn btn-increase h-100 ms-2" onClick={handleIncreaseBoxes}>
                             <i className="bx bxs-plus-circle"></i>
                           </Button>
                         </div>
@@ -143,10 +210,10 @@ const MedicineDetails = () => {
               )}
             </Card.Text>
             <div className="d-flex justify-content-around w-100">
-              <Button className="btn btn-buyMore me-4">
+              <Button className="btn btn-buyMore me-4" onClick={goBack}>
                 <i className="bx bx-search-alt bx-sm"></i>Buy More
               </Button>
-              <Button className="btn btn-addCart ms-3">
+              <Button className="btn btn-addCart ms-3" disabled={quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
                 <i className="bx bx-cart bx-sm"></i>Add to cart
               </Button>
             </div>

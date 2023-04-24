@@ -30,11 +30,12 @@ const PharmacyPage = () => {
           <div className="row">
             {pharmacies.map((pharmacy) => (
               <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
-                <Link to={`/Pharmacy/${pharmacy.id}`}>
+                <Link to={`/Pharmacy/${pharmacy.id}`} style={{textDecoration: 'none', color: 'white'}} >
                   <PharmacyCard
                     name={pharmacy.name}
                     location={pharmacy.location}
                     image={'https://www.mawbiz.com.bd/application/views/module/product_image/IMG_3556_1.JPG'}
+                    color= {'#EB006F'}
                   />
                 </Link>
               </div>
