@@ -7,6 +7,7 @@ const inventoryRoutes = require("./routes/inventory-routes");
 const profileRoutesUser = require("./routes/user-profile-route");
 const profileRoutesBuyer = require("./routes/buyer-profile-route");
 const profileRoutesSeller = require("./routes/seller-profile-route");
+const purchaseRoutes = require("./routes/product-purchase-route");
 const app=express();
 
 const conn=mongoose
@@ -20,7 +21,7 @@ const conn=mongoose
 
 
 app.use(express.json());
-
+app.use('/api/make-payment',purchaseRoutes);
 // app.use("/api/profile/profilePicture",profilePictureRoutes);
 app.use("/api/profile/addMedicine",medicineAddRoutes);
 app.use("/api/profile/inventory",inventoryRoutes);
