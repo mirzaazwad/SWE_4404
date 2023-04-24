@@ -7,7 +7,6 @@ const initialState = {
   sellerState: {},
   sellerDetails: {}
 }
-
 export const userSlice=createSlice({
   name:"userState",
   initialState,

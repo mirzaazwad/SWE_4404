@@ -2,15 +2,22 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
+import Badge from 'react-bootstrap/Badge';
 import Navbar from 'react-bootstrap/Navbar';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate} from 'react-router-dom';
+import { useState } from 'react';
 import { useLogout } from '../../../Hooks/useLogout';
 import {useParams} from 'react-router-dom';
+import {useCart} from '../../../Contexts/contextReducer';
 import '../../../index.css';
+import Modal from '../../../Modal';
+import Cart from '../../cartManagementSystem/cart';
 
 const NavbarCustomer=()=>{
   const id = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user'))._id:null;
   const {logout} = useLogout();
+  const[cartView, setCartView] = useState(false);
+  const data = useCart();
   const navigate=useNavigate();
   const handleLogout = () =>{
     logout();
@@ -34,7 +41,13 @@ const NavbarCustomer=()=>{
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
-          <button className='customCart bg-transparent me-3'><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '15px'}}></i></button>
+          <div>
+          <Button className='customCart bg-transparent me-3' onClick={()=>{setCartView(true)}}><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '20px'}}>
+          </i>
+          <Badge bg='danger' className='cart-badge position-absolute mx-0'>{data.length}</Badge>
+         </Button>
+          </div>
+          {cartView? <Modal onClose={()=>{setCartView(false)}}><Cart></Cart></Modal>:null}
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
             <Button className='customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
