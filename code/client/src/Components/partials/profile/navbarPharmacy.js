@@ -14,6 +14,8 @@ const NavbarPharmacy=(props) =>{
   const id = props.id;
   const {logout}= useLogout();
   const navigate=useNavigate();
+  let chatMessages=5;
+  let orderMessages=2;
   const handleLogout = () =>{
     logout();
     return navigate('/');
@@ -34,10 +36,18 @@ const NavbarPharmacy=(props) =>{
             <Nav.Link href="#action1">Home</Nav.Link>
             <Nav.Link href={`/profileSeller/${id}`}>Profile</Nav.Link>
             <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`}>Inventory</Nav.Link>
-            <Nav.Link href="#action2">Orders</Nav.Link>
+            <Nav.Link href="#action2">Orders
+            {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
+            {orderMessages}
+            </span>:""}
+            </Nav.Link>
             <Nav.Link href="">Accounts</Nav.Link>
+            <Nav.Link href={`/profileSeller/chats/${id}`}>Chats
+            {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
+            {chatMessages}
+            </span>:""}
+            </Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
-            
           </Nav>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
             <Button className='customButton' onClick={handleLogout}>Log Out</Button>

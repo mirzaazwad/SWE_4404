@@ -45,7 +45,7 @@ const ProfilePicture=(props)=>{
       }});
     }
   }
-  
+  console.log(image_Location);
   if(locked===false){
     return (
       <div className="profile-picture-container">

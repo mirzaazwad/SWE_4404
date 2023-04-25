@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useEffect} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
+import CollapsibleChat from '../Chat/collapsableChat';
 
 const  ProfilePageForPharmacy = () => {
   const user = useSelector((state)=>state.userState.user);
@@ -38,8 +39,8 @@ const  ProfilePageForPharmacy = () => {
   return (     
   <div>
     <NavbarPharmacy id={id}/>
-
     <section>
+    <CollapsibleChat></CollapsibleChat>
     <div className="container h-100">
       <div className="pt-5">
     <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture id={id}/></div>
@@ -51,9 +52,7 @@ const  ProfilePageForPharmacy = () => {
         </div>
       </div>
     </div>
-    
     </section>
-          
     </div>
   );
 }

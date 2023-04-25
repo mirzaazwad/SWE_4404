@@ -11,6 +11,9 @@ import Inventory from "./Components/inventoryManagementSystem/inventory";
 import Error404 from "./Components/error404";
 import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
+import ChatRoom from "./Components/chatroom";
+import ChatPage from "./Components/Chat/chatRoom";
+import './index.css';
 
 function App() {
   let user=useSelector((state)=>state.userState.user);
@@ -28,6 +31,8 @@ function App() {
           <Route exact path='/signup' element={!user?<Landing data={'signup'}/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) }/>
           <Route exact path='/profileBuyer/:id' element={user && user.verified===true?<ProfilePageForCustomers/>:<Navigate to='/'/>}/>
           <Route exact path='/profileSeller/:id' element={user  && user.verified===true?<ProfilePageForPharmacy/>:<Navigate to='/'/>}/>
+          <Route exact path='/profileSeller/chatroom/:id' element={user  && user.verified===true?<ChatRoom/>:<Navigate to='/'/>}/>
+          <Route exact path='/profileSeller/chats/:id' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
           <Route exact path='/profileBuyer/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/profileSeller/changePassword/:id' element={<ChangePassword/>} />
           <Route exact path='/forgotPassword' element={!user?<ForgotPassword/>:(user.userType==='buyer'?<Navigate to={'/profileBuyer/'+user._id}/>:<Navigate to={'/profileSeller/'+user._id}/>) } />
