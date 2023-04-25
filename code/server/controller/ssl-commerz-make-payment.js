@@ -42,7 +42,7 @@ const makePayment = async (req, res) => {
     console.log(data.GatewayPageURL);
     if(data?.GatewayPageURL){
       console.log('Gateway Page URL',data.GatewayPageURL);
-      return res.status(200).json(data);
+      return res.status(200).redirect(data.GatewayPageURL);
     }
     else{
       return res.status(400).json(data);

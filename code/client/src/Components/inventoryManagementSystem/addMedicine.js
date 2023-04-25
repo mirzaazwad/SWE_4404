@@ -542,11 +542,11 @@ const AddMedicine = () => {
   } else {
     return (
       <div
-        class="spinner-border text-primary"
+        className="spinner-border text-primary"
         role="status"
         style={{ marginLeft: "50%", marginTop: "10%" }}
       >
-        <span class="visually-hidden">Loading...</span>
+        <span className="visually-hidden">Loading...</span>
       </div>
     );
   }

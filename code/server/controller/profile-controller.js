@@ -180,6 +180,18 @@ const getSellerID = async(req,res)=>{
   }
 }
 
+const updateProfilePicture = async(req,res)=>{
+  const _id=req.params.id;
+  try{
+    await userModel.findByIdAndUpdate(_id,{
+      imageURL:req.body.imageURL
+    });
+  }
+  catch(err){
+    res.status(400).json({success:false,error:err.message});
+  }
+}
+
 module.exports = {
   getUserByID,
   patchUserByID,
@@ -189,5 +201,6 @@ module.exports = {
   patchSellerByEmail,
   changePassword,
   verifyPassword,
-  getSellerID
+  getSellerID,
+  updateProfilePicture
 };

@@ -27,7 +27,8 @@ const userSchema = new Schema({
     type:String
   },
   imageURL:{
-    type:String
+    type:String,
+    default:'/demoProilePicture.jpg'
   },
   image_id:{
     type:String

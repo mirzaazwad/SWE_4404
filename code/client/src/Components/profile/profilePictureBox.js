@@ -5,67 +5,101 @@ import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
-function ProfilePicture(props) {
-  console.log('props',props);
+const ProfilePicture=(props)=>{
   const user=useSelector((state)=>state.userState.user);
   const [modalShow, setModalShow] = useState(false);
-  const [image,setImage]=useState('');
+  const [image,setImage]=useState();
+  const [image_Location,setImage_Location]=useState('/demoProilePicture.jpg');
+  const [locked,setLocked]=useState(false);
 
-  const handleImage=(e)=>{
-    console.log(e.target.files[0]);
-    setImage(e.target.files[0]);
-  }
+  useEffect(()=>{
+    const retrieveUser=async ()=>{
+      await axios.get('/api/profile/user/getUser/'+props.id,{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }}).then((result)=>{
+        setImage_Location(result.data.imageURL);
+      })
+    };
+    retrieveUser();
+  },[modalShow,props,user]);
 
-  console.log(props);
   const handleSubmit = async(e) =>{
+    setLocked(true);
     e.preventDefault();
-    console.log(image);
-    axios.post('/upload',{
-      file:image
-    },{
-      headers:{'Authorization': `Bearer ${user.token}`}
-    });
     setModalShow(false);
+    if (image) {
+      console.log(image);
+      const formData = new FormData();
+        formData.append("file", image);
+        formData.append("upload_preset", "med_guard");
+        const dataRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
+          formData
+        );
+      setImage_Location(dataRes.data.url);
+      setLocked(false);
+      const result=await axios.patch('/api/profile/user/updateProfilePicture/'+props.id,{
+        imageURL:dataRes.data.url
+      },{headers: {
+        'Authorization': `Bearer ${user.token}`
+      }});
+    }
   }
   
-  return (
-    <div className="profile-picture-container">
-      {<img src={require('../../images/321504286_673183284310305_2418389886188844738_n.jpg')} alt="Profile Picture" />}
-      
-
-      <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>
-      <Modal show={modalShow}
-        onHide={() => setModalShow(false)}
-      size="md"
-      aria-labelledby="contained-modal-title-vcenter"
-      centered
-    >
-      
-      <Modal.Header closeButton>
-        <Modal.Title id="contained-modal-title-vcenter">
-          Change Profile Picture
-        </Modal.Title>
-      </Modal.Header>
-      <Form encType='multipart/form-data' onSubmit={handleSubmit}>
-      <Modal.Body>
-        <Form.Group controlId="formFile" className="mb-3" onSubmit={handleSubmit} enctype = 'multipart/form-data'>
-        <Form.Label>Upload new profile picture</Form.Label>
-        <Form.Control type="file" accept=".png, .jpg, .jpeg" name="profile-picture" onChange={handleImage}/>
-      </Form.Group>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button variant="secondary" onClick={() => setModalShow(false)}>
-                    Close
-                  </Button>
-                  <Button variant="primary" type="submit">
-                    Save Changes
-                  </Button>
+  if(locked===false){
+    return (
+      <div className="profile-picture-container">
+        <img src={image_Location} alt="Profile Picture" />
         
-      </Modal.Footer>
-      </Form>
-    </Modal>
-    </div>
-  );
+  
+        <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>
+        <Modal show={modalShow}
+          onHide={() => setModalShow(false)}
+        size="md"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+      >
+        
+        <Modal.Header closeButton>
+          <Modal.Title id="contained-modal-title-vcenter">
+            Change Profile Picture
+          </Modal.Title>
+        </Modal.Header>
+        <Form onSubmit={handleSubmit}>
+        <Modal.Body>
+          <Form.Group className="mb-3">
+          <Form.Label>Upload new profile picture</Form.Label>
+          <Form.Control type="file" name="file"
+                      accept="image/*"
+                      id="imageFileProfile"
+                      onChange={(e) => setImage(e.target.files[0])}/>
+        </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setModalShow(false)}>
+                      Close
+                    </Button>
+                    <Button variant="primary" type="submit">
+                      Save Changes
+                    </Button>
+          
+        </Modal.Footer>
+        </Form>
+      </Modal>
+      </div>
+    );
+  }
+  else{
+    return (
+      <div
+        className="spinner-border text-primary"
+        role="status"
+        style={{ marginLeft: "50%", marginTop: "10%" }}
+      >
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    );
+  }
 }
 
 export default ProfilePicture;
