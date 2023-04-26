@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import { setBuyerUser } from '../../Contexts/action';
+import CollapsibleChat from '../Chat/collapsableChat';
 
 const  ProfilePageForCustomers = () => {
   const user = useSelector((state)=>state.userState.user);
@@ -22,12 +23,14 @@ const  ProfilePageForCustomers = () => {
       })
     };
     retrieveUser();
-  },[dispatch,id,user.token])
+  },[])
+  console.log(id+"6411760cc1e404df5e624ef8");
   return (     
     <div>
       <NavbarCustomer id={id}/>
   
       <section>
+      <CollapsibleChat senderID={"6411760cc1e404df5e624ef8"} receiverID={id}  JWT={user} room={"6411760cc1e404df5e624ef8"+id}></CollapsibleChat>
       <div className="container h-100">
         <div className="pt-5">
       <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture id={id}/></div></div>

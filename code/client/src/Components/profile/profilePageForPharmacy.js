@@ -35,12 +35,13 @@ const  ProfilePageForPharmacy = () => {
       }});
      };
      retrieveUser();
-  },[dispatch,id,user.token])
+  },[])
+  console.log(id+"64294f161b7dcc92c8e40fce");
   return (     
   <div>
     <NavbarPharmacy id={id}/>
     <section>
-    <CollapsibleChat></CollapsibleChat>
+    <CollapsibleChat senderID={"64294f161b7dcc92c8e40fce"} receiverID={id} JWT={user} room={id+"64294f161b7dcc92c8e40fce"}/>
     <div className="container h-100">
       <div className="pt-5">
     <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture id={id}/></div>

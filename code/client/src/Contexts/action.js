@@ -33,6 +33,9 @@ export const userSlice=createSlice({
     },
     setSellerDetails:(state,action)=>{
       state.sellerDetails=action.payload;
+    },
+    setSocketID:(state,action)=>{
+      state.socketID=action.payload;
     }
   }
 });

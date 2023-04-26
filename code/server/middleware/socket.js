@@ -7,10 +7,14 @@ const io = require('socket.io')(process.env.SOCKET,{
 });
 
 io.on('connection', (socket) => {
-  console.log(`Socket ${socket.id} connected`);
+
+  socket.on('join room',(roomName)=>{
+    socket.join(roomName);
+  })
 
   socket.on('send_message', (message) => {
-    io.emit('message', message);
+    io.to(message.senderID).emit('message', message);
+    io.to(message.receiverID).emit('message', message);
   });
 
   socket.on('disconnect', () => {
