@@ -7,13 +7,7 @@ const cartSlice = createSlice({
   initialState: initialState,
   reducers: {
     addItem: (state, action) => {
-      state.push({
-        id: action.payload.id,
-        medicineId: action.payload.medicineId,
-        quantityPcs: action.payload.quantityPcs,
-        quantityStrips: action.payload.quantityStrips,
-        quantityBoxes: action.payload.quantityBoxes,
-      });
+      state.push(action.payload);
       localStorage.setItem("cartState", JSON.stringify(state));
     },
     removeItem: (state, action) => {

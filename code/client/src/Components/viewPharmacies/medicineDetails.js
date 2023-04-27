@@ -10,8 +10,6 @@ const MedicineDetails = () => {
 
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState) || [];
-  console.log("eta cart");
-  console.log(cart);
   const [medicine, setMedicine] = useState({});
   const [quantityPcs, setQuantityPcs] = useState(0);
   const [quantityStrips, setQuantityStrips] = useState(0);
@@ -102,36 +100,34 @@ const MedicineDetails = () => {
 
   };
   const handleAddToCart = async() => {
-    let medicine = null;
+    let found=false;
     for(const item of cart)
     {
       if(item.medicineId === medicineId && item.id === id)
       {
-        medicine = item;
+        found=true;
         break;
       }
     }
-    if(medicine !== null)
+    if(found)
     {
-       dispatch(updateItem({
-        id: id,
-      medicineId: medicineId,
-      quantityPcs: quantityPcs,
-      quantityStrips: quantityStrips,
-      quantityBoxes: quantityBoxes
+      dispatch(updateItem({
+        ...medicine,
+        quantityPcs: quantityPcs,
+        quantityStrips: quantityStrips,
+        quantityBoxes: quantityBoxes
       }));
-      return;
     }
-     dispatch(addItem({
-      id: id,
-      medicineId: medicineId,
-      quantityPcs: quantityPcs,
-      quantityStrips: quantityStrips,
-      quantityBoxes: quantityBoxes
-    }));
-    await console.log(cart);
-    
-  };
+    else {
+      dispatch(addItem({
+        ...medicine,
+        quantityPcs: quantityPcs,
+        quantityStrips: quantityStrips,
+        quantityBoxes: quantityBoxes
+      }));
+    }
+    await console.log(cart);    
+};
   return (
     <div>
       <NavbarCustomer id={id} />
