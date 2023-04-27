@@ -1,4 +1,6 @@
 const Pharmacy = require('../model/pharmacy-model');
+const MedicineType = require('../model/medicine-type');
+const MedicineCategory = require('../model/medicine-category');
 
 exports.getMedicine = async (req, res, next) => {
   const pharmacyId = req.params.id;
@@ -15,7 +17,10 @@ exports.getMedicine = async (req, res, next) => {
       });
     }
 
-    res.status(200).json(medicine);
+    const medicineType = await MedicineType.findOne({ _id: medicine.TypeID });
+    const medicineCategory = await MedicineCategory.findOne({ _id: medicine.CateogryID });
+    // console.log(medicineCategory);
+    res.status(200).json({ ...medicine.toObject(), medicineType: medicineType.Name, medicineCategory: medicineCategory.cateogry });
   } catch (err) {
     console.log(err);
     res.status(500).json({

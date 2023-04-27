@@ -3,12 +3,7 @@ import ProfilePageForCustomers from "./Components/profile/profilePageForCustomer
 import ForgotPassword from "./Components/LogRegister/forgotPassword";
 import EmailVerification from "./Components/LogRegister/verifyEmail";
 import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
+import {BrowserRouter as Router, Navigate, Route, Routes,} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
 import AddMedicine from "./Components/inventoryManagementSystem/addMedicine";
@@ -19,6 +14,8 @@ import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 import Medicine from "./Components/viewPharmacies/medicineDetails";
 import {CartProvider} from './Contexts/cartAction.js';
+import MyOrders from "./Components/cartManagementSystem/myOrders";
+import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
 
 function App() {
   let user = useSelector((state) => state.userState.user);
@@ -171,6 +168,8 @@ function App() {
                   )
                 }
               />
+              <Route exact path="/myOrders" element={user && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>

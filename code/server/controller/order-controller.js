@@ -37,11 +37,12 @@ const postOrder = async (req, res) => {
 
 const getOrder = async (req, res) => {
   try {
-    const { userId } = req.params.userId;
-
+    const  userId  = req.params.userId;
+    console.log(userId);
     const order = await Order.findOne({ userId:userId });
 
     if (!order) {
+      console.log("order not found");
       return res.status(404).json({ error: 'Order not found' });
     }
 

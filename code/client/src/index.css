@@ -70,6 +70,28 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn.btn-placeOrder{
+  display: flex;
+  justify-content: center !important;
+  margin: auto !important;
+  height: 100% !important;
+  width: 50%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-checkOut{
+  height: 100% !important;
+  width: 100%;
+  vertical-align: middle;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.heading-checkOut{
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  font-size: 5rem !important;
+}
 .pharmacy-container{
   margin-top:5rem!important;
 }
@@ -88,7 +110,11 @@ code {
   color: white !important;
 }
 .medicine-details-card{
-  margin-top: 8%;
+  margin-top: 7%;
+  height: 100% !important;
+}
+.billing-details-card{
+  margin-top: 5%;
   height: 100% !important;
 }
 .medicine-details-cardHeader{
@@ -97,11 +123,40 @@ code {
   font-size: 1.5rem;
   font-weight: bold;
 }
+.billing-details-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+.order-summary-card{
+  margin-top: 5%;
+  height: 100% !important;
+}
+.order-summary-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
 .addRemove-buttons{
   display: flex;
   justify-content: space-between;
   align-items: center;
   width: 150px;
+}
+.my-orders{
+  margin-top: 5rem;
+}
+.order-details-card{
+width: 75%;
+}
+.cart-table{
+  display: contents;
+  width: 100%;
+
 }
 .btn-login {
   display: flex;

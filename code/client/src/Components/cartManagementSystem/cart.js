@@ -1,66 +1,93 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeItem,clearItems } from '../../Contexts/cartAction.js';
+import { removeItem, clearItems } from '../../Contexts/cartAction.js';
 import Button from 'react-bootstrap/Button';
+import Table from 'react-bootstrap/Table';
 import axios from 'axios';
+import { Navigate } from 'react-router-dom';
+
 export default function Cart() {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState) || [];
+  const [totalPrice, setTotalPrice] = useState(0);
+
+  useEffect(() => {
+    let price = 0;
+    cart.forEach(item => {
+      price += item.price;
+    });
+    setTotalPrice(price);
+  }, [cart]);
+
   if (cart.length === 0) {
     return (
-      <div>
-        <div className='m-5 w-100 text-center fs-3' style={{color: 'white'}}>The Cart is Empty!</div>
+      <div className='d-flex flex-column justify-content-center'>
+      <div className='mt-5 w-100 text-center fs-3' style={{ color: 'red' }}>
+        The Cart is Empty!
       </div>
-    )
+      <div className='d-flex justify-content-center'>
+        <i class='bx bxs-cart-add' style={{fontSize: '20rem'}} ></i>
+      </div>
+      </div>
+    );
   }
 
   const handleCheckOut = async () => {
-    let user = JSON.parse(localStorage.getItem("user"));
-    let userId = user._id;
-    await axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
-      items: cart
-    });
-    await dispatch(clearItems());
-  }
+    <Navigate to = '/checkOutPage' />
+  };
 
-  let totalPrice = 10;
   return (
     <div>
-
-      {console.log(cart)}
-      <div className='container m-auto mt-5 table-responsive  table-responsive-sm table-responsive-md'>
-        <table className='table table-hover '>
-          <thead className=' text-success fs-4'>
-            <tr>
-              <th scope='col'>#</th>
-              <th scope='col'>Name</th>
-              <th scope='col'>Pcs</th>
-              <th scope='col'>Strips</th>
-              <th scope='col'>Boxes</th>
-              <th scope='col'></th>
+      <div className='container cart-table'>
+      <div>
+      <h2 style={{textAlign: "center", color: "#EB006F"}}>My Cart</h2>
+      </div>
+        <Table striped bordered hover responsive>
+        
+          <thead>
+            <tr style={{textAlign: "center"}}>
+              <th>#</th>
+              <th>Name</th>
+              <th>Pcs</th>
+              <th>Strips</th>
+              <th>Boxes</th>
+              <th>Price</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
             {cart.map((medicine, index) => (
-              <tr>
-                <th scope='row'>{index + 1}</th>
-                <td>{medicine.id}</td>
-                <td>{medicine.medicineId}</td>
+              <tr key={index}>
+                <td>{index + 1}</td>
+                <td>{medicine.MedicineName}</td>
                 <td>{medicine.quantityPcs}</td>
                 <td>{medicine.quantityStrips}</td>
                 <td>{medicine.quantityBoxes}</td>
+                <td>{medicine.price}</td>
                 <td>
-                  <Button className="btn btn-delete p-0" onClick={() => {dispatch(removeItem({index:index}))}}>Delete</Button>
+                  <Button
+                    className='btn btn-danger'
+                    onClick={() => {
+                      dispatch(removeItem({ index: index }));
+                    }}
+                  >
+                    Delete
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
-        <div><h1 className='fs-2'>Total Price: {totalPrice}/-</h1></div>
+        </Table>
+        <div className='d-flex justify-content-between'> 
+        <div><Button href={`/checkOutPage`} className='btn btn-checkOut'>
+            Check Out
+          </Button></div>
         <div>
-          <button className='btn bg-success mt-5' onClick={handleCheckOut}>Check Out</button>
+          <h4 style={{color: "red"}}>Total Price: ৳{totalPrice}</h4>
         </div>
+        </div>
+          
       </div>
     </div>
-  )
+  );
 }
