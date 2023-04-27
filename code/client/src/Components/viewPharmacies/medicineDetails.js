@@ -3,11 +3,15 @@ import axios from "axios";
 import { useParams, useNavigate} from "react-router-dom";
 import { Button, Card, Form } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
-import { useDispatchCart, useCart } from "../../Contexts/contextReducer";
+import { useDispatch, useSelector } from 'react-redux';
+import { addItem, removeItem, updateItem } from '../../Contexts/cartAction.js';
 
 const MedicineDetails = () => {
-  let dispatch = useDispatchCart();
-  let data = useCart();
+
+  const dispatch = useDispatch();
+  const cart = useSelector(state => state.cartState) || [];
+  console.log("eta cart");
+  console.log(cart);
   const [medicine, setMedicine] = useState({});
   const [quantityPcs, setQuantityPcs] = useState(0);
   const [quantityStrips, setQuantityStrips] = useState(0);
@@ -99,7 +103,7 @@ const MedicineDetails = () => {
   };
   const handleAddToCart = async() => {
     let medicine = null;
-    for(const item of data)
+    for(const item of cart)
     {
       if(item.medicineId === medicineId && item.id === id)
       {
@@ -109,13 +113,25 @@ const MedicineDetails = () => {
     }
     if(medicine !== null)
     {
-       await dispatch({type: "UPDATE", id: medicine.id, medicineId: medicine.medicineId, quantityPcs : quantityPcs, quantityStrips: quantityStrips, quantityBoxes: quantityBoxes});
-       return;
+       dispatch(updateItem({
+        id: id,
+      medicineId: medicineId,
+      quantityPcs: quantityPcs,
+      quantityStrips: quantityStrips,
+      quantityBoxes: quantityBoxes
+      }));
+      return;
     }
-    await dispatch({type: "ADD", id: id , medicineId: medicineId, quantityPcs: quantityPcs, quantityStrips: quantityStrips, quantityBoxes: quantityBoxes});
-    return;
+     dispatch(addItem({
+      id: id,
+      medicineId: medicineId,
+      quantityPcs: quantityPcs,
+      quantityStrips: quantityStrips,
+      quantityBoxes: quantityBoxes
+    }));
+    await console.log(cart);
+    
   };
-  console.log(data);
   return (
     <div>
       <NavbarCustomer id={id} />
