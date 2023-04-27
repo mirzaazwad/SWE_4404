@@ -34,9 +34,9 @@ export default function Cart() {
             <tr>
               <th scope='col'>#</th>
               <th scope='col'>Name</th>
-              <th scope='col'>Quantity</th>
-              <th scope='col'>Option</th>
-              <th scope='col'>Amount</th>
+              <th scope='col'>Pcs</th>
+              <th scope='col'>Strips</th>
+              <th scope='col'>Boxes</th>
               <th scope='col'></th>
             </tr>
           </thead>
@@ -46,10 +46,11 @@ export default function Cart() {
                 <th scope='row'>{index + 1}</th>
                 <td>{medicine.id}</td>
                 <td>{medicine.medicineId}</td>
-                <td>{medicine.size}</td>
-                <td>{medicine.price}</td>
+                <td>{medicine.quantityPcs}</td>
+                <td>{medicine.quantityStrips}</td>
+                <td>{medicine.quantityBoxes}</td>
                 <td>
-                  <Button className="btn btn-delete p-0" onClick={() => {dispatch({type:"REMOVE",index:index})}}>Delete</Button>
+                  <Button className="btn btn-delete p-0" onClick={() => {dispatch(removeItem({index:index}))}}>Delete</Button>
                 </td>
               </tr>
             ))}
