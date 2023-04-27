@@ -16,12 +16,13 @@ const MedicineDetails = () => {
   const [quantityBoxes, setQuantityBoxes] = useState(0);
   const { id, medicineId } = useParams();
   const [units, setUnits] = useState(1);
+  const [price, setPrice] = useState(0);
   const fetchMedicine = async (id, medicineId) => {
     try {
       const response = await axios.get(
         `http://localhost:4000/api/pharmacy/${id}/medicine/${medicineId}`
       );
-      console.log(response.data);
+      // console.log(response.data);
       setMedicine(response.data);
     } catch (error) {
       console.log(error);
@@ -31,6 +32,42 @@ const MedicineDetails = () => {
   useEffect(() => {
     fetchMedicine(id, medicineId);
   }, []);
+  
+  useEffect(() => {
+    const calculatePrice = async () => {
+      let pcsPrice=0, stripsPrice=0, boxesPrice=0;
+      if(medicine.Stock.Strips != null)
+      {
+        if(medicine.Stock.Boxes != null)
+        {
+          pcsPrice = medicine.SellingPrice*quantityPcs;
+          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
+          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerBox;
+        }
+        else
+        {
+          pcsPrice = medicine.SellingPrice*quantityPcs;
+          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
+        }
+      }
+      else
+      {
+        if(medicine.Stock.Boxes != null)
+        {
+          pcsPrice = medicine.SellingPrice*quantityPcs;
+          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerBox;
+        }
+        else
+        {
+          pcsPrice = medicine.SellingPrice*quantityPcs;
+        }
+      }
+      setPrice(pcsPrice+stripsPrice+boxesPrice);
+    };
+  
+    calculatePrice();
+  }, [medicine, quantityPcs, quantityStrips, quantityBoxes]);
+  
   const navigate = useNavigate();
 	const goBack = () => {
 		navigate(-1);
@@ -99,6 +136,8 @@ const MedicineDetails = () => {
     }
 
   };
+
+  
   const handleAddToCart = async() => {
     let found=false;
     for(const item of cart)
@@ -111,43 +150,46 @@ const MedicineDetails = () => {
     }
     if(found)
     {
-      dispatch(updateItem({
-        ...medicine,
+      await dispatch(updateItem({
+        ...medicine, id: id, medicineId: medicineId,
         quantityPcs: quantityPcs,
         quantityStrips: quantityStrips,
-        quantityBoxes: quantityBoxes
+        quantityBoxes: quantityBoxes,
+        price: price
       }));
     }
     else {
-      dispatch(addItem({
+      await dispatch(addItem({
         ...medicine,
+        id: id, medicineId: medicineId,
         quantityPcs: quantityPcs,
         quantityStrips: quantityStrips,
-        quantityBoxes: quantityBoxes
+        quantityBoxes: quantityBoxes,
+        price: price
       }));
     }
-    await console.log(cart);    
+    // await console.log(cart);    
 };
   return (
     <div>
       <NavbarCustomer id={id} />
       <div className="d-flex justify-content-center">
-        <Card className="medicine-details-card w-50 ">
+        <Card className="medicine-details-card w-50 mb-4">
           <Card.Header className="medicine-details-cardHeader">
             {medicine.MedicineName}
           </Card.Header>
           <Card.Body>
             <Card.Title></Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
-              <p style={{ fontSize: "20px" }}>{medicine.GenericName}</p>
-              <p style={{ fontSize: "20px" }}>{medicine.Description} </p>
-              {/* ekhane type name dibo */}
+              <p style={{ fontSize: "20px" }}>Generic Name: {medicine.GenericName}</p><hr/>
+              <p style={{ fontSize: "20px" }}>Type: {medicine.medicineType} </p><hr/>
+              <p style={{ fontSize: "20px" }}>Category: {medicine.medicineCategory} </p><hr/>
             </Card.Subtitle>
             <Card.Text>
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
-              </p>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p>
+              </p><hr/>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p><hr/>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
@@ -228,10 +270,15 @@ const MedicineDetails = () => {
               <Button className="btn btn-addCart ms-3" disabled={quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
                 <i className="bx bx-cart bx-sm"></i>Add to cart
               </Button>
-            </div>
+            </div><hr/>
           </Card.Body>
         </Card>
       </div>
+      <div className="mx-5">
+      <h1 style={{color: '#EB006F'}}>Description:</h1><hr/>
+            <p> {medicine.Description}</p>
+      </div>
+            
     </div>
   );
 };
