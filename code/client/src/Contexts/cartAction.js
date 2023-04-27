@@ -27,6 +27,7 @@ const cartSlice = createSlice({
             quantityPcs: parseInt(action.payload.quantityPcs) + parseInt(item.quantityPcs),
             quantityStrips: parseInt(action.payload.quantityStrips) + parseInt(item.quantityStrips),
             quantityBoxes: parseInt(action.payload.quantityBoxes) + parseInt(item.quantityBoxes),
+            price: parseInt(action.payload.price) + parseInt(item.price)
           };
         }
         return item;
