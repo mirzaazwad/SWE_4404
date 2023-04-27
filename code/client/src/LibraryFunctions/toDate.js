@@ -20,13 +20,16 @@ const toDate=(dateString)=> {
   }
   dat=dat+dateComponents[2]+"-"+monthMap.get(dateComponents[1])+"-"+day+"T";
   const timeSplit=dateComponents[3].split(":");
-  if(dateComponents[4]==="AM" || (timeSplit[0]==="12" && dateComponents[4]==="PM")){
+  if((timeSplit[0]!=="12" && dateComponents[4]==="AM") || (timeSplit[0]==="12" && dateComponents[4]==="PM")){
     if(timeSplit[0]<10){
       dat=dat+"0"+dateComponents[3];
     }
     else{
       dat=dat+dateComponents[3];
     }
+  }
+  else if(timeSplit[0]==="12" && dateComponents[4]==="AM"){
+    dat=dat+"00"+":"+timeSplit[1];
   }
   else{
     let hours=parseInt(timeSplit[0]);

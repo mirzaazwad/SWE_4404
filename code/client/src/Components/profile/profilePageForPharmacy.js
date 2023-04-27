@@ -38,7 +38,7 @@ const  ProfilePageForPharmacy = () => {
   },[])
   return (     
   <div>
-    <NavbarPharmacy id={id}/>
+    <NavbarPharmacy id={id} user={user}/>
     <section>
     <CollapsibleChat senderID={"64493762def7609b0ccbdbfe"} receiverID={id} JWT={user}/>
     <div className="container h-100">

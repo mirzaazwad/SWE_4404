@@ -2,19 +2,20 @@ import { useEffect, useState } from "react";
 import ChatReceiver from "./chatsReceiverMessage";
 import ChatSender from "./chatsSenderMessage";
 import axios from "axios";
-import io from "socket.io-client";
 
 const ChatBox = (props) => {
-  const socket = io("http://localhost:4110");
   const [messages,setMessages]=useState([]);
   const [isLoading,setIsLoading]=useState(true);
-
+  const socket = props.socket;
   useEffect(()=>{
     setIsLoading(true);
-    const retrieveMessages = async () =>{
+    async function retrieveMessages(){
+      setIsLoading(true);
+      console.log(props.senderID);
+      console.log(props.id);
       const value=await axios.post("/api/profile/chat/messages",{
-        senderID:props.sender.senderID,
-        receiverID:props.receiver._id
+        senderID:props.senderID,
+        receiverID:props.id
       }, {
         headers: {
           Authorization: `Bearer ${props.user.token}`,
@@ -24,17 +25,19 @@ const ChatBox = (props) => {
       setMessages(value.data);
       setIsLoading(false);
     }
-    retrieveMessages();
-    console.log("Messages from sender: ",messages);
-  },[props]);
+    if(props.senderID){
+      retrieveMessages();
+    }
+  },[props.senderID]);
 
-  socket.on("message", (message) => {
-    if(message.receiverID===props.receiver._id && message.senderID===props.sender.senderID){
+  useEffect(()=>{
+    const message=props.message;
+    if(message!==null){
       setMessages((messages) => [...messages, message]);
     }
-  });
+  },[props.message])
 
-  if(props.sender===null || !isLoading){
+  if(!isLoading){
     return ( 
       <div
         className="scrollable pt-3 pe-3"
@@ -47,13 +50,13 @@ const ChatBox = (props) => {
         {messages.map((msg, index) =>
           msg.receiverID === props.id ? (
             <ChatReceiver
-              imageURL={props.receiver.imageURL}
+              imageURL={props.receiverImageURL}
               message={msg.messageContent}
               datetime={msg.SentTime}
             />
           ) : (
             <ChatSender
-              imageURL="/demoProilePicture.jpg"
+              imageURL={props.senderImageURL}
               message={msg.messageContent}
               datetime={msg.SentTime}
             />

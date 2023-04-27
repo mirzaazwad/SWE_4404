@@ -12,6 +12,10 @@ io.on('connection', (socket) => {
     socket.join(roomName);
   })
 
+  socket.on('leave room',(roomName)=>{
+    socket.leave(roomName);
+  })
+
   socket.on('send_message', (message) => {
     io.to(message.senderID).emit('message', message);
     io.to(message.receiverID).emit('message', message);

@@ -83,12 +83,12 @@ const CollapsibleChat = (props) => {
     };
     if (message) {
       socket.emit("send_message", msg);
+      setMessage("");
       await axios.post('/api/profile/chat/send',msg, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      setMessage("");
     }
   };
   if(loading===false){
@@ -150,6 +150,7 @@ const CollapsibleChat = (props) => {
                 className="form-control form-control-sm"
                 id="exampleFormControlInput3"
                 placeholder="Type message"
+                value={message}
                 onChange={(e) => setMessage(e.target.value)}/>
                 <Button type="submit">
                   <Send/>

@@ -13,27 +13,32 @@ import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import ChatTile from "../partials/chats/chatsTile";
-import ChatSender from "../partials/chats/chatsSenderMessage";
-import ChatReceiver from "../partials/chats/chatsReceiverMessage";
 import axios from "axios";
 import io from "socket.io-client";
 import toDateString from "../../LibraryFunctions/toDateString";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ChatBox from "../partials/chats/chatBox";
 import toDate from "../../LibraryFunctions/toDate";
+import { setNotification } from "../../Contexts/action";
 import timeElapsed from "../../LibraryFunctions/timeElapsed";
 
 const ChatPage = () => {
   const { id } = useParams();
+  const dispatch=useDispatch();
   const user = useSelector((state) => state.userState.user);
   const socket = io("http://localhost:4110");
   const [receiver, setReceiver] = useState({});
   const [currentSender, setCurrentSender] = useState({});
+  const [currentSenderID, setCurrentSenderID] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [senders, setSenders] = useState([]);
   const [filteredValues,setFilter]=useState([]);
   const [searchValue,setSearchValue]=useState("");
+  const [toggle,setToggle]=useState(false);
+  const [messagesMap,setMessagesMap]=useState(new Map());
+  const [newMessage,setNewMessage]=useState(null);
+  const [messages,setMessages]=useState([]);
 
   const changeContacts = (input) =>{
     console.log(input);
@@ -46,6 +51,17 @@ const ChatPage = () => {
     }
   }
 
+  const getSender = async(senderID)=>{
+    const result=await axios.get('/api/profile/user/getUser/'+senderID, {
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    });
+    let temp=senders;
+    senders.push(result);
+    setSenders(temp);
+  }
+
   const retrieveUsers = async () => {
     setLoading(true);
     const value = await axios.get("/api/profile/chat/senders/" + id, {
@@ -53,11 +69,25 @@ const ChatPage = () => {
         Authorization: `Bearer ${user.token}`,
       },
     });
-    console.log(value);
     setSenders(value.data)
     setFilter(value.data);
+    value.data.forEach((sent)=>messagesMap.set(sent.senderID,{lastMessage:sent.lastMessage,lastMessageTime:sent.lastMessageTime}));
     setLoading(false);
   };
+
+  socket.on("message",(message)=>{
+    setNewMessage(message);
+    if(message.receiverID===id){
+      messagesMap.set(message.senderID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
+    }
+    else if(message.senderID===id){
+      console.log("Expected Receiver ID: ",id);
+      console.log(message);
+      console.log(messagesMap.get(message.receiverID));
+      messagesMap.set(message.receiverID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
+      console.log(messagesMap.get(message.receiverID));
+    }
+  })
 
   useEffect(() => {
     setLoading(true);
@@ -77,22 +107,34 @@ const ChatPage = () => {
     retrieveUsers();
   }, []);
 
+  const ToggleChat = async(sent) =>{
+    setCurrentSender(sent);
+    setCurrentSenderID(sent.senderID);
+    console.log("Current Sender ID:",currentSenderID);
+    await axios.post('/api/profile/chat/toggleRead',{
+      senderID:id,
+      receiverID:sent.senderID
+    },{
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    }).then((result)=>{
+      setToggle(toggle^true);
+    });
+  }
+
   useEffect(()=>{
     if(senders.length>0){
-      setCurrentSender(senders[0]);
+      ToggleChat(senders[0]);
     }
   },[senders])
 
-  socket.on("message", (message) => {
-    if(message.receiverID===id){
-      
-    }
-  });
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     let msg = {
-      senderID: currentSender,
+      senderID: currentSender.senderID,
       receiverID: id,
       SentTime: toDateString(new Date()),
       messageContent: message,
@@ -115,7 +157,7 @@ const ChatPage = () => {
         className="py-5"
         style={{ backgroundColor: "#3354a9", height: "100vh" }}
       >
-        <NavbarPharmacy id={id} />
+        <NavbarPharmacy id={id} toggle={toggle} user={user}/>
         <MDBRow>
           <MDBCol md="12">
             <MDBCard
@@ -158,14 +200,17 @@ const ChatPage = () => {
                       >
                         <MDBTypography listUnStyled className="mb-0">
                           {filteredValues.map((sent, index) => (
-                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:"transparent",width:"60vh"}} onClick={()=>setCurrentSender(sent)}>
+                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>ToggleChat(sent)}>
                             <ChatTile
-                            sender={sent.senderName}
-                            time={timeElapsed(sent.lastMessageTime)}
-                            messageCount={"3"}
+                            sender={sent}
+                            time={timeElapsed(messagesMap.get(sent.senderID).lastMessageTime)}
+                            messageCount={newMessage}
+                            id={id}
                             imageURL={sent.senderImageURL}
-                            message={sent.lastMessage}
+                            message={messagesMap.get(sent.senderID).lastMessage}
                             index={index}
+                            user={user}
+                            currentSender={currentSenderID}
                           /></button>
                           ))}
                         </MDBTypography>
@@ -173,8 +218,8 @@ const ChatPage = () => {
                     </div>
                   </MDBCol>
                   <MDBCol md="6" lg="7" xl="8">
-                    <ChatBox id={id} receiver={receiver} sender={currentSender} user={user}/>
-                    <form className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2" onSubmit={handleSubmit}>
+                    <ChatBox id={id} senderID={currentSenderID} receiverImageURL={receiver.imageURL} senderImageURL={currentSender.senderImageURL} user={user} socket={socket} message={newMessage}/>
+                      <form className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2" onSubmit={handleSubmit}> 
                       <img
                         src={receiver.imageURL}
                         alt="avatar 3"
@@ -183,13 +228,14 @@ const ChatPage = () => {
                       <input
                         type="text"
                         className="form-control form-control-sm"
-                        id="exampleFormControlInput2"
                         placeholder="Type message"
+                        value={message}
+                        onChange={(e)=>setMessage(e.target.value)}
                       />
-                      <Button className="ms-3" href="#!">
+                      <Button className="ms-3" type="submit">
                         <Send />
                       </Button>
-                    </form>
+                      </form>
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

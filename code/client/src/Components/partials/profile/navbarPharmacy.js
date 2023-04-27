@@ -9,13 +9,35 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useParams } from 'react-router';
 import {Navigate} from "react-router-dom";
 import '../../../index.css';
+import { useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const NavbarPharmacy=(props) =>{
   const id = props.id;
+  const [chatMessages,setChatMessages]=useState(0);
   const {logout}= useLogout();
   const navigate=useNavigate();
-  let chatMessages=5;
   let orderMessages=2;
+
+  useEffect(()=>{
+    const retrieveMessageCount =async()=>{
+      const messages = await axios.post(
+        "/api/profile/chat/countAllMessages/",
+        { 
+          receiverID: id
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${props.user.token}`,
+          },
+        }
+      );
+      setChatMessages(messages.data.count);
+    }
+    retrieveMessageCount();
+  },[props])
+
   const handleLogout = () =>{
     logout();
     return navigate('/');

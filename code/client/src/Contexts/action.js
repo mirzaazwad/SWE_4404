@@ -5,7 +5,8 @@ const initialState = {
   loginSignUp: 0,
   buyerState: {},
   sellerState: {},
-  sellerDetails: {}
+  sellerDetails: {},
+  notificationCount:0
 }
 
 export const userSlice=createSlice({
@@ -36,9 +37,12 @@ export const userSlice=createSlice({
     },
     setSocketID:(state,action)=>{
       state.socketID=action.payload;
+    },
+    setNotification:(state)=>{
+      state.notificationCount++;
     }
   }
 });
 
-export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setSellerUser,setSellerDetails} =userSlice.actions;
+export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setSellerUser,setSellerDetails,setNotification} =userSlice.actions;
 export default userSlice.reducer;
