@@ -7,8 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import { useLogout } from '../../../Hooks/useLogout';
-import {useParams} from 'react-router-dom';
-import {useCart} from '../../../Contexts/contextReducer';
+import { useDispatch, useSelector } from 'react-redux';
 import '../../../index.css';
 import Modal from '../../../Modal';
 import Cart from '../../cartManagementSystem/cart';
@@ -17,7 +16,8 @@ const NavbarCustomer=()=>{
   const id = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user'))._id:null;
   const {logout} = useLogout();
   const[cartView, setCartView] = useState(false);
-  const data = useCart();
+  const dispatch = useDispatch();
+  const cart = useSelector(state => state.cartState);
   const navigate=useNavigate();
   const handleLogout = () =>{
     logout();
@@ -44,7 +44,7 @@ const NavbarCustomer=()=>{
           <div>
           <Button className='customCart bg-transparent me-3' onClick={()=>{setCartView(true)}}><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '20px'}}>
           </i>
-          <Badge bg='danger' className='cart-badge position-absolute mx-0'>{data.length}</Badge>
+          <Badge bg='danger' className='cart-badge position-absolute mx-0'>{cart.length}</Badge>
          </Button>
           </div>
           {cartView? <Modal onClose={()=>{setCartView(false)}}><Cart></Cart></Modal>:null}

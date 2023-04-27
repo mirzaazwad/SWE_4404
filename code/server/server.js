@@ -10,6 +10,7 @@ const profileRoutesBuyer = require("./routes/buyer-profile-route");
 const profileRoutesSeller = require("./routes/seller-profile-route");
 const pharmaciesRoutes = require("./routes/viewPharmacies/viewPharmacies-route");
 const pharmacyRoutes = require("./routes/viewPharmacies/medicinesOfPharmacy-route");
+const orderRoutes = require("./routes/order-routes");
 const app=express();
 
 const conn=mongoose
@@ -26,6 +27,7 @@ app.use(express.json());
 app.use("/api/profile/addMedicine",medicineAddRoutes);
 app.use("/api/profile/inventory",inventoryRoutes);
 app.use("/api",loginSignUpRoutes);
+app.use("/api/order",orderRoutes);
 app.use("/api/profile/user",profileRoutesUser);
 app.use("/api/profile/buyer",profileRoutesBuyer);
 app.use("/api/profile/seller",profileRoutesSeller);

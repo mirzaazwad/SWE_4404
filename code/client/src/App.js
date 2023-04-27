@@ -18,7 +18,7 @@ import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 import Medicine from "./Components/viewPharmacies/medicineDetails";
-import {CartProvider} from './Contexts/contextReducer';
+import {CartProvider} from './Contexts/cartAction.js';
 
 function App() {
   let user = useSelector((state) => state.userState.user);
@@ -28,7 +28,6 @@ function App() {
     dispatch(LOGIN(user));
   }
   return (
-    <CartProvider>
       <Router>
         <div className="App">
           <div className="content">
@@ -177,7 +176,6 @@ function App() {
           </div>
         </div>
       </Router>
-    </CartProvider>
   );
 }
 
