@@ -13,9 +13,9 @@ import CollapsibleSender from "../partials/chats/collapsibleSenderMessage";
 import CollapsibleReceiver from "../partials/chats/collapsibleReceiverMessage";
 import axios from "axios";
 import io from "socket.io-client";
+import toDateString from "../../LibraryFunctions/toDateString";
 
 const CollapsibleChat = (props) => {
-  const id=props.receiverID;
   const socket = io("http://localhost:4110");
   const [sender, setSender] = useState("/demoProilePicture.jpg");
   const [receiver, setReceiver] = useState("/demoProilePicture.jpg");
@@ -25,38 +25,6 @@ const CollapsibleChat = (props) => {
   const [message, setMessage] = useState("");
   const [loading,setLoading]=useState(false);
   const user = props.JWT;
-
-  function customDate(date) {
-    const Month = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const day = date.getDate();
-    let hour = date.getHours();
-    let meridian = "AM";
-    if (hour >= 12) {
-      meridian = "PM";
-      hour = hour % 12;
-    } else if (hour === 0) {
-      hour += 12;
-    }
-    const minutes = date.getMinutes();
-    if (minutes < 10)
-      return `${day} ${Month[month]} ${year} ${hour}:0${minutes} ${meridian}`;
-    else return `${day} ${Month[month]} ${year} ${hour}:${minutes} ${meridian}`;
-  }
 
   useEffect(() => {
     setLoading(true);
@@ -91,7 +59,7 @@ const CollapsibleChat = (props) => {
           Authorization: `Bearer ${user.token}`,
         },
       });
-      console.log(value.data);
+      value.data.sort((a,b)=>a.messageOrder-b.messageOrder);
       setMessages(value.data);
     }
     retrieveMessages();
@@ -100,7 +68,6 @@ const CollapsibleChat = (props) => {
   }, []);
 
   socket.on("message", (message) => {
-    console.log('comes here');
     if(message.receiverID===props.receiverID && message.senderID===props.senderID){
       setMessages((messages) => [...messages, message]);
     }
@@ -111,7 +78,7 @@ const CollapsibleChat = (props) => {
     let msg={
       senderID: props.senderID,
       receiverID: props.receiverID,
-      SentTime: customDate(new Date()),
+      SentTime: toDateString(new Date()),
       messageContent: message,
     };
     if (message) {
@@ -139,7 +106,7 @@ const CollapsibleChat = (props) => {
       >
         <MDBBtn onClick={toggleShow} size="sm" block>
           <div class="d-flex">
-            <span>Collapsible Chat App</span>
+            <span>Chat</span>
             <ArrowDownCircle />
           </div>
         </MDBBtn>

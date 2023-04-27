@@ -1,5 +1,6 @@
 const ChatTile = (props) => {
   return (
+    <li className="p-2 border-bottom" key={props.index}>
     <div className="d-flex justify-content-between">
       <div className="d-flex flex-row">
         <div>
@@ -11,7 +12,7 @@ const ChatTile = (props) => {
           />
           <span className="badge bg-success badge-dot"></span>
         </div>
-        <div className="pt-1">
+        <div className="pt-1" style={{textAlign:"left"}}>
           <p className="fw-bold mb-0">{props.sender}</p>
           <p className="small text-muted">{props.message}</p>
         </div>
@@ -21,6 +22,7 @@ const ChatTile = (props) => {
         <span className="badge bg-danger rounded-pill float-end">{props.messageCount}</span>
       </div>
     </div>
+    </li>
   );
 };
 

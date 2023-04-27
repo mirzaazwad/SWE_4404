@@ -30,6 +30,10 @@ const chatSchema = new Schema({
   messageOrder:{
     type: Number,
     default:0
+  },
+  senderRead:{
+    type:Boolean,
+    default:false
   }
 },{timestamps:true});
 

@@ -30,7 +30,7 @@ const  ProfilePageForCustomers = () => {
       <NavbarCustomer id={id}/>
   
       <section>
-      <CollapsibleChat senderID={"6411760cc1e404df5e624ef8"} receiverID={id}  JWT={user} room={"6411760cc1e404df5e624ef8"+id}></CollapsibleChat>
+      <CollapsibleChat senderID={"6411760cc1e404df5e624ef8"} receiverID={id}  JWT={user}></CollapsibleChat>
       <div className="container h-100">
         <div className="pt-5">
       <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture id={id}/></div></div>
