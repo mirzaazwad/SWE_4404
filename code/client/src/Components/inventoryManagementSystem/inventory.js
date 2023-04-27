@@ -9,12 +9,14 @@ import "../../index.css";
 import Table from "react-bootstrap/Table";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSelector } from "react-redux";
+import { useSocket } from "../../Hooks/useSocket";
 
 const Inventory = () => {
   const user = useSelector((state)=>state.userState.user);
   const [sellerId, setSellerId] = useState();
   const id = useParams();
   const _id = id.id;
+  const socket=useSocket(_id,[]);
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
   const [medicines, setMedicines] = useState([]);
   const [types, setTypes] = useState([]);
@@ -165,7 +167,7 @@ const Inventory = () => {
     return (
       <div>
         <div>
-          <NavbarPharmacy id={_id} />
+          <NavbarPharmacy id={_id} user={user}/>
         </div>
         <section className="inventory-section">
           <div className="d-flex w-75 m-auto  flex-column">

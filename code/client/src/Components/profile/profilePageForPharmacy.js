@@ -5,12 +5,13 @@ import ProfilePicture from './profilePictureBox';
 import axios from 'axios';
 import { useEffect} from 'react';
 import {useDispatch, useSelector } from 'react-redux';
-import { setSellerDetails, setSellerUser,LOGOUT } from '../../Contexts/action';
-import CollapsibleChat from '../Chat/collapsableChat';
+import { setSellerDetails, setSellerUser,LOGOUT,addNotification } from '../../Contexts/action';
+import { useSocket } from '../../Hooks/useSocket';
 
 const  ProfilePageForPharmacy = () => {
   const user = useSelector((state)=>state.userState.user);
   const {id}=useParams();
+  const socket=useSocket(id,[]);
   const dispatch=useDispatch();
   useEffect(()=>{
     const retrieveUser = async() =>{
@@ -40,7 +41,6 @@ const  ProfilePageForPharmacy = () => {
   <div>
     <NavbarPharmacy id={id} user={user}/>
     <section>
-    <CollapsibleChat senderID={"64493762def7609b0ccbdbfe"} receiverID={id} JWT={user}/>
     <div className="container h-100">
       <div className="pt-5">
     <div className="mt-5 d-lg-none d-flex justify-content-center"><ProfilePicture id={id}/></div>

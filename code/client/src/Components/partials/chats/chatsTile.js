@@ -30,7 +30,6 @@ const ChatTile = (props) => {
         }
       );
       setNotification(messages.data.count);
-      dispatch(addNotification(messages.data.count));
     };
     retrieveMessageCount();
   }, [props.id]);

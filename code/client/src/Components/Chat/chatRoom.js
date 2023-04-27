@@ -81,11 +81,7 @@ const ChatPage = () => {
       messagesMap.set(message.senderID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
     }
     else if(message.senderID===id){
-      console.log("Expected Receiver ID: ",id);
-      console.log(message);
-      console.log(messagesMap.get(message.receiverID));
       messagesMap.set(message.receiverID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
-      console.log(messagesMap.get(message.receiverID));
     }
   })
 

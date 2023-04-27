@@ -10,11 +10,13 @@ import {useNavigate, useParams } from "react-router-dom";
 import Switch from "@mui/material/Switch";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import { useSelector } from "react-redux";
+import { useSocket } from "../../Hooks/useSocket";
 
 const AddMedicine = () => {
   const user = useSelector((state)=>state.userState.user);
   const id = useParams();
   const _id = id.id;
+  const socket=useSocket(_id,[]);
   const navigate=useNavigate();
   const [sellerId, setSellerId] = useState();
   const [categories, setCategories] = useState(null);
@@ -179,7 +181,7 @@ const AddMedicine = () => {
   if (categories !== null && types !== null) {
     return (
       <div>
-        <NavbarPharmacy id={_id} />
+        <NavbarPharmacy id={_id} user={user}/>
         <section className="d-flex justify-content-center">
           <Card className="addMedicineCard">
             <Card.Header
