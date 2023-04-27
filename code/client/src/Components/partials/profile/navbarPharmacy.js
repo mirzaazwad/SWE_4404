@@ -9,13 +9,15 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useParams } from 'react-router';
 import {Navigate} from "react-router-dom";
 import '../../../index.css';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
+import { setNotification } from '../../../Contexts/action';
 import axios from 'axios';
 
 const NavbarPharmacy=(props) =>{
   const id = props.id;
-  const [chatMessages,setChatMessages]=useState(0);
+  const dispatch=useDispatch();
+  const chatMessages=useSelector((state)=>state.userState.notificationCount)
   const {logout}= useLogout();
   const navigate=useNavigate();
   let orderMessages=2;
@@ -33,10 +35,10 @@ const NavbarPharmacy=(props) =>{
           },
         }
       );
-      setChatMessages(messages.data.count);
+      dispatch(setNotification(messages.data.count));
     }
     retrieveMessageCount();
-  },[props])
+  },[props.id])
 
   const handleLogout = () =>{
     logout();

@@ -38,11 +38,17 @@ export const userSlice=createSlice({
     setSocketID:(state,action)=>{
       state.socketID=action.payload;
     },
-    setNotification:(state)=>{
-      state.notificationCount++;
+    addNotification:(state,action)=>{
+      state.notificationCount=state.notificationCount+action.payload;
+    },
+    subNotification:(state,action)=>{
+      state.notificationCount=state.notificationCount-action.payload;
+    },
+    setNotification:(state,action)=>{
+      state.notificationCount=action.payload;
     }
   }
 });
 
-export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setSellerUser,setSellerDetails,setNotification} =userSlice.actions;
+export const {LOGIN,LOGOUT,setLogin,setSignUp,setBuyerUser,setNotification,setSellerUser,setSellerDetails,addNotification,subNotification} =userSlice.actions;
 export default userSlice.reducer;

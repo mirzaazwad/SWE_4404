@@ -1,9 +1,20 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { addNotification, subNotification } from '../../../Contexts/action';
 
 const ChatTile = (props) => {
+  const dispatch=useDispatch();
   const [notifications, setNotification] = useState(0);
   const user = props.user;
+
+  useEffect(()=>{
+    if(props.sender.senderID===props.currentSender){
+      dispatch(subNotification(notifications));
+      setNotification(0);
+    }
+  },[props.currentSender])
+  
   useEffect(() => {
     const retrieveMessageCount = async () => {
       const messages = await axios.post(
@@ -19,6 +30,7 @@ const ChatTile = (props) => {
         }
       );
       setNotification(messages.data.count);
+      dispatch(addNotification(messages.data.count));
     };
     retrieveMessageCount();
   }, [props.id]);
@@ -27,14 +39,9 @@ const ChatTile = (props) => {
     console.log(props);
     if(props.messageCount!==null && props.messageCount.receiverID!==props.currentSender && props.messageCount.receiverID===props.sender.senderID && props.messageCount.senderID===props.id){
       setNotification(notifications+1);
+      dispatch(addNotification(1));
     }
   },[props.messageCount])
-
-  useEffect(()=>{
-    if(props.sender.senderID===props.currentSender){
-      setNotification(0);
-    }
-  },[props.currentSender])
 
   return (
     <li className="p-2 border-bottom" key={props.sender.senderID}>
