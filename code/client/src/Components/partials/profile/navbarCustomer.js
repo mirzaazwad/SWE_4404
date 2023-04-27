@@ -34,10 +34,10 @@ const NavbarCustomer=()=>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
+            <Nav.Link href={`/profileBuyer/${id}`}>Profile</Nav.Link>
             <Nav.Link href={`/ViewPharmacies/${id}`}>Pharmacies</Nav.Link>
-            <Nav.Link href="#action2">Medicines</Nav.Link>
-            <Nav.Link href="#action2">My Orders</Nav.Link>
+            <Nav.Link href="#action2">Prescriptions</Nav.Link>
+            <Nav.Link href={`/myOrders`}>My Orders</Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
