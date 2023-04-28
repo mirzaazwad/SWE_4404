@@ -21,7 +21,24 @@ const CollapsibleChat = (props) => {
   const [receiver, setReceiver] = useState("/demoProilePicture.jpg");
   const [showShow, setShowShow] = useState(false);
   const [messages, setMessages] = useState([]);
-  const toggleShow = () => setShowShow(!showShow);
+  const [notifications,setNotifications] = useState(0);
+  const toggleShow = async() => {
+    if(showShow===false){
+      await axios.post('/api/profile/chat/toggleReadReceiver',{
+        senderID:props.receiverID,
+        receiverID:props.senderID,
+      },{
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+    }
+    setShowShow(!showShow);
+    if(showShow===true){
+      setNotifications(0);
+    }
+  }
+
   const [message, setMessage] = useState("");
   const [loading,setLoading]=useState(false);
   const user = props.JWT;
@@ -63,12 +80,39 @@ const CollapsibleChat = (props) => {
       setMessages(value.data);
     }
     retrieveMessages();
-    
+    const retrieveMessageCount = async () => {
+      const messages = await axios.post(
+        "/api/profile/chat/countMessagesReceiver/",
+        { 
+          senderID: props.receiverID,
+          receiverID: props.senderID
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      );
+      setNotifications(messages.data.count);
+    };
+    retrieveMessageCount();
     setLoading(false);
   }, []);
 
-  socket.on("message", (message) => {
+  // useEffect(()=>{
+  //   if(showShow!==null && showShow===true){
+      
+  //   }
+  // },[notifications])
+
+  socket.on("message",  (message) => {
+    console.log(message);
     if(message.receiverID===props.receiverID && message.senderID===props.senderID){
+      setNotifications(notifications+1);
+      setMessages((messages) => [...messages, message]);
+    }
+    else if(message.receiverID===props.senderID && message.senderID===props.receiverID){
+      setNotifications(notifications+1);
       setMessages((messages) => [...messages, message]);
     }
   });
@@ -84,6 +128,7 @@ const CollapsibleChat = (props) => {
     if (message) {
       socket.emit("send_message", msg);
       setMessage("");
+      msg.readStatus="receiver";
       await axios.post('/api/profile/chat/send',msg, {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -106,6 +151,9 @@ const CollapsibleChat = (props) => {
       >
         <MDBBtn onClick={toggleShow} size="sm" block>
           <div class="d-flex">
+          {notifications>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
+            {notifications}
+            </span>:""}
             <span>Chat</span>
             <ArrowDownCircle />
           </div>

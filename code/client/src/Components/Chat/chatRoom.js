@@ -137,6 +137,7 @@ const ChatPage = () => {
     };
     if (message) {
       socket.emit("send_message", msg);
+      msg.readStatus="sender";
       await axios.post("/api/profile/chat/send", msg, {
         headers: {
           Authorization: `Bearer ${user.token}`,

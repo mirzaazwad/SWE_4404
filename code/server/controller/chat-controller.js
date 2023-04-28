@@ -4,8 +4,8 @@ const chatSubscriber = require('../model/chat-subscriber');
 
 const addMessage = async (req,res)=>{
   try{
-    const {senderID,receiverID,SentTime,messageContent}=req.body;
-    const result=await chatModel.addChat(senderID,receiverID,messageContent,SentTime);
+    const {senderID,receiverID,SentTime,messageContent,readStatus}=req.body;
+    const result=await chatModel.addChat(senderID,receiverID,messageContent,SentTime,readStatus);
     await chatSubscriber.addChat(senderID,receiverID,messageContent,SentTime);
     return res.status(200).json(result);
   }
@@ -60,6 +60,17 @@ const toggleRead = async(req,res)=>{
   }
 }
 
+const toggleReadReceiver = async(req,res)=>{
+  try{
+    const {senderID,receiverID}=req.body;
+    await chatModel.updateMany({senderID:senderID,receiverID:receiverID},{$set : {receiverRead:true}});
+    return res.status(200).json({success:true});
+  }
+  catch(err){
+    return res.status(400).json({error:err.message,success:false});
+  }
+}
+
 const countUnread = async(req,res)=>{
   try{
     const {senderID,receiverID}=req.body;
@@ -83,6 +94,29 @@ const countAllUnread = async(req,res)=>{
   }
 }
 
+const countUnreadReceiver = async(req,res)=>{
+  try{
+    const {senderID,receiverID}=req.body;
+    const result=await chatModel.find({senderID:senderID,receiverID:receiverID,receiverRead:false});
+    return res.status(200).json({count:result.length});
+  }
+  catch(err){
+    return res.status(400).json({error:err.message,success:false});
+  }
+}
+
+const countAllUnreadReceiver = async(req,res)=>{
+  try{
+    const {receiverID}=req.body;
+    const result=await chatModel.find({senderID:receiverID,receiverRead:false});
+    console.log(result.length);
+    return res.status(200).json({count:result.length});
+  }
+  catch(err){
+    return res.status(400).json({error:err.message,success:false});
+  }
+}
+
 module.exports = {
   addMessage,
   getMessages,
@@ -90,6 +124,9 @@ module.exports = {
   getAllSenders,
   countUnread,
   toggleRead,
-  countAllUnread
+  countAllUnread,
+  toggleReadReceiver,
+  countUnreadReceiver,
+  countAllUnreadReceiver
 };
 
