@@ -4,17 +4,19 @@ const postOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
     const  items  = req.body.items;
-    console.log(items);
+    const customer_data  = req.body.customer_data;
 
     const order = await Order.findOne({ userId: userId });
 
     if (order) {
       order.order_data.push({
         date: new Date(),
-        medicines:items
+        medicines:items,
+        customer_data: customer_data
       });
       await order.save();
-      return res.status(200).json(order);
+      console.log("order saved");
+      return res.status(200);
     }
     console.log("order not found");
     const newOrder = new Order({
@@ -22,13 +24,15 @@ const postOrder = async (req, res) => {
       order_data: [
         {
           date: new Date(),
-          medicines : items
+          medicines : items,
+          customer_data: customer_data
         }
       ]
     });
 
     await newOrder.save();
-    return res.status(200).json(newOrder);
+    
+    return res.status(200);
   } catch (err) {
     console.error(err);
     return res.status(500).json({ error: 'Server error' });

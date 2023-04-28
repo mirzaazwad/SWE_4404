@@ -22,7 +22,6 @@ const MedicineDetails = () => {
       const response = await axios.get(
         `http://localhost:4000/api/pharmacy/${id}/medicine/${medicineId}`
       );
-      // console.log(response.data);
       setMedicine(response.data);
     } catch (error) {
       console.log(error);
@@ -42,7 +41,7 @@ const MedicineDetails = () => {
         {
           pcsPrice = medicine.SellingPrice*quantityPcs;
           stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
-          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerBox;
+          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerStrip*medicine.StripsPerBox; 
         }
         else
         {
