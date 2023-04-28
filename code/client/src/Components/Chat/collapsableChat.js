@@ -21,22 +21,26 @@ const CollapsibleChat = (props) => {
   const [receiver, setReceiver] = useState("/demoProilePicture.jpg");
   const [showShow, setShowShow] = useState(false);
   const [messages, setMessages] = useState([]);
+  const [messageNotifier,setMessageNotifier]=useState(null);
   const [notifications,setNotifications] = useState(0);
+
+  const toggleRead = async() =>{
+    await axios.post('/api/profile/chat/toggleReadReceiver',{
+      senderID:props.receiverID,
+      receiverID:props.senderID,
+    },{
+      headers: {
+        Authorization: `Bearer ${user.token}`,
+      },
+    })
+  }
+
   const toggleShow = async() => {
+    setNotifications(0);
     if(showShow===false){
-      await axios.post('/api/profile/chat/toggleReadReceiver',{
-        senderID:props.receiverID,
-        receiverID:props.senderID,
-      },{
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
+      toggleRead();
     }
     setShowShow(!showShow);
-    if(showShow===true){
-      setNotifications(0);
-    }
   }
 
   const [message, setMessage] = useState("");
@@ -99,20 +103,23 @@ const CollapsibleChat = (props) => {
     setLoading(false);
   }, []);
 
-  // useEffect(()=>{
-  //   if(showShow!==null && showShow===true){
-      
-  //   }
-  // },[notifications])
+  useEffect(()=>{
+    if(showShow===true && messageNotifier!==null){
+      toggleRead();
+      setNotifications(0);
+    }
+    if(showShow===false && messageNotifier!==null){
+      setNotifications(notifications+1);
+    }
+  },[messageNotifier])
 
   socket.on("message",  (message) => {
-    console.log(message);
     if(message.receiverID===props.receiverID && message.senderID===props.senderID){
-      setNotifications(notifications+1);
+      setMessageNotifier(message);
       setMessages((messages) => [...messages, message]);
     }
     else if(message.receiverID===props.senderID && message.senderID===props.receiverID){
-      setNotifications(notifications+1);
+      setMessageNotifier(message);
       setMessages((messages) => [...messages, message]);
     }
   });
