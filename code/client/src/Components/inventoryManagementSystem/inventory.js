@@ -33,12 +33,10 @@ const Inventory = () => {
     e.preventDefault();
     handleClose();
     let currentAmount=0;
-    let StockType=stockType;
-    if(StockType==="Pcs"){
+    if(stockType==="Pcs"){
       currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
     }
-    else if(StockType==="Box"){
-      StockType=StockType+"es";
+    else if(stockType==="Boxes"){
       currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
     }
     else{
@@ -47,7 +45,7 @@ const Inventory = () => {
     console.log('pharmacy ID: ',pharmacyID)
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:StockType,
+      stock:stockType,
       amount:Number(amount)+Number(currentAmount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
@@ -59,12 +57,10 @@ const Inventory = () => {
     e.preventDefault();
     handleClose();
     let currentAmount=0;
-    let StockType=stockType;
-    if(StockType==="Pcs"){
+    if(stockType==="Pcs"){
       currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
     }
-    else if(StockType==="Box"){
-      StockType=StockType+"es";
+    else if(stockType==="Boxes"){
       currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
     }
     else{
@@ -76,7 +72,7 @@ const Inventory = () => {
     }
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:StockType,
+      stock:stockType,
       amount:Number(currentAmount)-Number(amount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
@@ -249,7 +245,7 @@ const Inventory = () => {
                     <option>Select quantity type</option>
                     <option value="Pcs">Pcs</option>
                     <option value="Strips">Strips</option>
-                    <option value="Box">Box</option>
+                    <option value="Boxes">Boxes</option>
                   </Form.Select>
                   <Form.Label>Quantity:</Form.Label>
                   <Form.Control
