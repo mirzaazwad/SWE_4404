@@ -16,7 +16,6 @@ const AddExistingMedicine = (props) => {
   const _id=props.id;
 
   useEffect(()=>{
-    console.log('comes to this props');
     setShowMedicines(props.show);
   },[props.show])
 

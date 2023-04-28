@@ -32,13 +32,23 @@ const Inventory = () => {
   const addToStock = (e) => {
     e.preventDefault();
     handleClose();
-    console.log(stockType);
-    console.log(amount);
+    let currentAmount=0;
+    let StockType=stockType;
+    if(StockType==="Pcs"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
+    }
+    else if(StockType==="Box"){
+      StockType=StockType+"es";
+      currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
+    }
+    else{
+      currentAmount=medicines[current_medicine_index-1].Amount.Strips;
+    }
     console.log('pharmacy ID: ',pharmacyID)
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:stockType.option,
-      amount:Number(amount)+Number(medicines[current_medicine_index-1].Amount)
+      stock:StockType,
+      amount:Number(amount)+Number(currentAmount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
     }})
@@ -48,17 +58,26 @@ const Inventory = () => {
   const subToStock = (e) => {
     e.preventDefault();
     handleClose();
-    console.log(stockType);
-    console.log(amount);
-    console.log('pharmacy ID: ',pharmacyID)
-    if(Number(medicines[current_medicine_index-1].Amount)-Number(amount)<0){
+    let currentAmount=0;
+    let StockType=stockType;
+    if(StockType==="Pcs"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
+    }
+    else if(StockType==="Box"){
+      StockType=StockType+"es";
+      currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
+    }
+    else{
+      currentAmount=medicines[current_medicine_index-1].Amount.Strips;
+    }
+    if(Number(currentAmount)-Number(amount)<0){
       setError("Stock cannot be negative");
       return;
     }
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:stockType.option,
-      amount:Number(medicines[current_medicine_index-1].Amount)-Number(amount)
+      stock:StockType,
+      amount:Number(currentAmount)-Number(amount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
     }})
@@ -114,7 +133,7 @@ const Inventory = () => {
               Manufacturer: temp[i].Manufacturer,
               SellingPrice: temp[i].SellingPrice,
               PurchasePrice: temp[i].PurchasePrice,
-              Amount: temp[i].Stock.Pcs,
+              Amount:{...temp[i].Stock},
             };
             res.push(medicine);
           }
@@ -224,7 +243,7 @@ const Inventory = () => {
                   <Form.Select
                     aria-label="Default select example"
                     onChange={(e) =>
-                      setStockType({ option: e.target.value, amount: amount })
+                      setStockType(e.target.value)
                     }
                   >
                     <option>Select quantity type</option>
@@ -283,7 +302,7 @@ const Inventory = () => {
                       <td> {medicine.Manufacturer} </td>{" "}
                       <td> {medicine.SellingPrice} </td>{" "}
                       <td> {medicine.PurchasePrice} </td>{" "}
-                      <td> {medicine.Amount} </td>{" "}
+                      <td> {medicine.Amount.Pcs} </td>{" "}
                       <td>
                         <Button
                           variant="secondary"
