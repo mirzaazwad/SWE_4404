@@ -1,22 +1,34 @@
 const express = require("express");
-const mongoose = require("mongoose");
-require("dotenv").config();
+const cors = require('cors');
+
+//middleware
+const mongoDBConnection = require('./middleware/mongoDBConnection');
+const socket= require('./middleware/socket');
+
+//routes
 const loginSignUpRoutes = require("./routes/login-signup-routes");
-const profileRoutesUser = require("./routes/profile/user-route");
-const profileRoutesBuyer = require("./routes/profile/buyer-route");
-const profileRoutesSeller = require("./routes/profile/seller-route");
+const medicineAddRoutes = require("./routes/add-medicine-routes");
+const inventoryRoutes = require("./routes/inventory-routes");
+const profileRoutesUser = require("./routes/user-profile-route");
+const profileRoutesBuyer = require("./routes/buyer-profile-route");
+const profileRoutesSeller = require("./routes/seller-profile-route");
+const purchaseRoutes = require("./routes/product-purchase-route");
+const pharmaciesRoutes = require("./routes/viewPharmacies/viewPharmacies-route");
+const chatRoutes = require("./routes/chat-routes");
+
+
+//express app setup
 const app=express();
-const dbURI = process.env.ConnectionString;
-mongoose
-  .connect(dbURI, { useNewURLParser: true, useUnifiedTopology: true })
-  .then((result) => {
-    app.listen(process.env.PORT);
-  })
-  .catch((err) => console.error(err));
-
 app.use(express.json());
+app.use(cors());
+app.listen(process.env.PORT);
 
+app.use('/api/make-payment',purchaseRoutes);
+app.use("/api/profile/addMedicine",medicineAddRoutes);
+app.use("/api/profile/inventory",inventoryRoutes);
 app.use("/api",loginSignUpRoutes);
 app.use("/api/profile/user",profileRoutesUser);
 app.use("/api/profile/buyer",profileRoutesBuyer);
 app.use("/api/profile/seller",profileRoutesSeller);
+app.use("/api/pharmacies",pharmaciesRoutes);
+app.use("/api/profile/chat",chatRoutes);

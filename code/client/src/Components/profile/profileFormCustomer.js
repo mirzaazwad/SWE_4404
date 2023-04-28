@@ -6,7 +6,6 @@ import Modal from "react-bootstrap/Modal";
 import { InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
 import "../../index.css";
-import "boxicons";
 import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
@@ -26,13 +25,15 @@ const ProfileFormCustomer = (id) => {
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [errorPassword,setErrorPassword] = useState(false);
   const [password, changePassword] = useState(null);
+  const [loaded,setLoaded] = useState(false);
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
-    useEffect(() => {
+  useEffect(() => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
     setAddress(buyer.address);
+    setLoaded(true);
   }, [buyer]);
 
   const setPassword = (e) =>{
@@ -96,120 +97,131 @@ const ProfileFormCustomer = (id) => {
     setIsEditing(false);
     setisLocked(false);
   };
-  
-
-  return (
-    <div>
-      <div className="profileInfo d-flex justify-content-between">
-        <h4 className="InfoHeader mb-4">Personal Information</h4>
-        <button
-          className="btn btn-outline-dark btn-editProfile "
-          onClick={turnOnEdit}
-        >
-          Edit Profile
-          <i className="bx bx-cog bx-sm"></i>
-        </button>
-      </div>
-      <Form>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Name</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter your name"
-            disabled={isDisabled}
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Contact No.</Form.Label>
-          <Form.Control
-            type="text"
-            placeholder="Enter contact no."
-            disabled={isDisabled}
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Address</Form.Label>
-          <Form.Control
-            type="address"
-            placeholder="Address"
-            disabled={isDisabled}
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicEmail">
-          <Form.Label>Email address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            disabled={isDisabled}
-            value={buyer.email}
-          />
-        </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          {isEditing && (
-            <a href={"changePassword/" + user._id}>Change Password</a>
-          )}
-        </Form.Group>
-
-        {isEditing && (
-          <Button
-            className="btn btn-outline-dark btn-save"
-            disabled={isLocked}
-            onClick={handleShow}
+  if(loaded===true){
+    return (
+      <div>
+        <div className="profileInfo d-flex justify-content-between">
+          <h4 className="InfoHeader mb-4">Personal Information</h4>
+          <button
+            className="btn btn-outline-dark btn-editProfile "
+            onClick={turnOnEdit}
           >
-            Save
-          </Button>
-        )}
-      
-      <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Enter Password to Confirm Changes</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-            <div className="errorMessageShow" style={{color:"red"}}>{error}</div>
-            <Form.Group className="mb-3" controlId="enterPassword">
-              <Form.Label>Enter Password</Form.Label>
-              <InputGroup>
-                <Form.Control
-                  type={currentPasswordVisibility ? "text" : "password"}
-                  placeholder="Password"
-                  value={password}
-                  onChange={setPassword}
-                />
-                <InputGroup.Text>
-                  {(currentPasswordVisibility && (
-                    <EyeFill
-                      color="#3354a9"
-                      onClick={() => setCurrentPasswordVisibility(false)}
-                    />
-                  )) ||
-                    (!currentPasswordVisibility && (
-                      <EyeSlashFill
+            Edit Profile
+            <i className="bx bx-cog bx-sm"></i>
+          </button>
+        </div>
+        <Form>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Name</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter your name"
+              disabled={isDisabled}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Contact No.</Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="Enter contact no."
+              disabled={isDisabled}
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Address</Form.Label>
+            <Form.Control
+              type="address"
+              placeholder="Address"
+              disabled={isDisabled}
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicEmail">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type="email"
+              placeholder="Enter email"
+              disabled={true}
+              value={buyer.email}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formBasicPassword">
+            {isEditing && (
+              <a href={"changePassword/" + user._id}>Change Password</a>
+            )}
+          </Form.Group>
+  
+          {isEditing && (
+            <Button
+              className="btn btn-outline-dark btn-save"
+              disabled={isLocked}
+              onClick={handleShow}
+            >
+              Save
+            </Button>
+          )}
+        
+        <Modal show={show} onHide={handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>Enter Password to Confirm Changes</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <div className="errorMessageShow" style={{color:"red"}}>{error}</div>
+              <Form.Group className="mb-3" controlId="enterPassword">
+                <Form.Label>Enter Password</Form.Label>
+                <InputGroup>
+                  <Form.Control
+                    type={currentPasswordVisibility ? "text" : "password"}
+                    placeholder="Password"
+                    value={password}
+                    onChange={setPassword}
+                  />
+                  <InputGroup.Text>
+                    {(currentPasswordVisibility && (
+                      <EyeFill
                         color="#3354a9"
-                        onClick={() => setCurrentPasswordVisibility(true)}
+                        onClick={() => setCurrentPasswordVisibility(false)}
                       />
-                    ))}
-                </InputGroup.Text>
-              </InputGroup>
-            </Form.Group>
-          
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={handleSubmit}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    </Form>
-    </div>
-  );
+                    )) ||
+                      (!currentPasswordVisibility && (
+                        <EyeSlashFill
+                          color="#3354a9"
+                          onClick={() => setCurrentPasswordVisibility(true)}
+                        />
+                      ))}
+                  </InputGroup.Text>
+                </InputGroup>
+              </Form.Group>
+            
+          </Modal.Body>
+          <Modal.Footer>
+            <Button variant="secondary" onClick={handleClose}>
+              Close
+            </Button>
+            <Button variant="primary" onClick={handleSubmit}>
+              Save Changes
+            </Button>
+          </Modal.Footer>
+        </Modal>
+      </Form>
+      </div>
+    );
+  }
+  else{
+    return (
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style={{ marginLeft: "50%", marginTop: "10%" }}
+      >
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    );
+  }
 };
 export default ProfileFormCustomer;

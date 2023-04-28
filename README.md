@@ -12,7 +12,7 @@ Those who contributed to this project:
 
 [Sadnam Sakib Apurbo](https://www.linkedin.com/in/sadnam-sakib-apurbo-0a4613211/)
 
-[Zannatul Naim Srishty]()(Supervisor)
+[Zannatun Naim Srishty]()(Supervisor)
 
 This project is a part of the respective course in Islamic University of Technology(IUT), Board Bazar, Gazipur, Dhaka, Bangladesh.
 

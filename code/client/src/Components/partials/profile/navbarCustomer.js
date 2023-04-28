@@ -4,10 +4,11 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate } from 'react-router-dom';
-import { useLogout } from '../../Hooks/useLogout';
-import '../../index.css';
+import { useLogout } from '../../../Hooks/useLogout';
+import '../../../index.css';
 
 const NavbarCustomer=()=>{
+  const id=localStorage.getItem('id');
   const {logout} = useLogout();
   const navigate=useNavigate();
   const handleLogout = () =>{
@@ -26,10 +27,10 @@ const NavbarCustomer=()=>{
             navbarScroll
           >
             <Nav.Link href="#action1">Home</Nav.Link>
-            <Nav.Link href="#action2">Pharmacies</Nav.Link>
+            <Nav.Link href={`/ViewPharmacies/${id}`}>Pharmacies</Nav.Link>
             <Nav.Link href="#action2">Medicines</Nav.Link>
             <Nav.Link href="#action2">My Orders</Nav.Link>
-            <Nav.Link className="d-block d-lg-none" href="#action2">Log Out</Nav.Link>
+            <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
           </Nav>
           <button className='customCart bg-transparent me-3'><i className='bx bxs-cart-add bx-md' style={{color: 'white', fontSize: '15px'}}></i></button>
@@ -42,4 +43,6 @@ const NavbarCustomer=()=>{
   );
 }
 
+
 export default NavbarCustomer;
+

@@ -1,146 +1,142 @@
-import Card from 'react-bootstrap/Card';
-import Button from 'react-bootstrap/Button';
-import { InputGroup, Form } from 'react-bootstrap';
-import NavbarPharmacy from '../profile/navbarPharmacy';
+import Card from "react-bootstrap/Card";
+import Button from "react-bootstrap/Button";
+import NavbarPharmacy from "../partials/profile/navbarPharmacy";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import {useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useSocket } from "../../Hooks/useSocket";
+import Category from "../partials/inventoryManagement/addCategory";
+import Type from "../partials/inventoryManagement/addType";
+import StripsForm from "../partials/inventoryManagement/stripsForm";
+import NonStripsForm from "../partials/inventoryManagement/nonStripsForm";
 
-function AddMedicine() {
-  return (
-    <div>
-      <NavbarPharmacy />
-      <section className='d-flex justify-content-center'>
-        <Card className='addMedicineCard'>
-          <Card.Header className='addMedicineCardHeader' style={{ fontSize: '20px' }}><b>Add Medicine</b></Card.Header>
-          <Card.Title className='addMedicineCardTitle'>New Medicine Information: </Card.Title>
-          <Card.Body>
-            <div className='addMedicineSide d-flex justify-content-between'>
-              <div className='w-100 me-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Medicine Name
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter medicine name' required
-                  />
-                </InputGroup>
-              </div>
-              <div className='addMedicineSide w-100 pl-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Generic Name
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter generic name of medicine' required
-                  />
-                </InputGroup>
-              </div>
-            </div>
+const AddMedicine = () => {
+  const user = useSelector((state)=>state.userState.user);
+  const id = useParams();
+  const _id = id.id;
+  useSocket(_id,[]);
+  const [categories, setCategories] = useState(null);
+  const [types, setTypes] = useState(null);
+  const [sellerId, setSellerId] = useState();
+  const [error, setError] = useState("");
+  const [Strips, setHasStrips] = useState(false);
+  const [showCategory, setShowCategory] = useState(false);
+  const [showType, setShowType] = useState(false);
+  const [medicineType, setMedicineType] = useState("Default");
+  const handleCategory = (data) =>{
+    setShowCategory(data);
+  }
 
-            <br />
-            <div className='addMedicineSide d-flex justify-content-between'>
-              <div className='w-100 me-2'>
-              <InputGroup className="mb-1">
-              <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                Medicine Type
-              </InputGroup.Text>
-              <Form.Select aria-label="Select an option" placeholder="Select an option">
-        <option value="">Select an option</option>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </Form.Select>
-            </InputGroup>
-              </div>
-              <div className='addMedicineSide w-100 pl-2'>
-              <InputGroup className="mb-1">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Category
-              </InputGroup.Text>
-              <Form.Select aria-label="Select an option" placeholder="Select an option">
-        <option value="">Select an option</option>
-        <option value="option1">Option 1</option>
-        <option value="option2">Option 2</option>
-        <option value="option3">Option 3</option>
-      </Form.Select>
-            </InputGroup>
-              </div>
-            </div>
+  const handleError=(data)=>{
+    setError(data);
+  }
 
-            <br />
-            <div className='addMedicineSide d-flex justify-content-between'>
-              <div className='w-100 me-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Strips per box
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter amount' required
-                  />
-                </InputGroup>
+  const handleType = (data) => {
+    setShowType(data);
+  };
+
+  useEffect(() => {
+    const retrieveData = async() =>{
+      await axios
+      .get("/api/profile/user/getUserSellerId/" + _id, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((response) => {
+        setSellerId(response.data._id);
+      })
+      .catch((err) => console.log(err));
+    await axios
+      .get("/api/profile/addMedicine/findCateogry", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((result) => {
+        setCategories(result.data);
+      });
+    await axios
+      .get("/api/profile/addMedicine/findType", {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+        },
+      })
+      .then((result) => {
+        setTypes(result.data);
+      });
+    }
+    retrieveData();
+  }, [_id,user.token]);
+
+  const handleMedicineType = (e) => {
+    setMedicineType(e);
+    setHasStrips(false);
+    types.forEach((elem) => {
+      if (elem.hasStrips && elem._id === e) {
+        setHasStrips(true);
+      }
+    });
+  };
+
+  if (categories !== null && types !== null) {
+    return (
+      <div>
+        <NavbarPharmacy id={_id} user={user}/>
+        <section className="d-flex justify-content-center">
+          <Card className="addMedicineCard">
+            <Card.Header
+              className="addMedicineCardHeader"
+              style={{ fontSize: "20px" }}
+            >
+              <b>Add Medicine</b>
+            </Card.Header>
+            <Card.Title className="addMedicineCardTitle">
+              New Medicine Information:
+              <Button
+                className="btn float-end"
+                variant="primary"
+                size="sm"
+                style={{ height: "100%", marginRight: "0.8%" }}
+                onClick={() => setShowCategory(true)}
+              >
+                Add Category
+              </Button>
+              <Button
+                className="btn float-end"
+                variant="primary"
+                size="sm"
+                style={{ height: "100%", marginRight: "0.8%" }}
+                onClick={() => setShowType(true)}
+              >
+                Add Medicine Type
+              </Button>
+            </Card.Title>
+            <Card.Body>
+              <div className="errorMessage" style={{ color: "red" }}>
+                {error}
               </div>
-              <div className='addMedicineSide w-100 pl-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Manufacturer
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter manufacturer name' required
-                  />
-                </InputGroup>
-              </div>
-            </div>
-            <br/>
-            <div className='addMedicineSide d-flex justify-content-between  mb-2'>
-              <div className='w-100 me-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Purchase Price
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter amount' required
-                  />
-                </InputGroup>
-              </div>
-              <div className='addMedicineSide w-100 pl-2'>
-                <InputGroup className="mb-1">
-                  <InputGroup.Text className='required-field' id="inputGroup-sizing-default">
-                    Sell Price
-                  </InputGroup.Text>
-                  <Form.Control
-                    aria-label="Default"
-                    aria-describedby="inputGroup-sizing-default"
-                    placeholder='Enter number' required
-                  />
-                </InputGroup>
-              </div>
-            </div>
-            <br/>
-            <InputGroup className="mb-4">
-              <InputGroup.Text id="inputGroup-sizing-default">
-                Description
-              </InputGroup.Text>
-              <Form.Control
-                as="textarea"
-                aria-describedby="inputGroup-sizing-default"
-                placeholder='Add a description of the medicine, diagnosis, treatment, prevention of disease and side effects.'
-              />
-            </InputGroup>
-            <div className='d-flex justify-content-center'>
-        <Button className='btn btn-addMedicine w-25' variant="primary" type="submit">
-          Add
-        </Button>
-        </div>
-          </Card.Body>
-        </Card>
-      </section>
-    </div>
-  );
-}
+              {Strips && (<StripsForm _id={_id} user={user} types={types} categories={categories} onError={handleError} sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
+              {!Strips && (<NonStripsForm _id={_id} user={user} types={types} categories={categories} onError={handleError}  sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
+              <Category showCategory={showCategory} user={user} onClosing={handleCategory}/>
+              <Type showType={showType} user={user} onClosing={handleType}/>
+            </Card.Body>
+          </Card>
+        </section>
+      </div>
+    );
+  } else {
+    return (
+      <div
+        className="spinner-border text-primary"
+        role="status"
+        style={{ marginLeft: "50%", marginTop: "10%" }}
+      >
+        <span className="visually-hidden">Loading...</span>
+      </div>
+    );
+  }
+};
 
 export default AddMedicine;

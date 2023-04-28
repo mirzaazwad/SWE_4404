@@ -1,6 +1,6 @@
 const express=require('express');
-const {getBuyerByEmail, patchBuyerByEmail} = require('../../controller/profile-controller');
-const requireAuth = require('../../middleware/requireAuth');
+const {getBuyerByEmail, patchBuyerByEmail} = require('../controller/profile-controller');
+const requireAuth = require('../middleware/requireAuth');
 const router=express.Router();
 
 router.use(requireAuth);

@@ -7,6 +7,9 @@ const sellerSchema = new Schema({
     required: true,
     unique: true
   },
+  pharmacyID:{
+    type:mongoose.Schema.ObjectId
+  },
   pharmacy:{
     type: String
   }
