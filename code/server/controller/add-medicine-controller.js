@@ -1,4 +1,5 @@
 const medicineCategory = require("../model/medicine-category");
+const medicineModel = require("../model/medicine-model");
 const medicineType = require("../model/medicine-type");
 const pharmacyModel = require("../model/pharmacy-model");
 
@@ -54,10 +55,34 @@ const addType=async(req,res)=>{
   }
 }
 
+const addGlobalMedicine=async(req,res)=>{
+  try{
+    const result=await medicineModel.addNewMedicine(req.body);
+    console.log(result);
+    res.status(200).json(result);
+  }
+  catch(err){
+    console.log(err);
+    res.status(400).json({error:err.message});
+  }
+}
+
+const getAllMedicines=async(req,res)=>{
+  try{
+    const result=await medicineModel.find();
+    res.status(200).json({result});
+  }
+  catch(err){
+    res.status(400).json({success:false,error:err.message});
+  }
+}
+
 module.exports ={
   getAllCategories,
   getAllTypes,
   addMedicine,
   addCateogry,
-  addType
+  addType,
+  addGlobalMedicine,
+  getAllMedicines
 }

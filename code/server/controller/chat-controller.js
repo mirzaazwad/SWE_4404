@@ -86,7 +86,6 @@ const countAllUnread = async(req,res)=>{
   try{
     const {receiverID}=req.body;
     const result=await chatModel.find({senderID:receiverID,senderRead:false});
-    console.log(result.length);
     return res.status(200).json({count:result.length});
   }
   catch(err){

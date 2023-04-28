@@ -10,13 +10,14 @@ import Table from "react-bootstrap/Table";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSelector } from "react-redux";
 import { useSocket } from "../../Hooks/useSocket";
+import AddExistingMedicine from "../partials/inventoryManagement/addExistingMedicine";
 
 const Inventory = () => {
   const user = useSelector((state)=>state.userState.user);
   const [sellerId, setSellerId] = useState();
   const id = useParams();
   const _id = id.id;
-  const socket=useSocket(_id,[]);
+  useSocket(_id,[]);
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
   const [medicines, setMedicines] = useState([]);
   const [types, setTypes] = useState([]);
@@ -25,6 +26,8 @@ const Inventory = () => {
   const [pharmacyID,setPharmacyID]=useState();
   const [error,setError]=useState(null);
   const [medicinesEmpty,setMedicinesEmpty]=useState(true);
+  const [showMedicines,setShowMedicines]=useState(false);
+  const [loading,setLoading]=useState(false);
 
   const addToStock = (e) => {
     e.preventDefault();
@@ -63,7 +66,9 @@ const Inventory = () => {
   };
 
   useEffect(() => {
-    axios
+    const retrieveData=async()=>{
+      setLoading(true);
+      await axios
       .get("/api/profile/user/getUserSellerId/" + _id, {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -73,7 +78,7 @@ const Inventory = () => {
         setSellerId(response.data._id);
       })
       .catch((err) => console.log(err));
-    axios
+    await axios
       .get("/api/profile/inventory/getTypes", {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -82,13 +87,13 @@ const Inventory = () => {
       .then((result) => {
         setTypes(result.data.result);
       });
-    axios
+    await axios
       .get("/api/profile/inventory/getMedicines/" + sellerId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       })
-      .then( (result) => {
+      .then( async (result) => {
         if(result.data!==null){
           let temp = result.data.Inventory;
           if(result.data._id!==null){
@@ -114,8 +119,11 @@ const Inventory = () => {
             res.push(medicine);
           }
           setMedicines(res);
+          setLoading(false);
         }
       });
+    }
+    retrieveData();
   }, [sellerId,_id,user.token]);
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
@@ -161,9 +169,13 @@ const Inventory = () => {
     console.log("editing medicines" + value);
   };
 
+  const handleClosing=(data)=>{
+    setShowMedicines(data);
+  }
+
   
 
-  if (medicines.length!==0 || medicinesEmpty) {
+  if (!loading) {
     return (
       <div>
         <div>
@@ -172,11 +184,10 @@ const Inventory = () => {
         <section className="inventory-section">
           <div className="d-flex w-75 m-auto  flex-column">
             <div className="d-flex justify-content-between mb-2">
-              <Link to={"/inventoryManagementSystem/addMedicine/" + id.id}>
-                <Button className="btn btn-add" variant="primary">
+                <Button className="btn btn-add" variant="primary" onClick={()=>setShowMedicines(true)}>
                   Add new medicine <i className="bx bx-plus-circle bx-sm"></i>
                 </Button>{" "}
-              </Link>
+              <AddExistingMedicine id={_id} user={user} show={showMedicines} onClosing={handleClosing}/>
               <div className="errorMessage" style={{color:"red"}}>
                 {error}
               </div>
