@@ -17,6 +17,7 @@ import {CartProvider} from './Contexts/cartAction.js';
 import MyOrders from "./Components/cartManagementSystem/myOrders";
 import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
 import ChatPage from "./Components/Chat/chatRoom";
+import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import './index.css';
 
 function App() {
@@ -173,6 +174,7 @@ function App() {
               />
               <Route exact path="/myOrders" element={user && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
               <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderDetails" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>
