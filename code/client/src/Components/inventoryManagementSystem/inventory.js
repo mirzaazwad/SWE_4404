@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -25,9 +25,11 @@ const Inventory = () => {
   const [amount, setAmount] = useState(0);
   const [pharmacyID,setPharmacyID]=useState();
   const [error,setError]=useState(null);
-  const [medicinesEmpty,setMedicinesEmpty]=useState(true);
   const [showMedicines,setShowMedicines]=useState(false);
   const [loading,setLoading]=useState(false);
+  const [togglePcs,setTogglePcs]=useState(0);
+  const [filterChangeValue,setFilterChangeValue]=useState("");
+
 
   const addToStock = (e) => {
     e.preventDefault();
@@ -114,11 +116,6 @@ const Inventory = () => {
           if(result.data._id!==null){
             setPharmacyID(result.data._id);
           }
-          if(result.data!==null){
-            if(result.data.Inventory===null){
-              setMedicinesEmpty(true);
-            }
-          }
           let res = [];
           for (let i = 0; i < temp.length; i++) {
             const medicine = {
@@ -154,8 +151,20 @@ const Inventory = () => {
     setFilterOption(event.target.value);
   };
 
+  const filterByToggle = async (toggleVal)=>{
+    setTogglePcs(toggleVal);
+    if(toggleVal===2){
+      setFilteredMedicines(filteredMedicines.filter((medicines)=>medicines.Amount.hasOwnProperty('Strips')));
+    }
+    else{
+      console.log('Filter Change Value is: ',filterChangeValue);
+      handleFilterValueChange(filterChangeValue);
+    }
+  }
+
   const handleFilterValueChange = (event) => {
-    const value = event.target.value;
+    const value = event;
+    setFilterChangeValue(value);
     if(value===""){
       setFilteredMedicines(medicines);
     }
@@ -223,7 +232,7 @@ const Inventory = () => {
                   className="w-auto"
                   type="text"
                   placeholder="Enter value"
-                  onChange={handleFilterValueChange}
+                  onChange={(e)=>handleFilterValueChange(e.target.value)}
                 />{" "}
               </div>
             </div>
@@ -275,7 +284,7 @@ const Inventory = () => {
                     <th> SL </th> <th> Medicine Name </th>{" "}
                     <th> Generic Name </th> <th> Type </th>{" "}
                     <th> Manufacturer </th> <th> Sell Price </th>{" "}
-                    <th> Purchase Price </th> <th> Amount(Pcs) </th>{" "}
+                    <th> Purchase Price </th> <th onClick={()=>filterByToggle((togglePcs+1)%3)}> {(togglePcs===0 && "Amount(Pcs)")||(togglePcs===1 && "Amount(Boxes)")||(togglePcs===2 && "Amount(Strips)")} </th>{" "}
                     <th> Action </th>{" "}
                   </tr>{" "}
                 </thead>{" "}
@@ -298,7 +307,7 @@ const Inventory = () => {
                       <td> {medicine.Manufacturer} </td>{" "}
                       <td> {medicine.SellingPrice} </td>{" "}
                       <td> {medicine.PurchasePrice} </td>{" "}
-                      <td> {medicine.Amount.Pcs} </td>{" "}
+                      <td>{(togglePcs===0 && (<span>{medicine.Amount.Pcs}</span>))||(togglePcs===1 && (<span>{medicine.Amount.Boxes}</span>))||(togglePcs===2 && (<span>{medicine.Amount.Strips}</span>))}  </td>{" "}
                       <td>
                         <Button
                           variant="secondary"
