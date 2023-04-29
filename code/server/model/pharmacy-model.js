@@ -99,7 +99,6 @@ const pharmacySchema = new Schema({
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {
   const medicineDescription=await medicineType.findById(medicine.TypeID).select('hasPcs hasStrips hasBoxes');
-  console.log(medicineDescription);
   let stock=null;
   if(medicineDescription.hasStrips===true && medicineDescription.hasBoxes===true){
     stock={
