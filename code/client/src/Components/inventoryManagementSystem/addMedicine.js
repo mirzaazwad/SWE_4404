@@ -23,13 +23,29 @@ const AddMedicine = () => {
   const [Strips, setHasStrips] = useState(false);
   const [showCategory, setShowCategory] = useState(false);
   const [showType, setShowType] = useState(false);
-  const [medicineType, setMedicineType] = useState("Default");
+  const [medicineType, setMedicineType] = useState("default");
+  const [currentValue,setCurrentValue]=useState({
+    medicineName:"",
+      genericName:"",
+      description:"",
+      stripsPerBox:"",
+      sellingPrice:"",
+      pcsPerStrip:"",
+      manufacturer:"",
+      purchasePrice:"",
+      medicineCateogry:"",
+      pcsPerBox:""
+  });
   const handleCategory = (data) =>{
     setShowCategory(data);
   }
 
   const handleError=(data)=>{
     setError(data);
+  }
+
+  const handleCurrentValue=(data)=>{
+    setCurrentValue(data);
   }
 
   const handleType = (data) => {
@@ -71,6 +87,7 @@ const AddMedicine = () => {
   }, [_id,user.token]);
 
   const handleMedicineType = (e) => {
+    console.log('medicine TypeL : '+e);
     setMedicineType(e);
     setHasStrips(false);
     types.forEach((elem) => {
@@ -117,8 +134,8 @@ const AddMedicine = () => {
               <div className="errorMessage" style={{ color: "red" }}>
                 {error}
               </div>
-              {Strips && (<StripsForm _id={_id} user={user} types={types} categories={categories} onError={handleError} sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
-              {!Strips && (<NonStripsForm _id={_id} user={user} types={types} categories={categories} onError={handleError}  sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
+              {Strips && (<StripsForm _id={_id} currentValue={currentValue} handleCurrentValue={handleCurrentValue} user={user} types={types} categories={categories} onError={handleError} sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
+              {!Strips && (<NonStripsForm _id={_id} currentValue={currentValue} handleCurrentValue={handleCurrentValue} user={user} types={types} categories={categories} onError={handleError}  sellerId={sellerId} medicineType={medicineType} onHandleType={handleMedicineType}/>)}
               <Category showCategory={showCategory} user={user} onClosing={handleCategory}/>
               <Type showType={showType} user={user} onClosing={handleType}/>
             </Card.Body>

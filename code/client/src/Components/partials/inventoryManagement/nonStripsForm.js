@@ -1,6 +1,6 @@
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -11,31 +11,49 @@ const NonStripsForm = (props) => {
   const _id=props._id;
   const navigate=useNavigate();
   const sellerId=props.sellerId;
-  const [medicineName, setMedicineName] = useState("");
-  const [genericName, setGenericName] = useState("");
-  const [description, setDescription] = useState("");
-  const [sellingPrice, setSellingPrice] = useState();
-  const [pcsPerBox, setPcsPerBox] = useState();
-  const [manufacturer, setManufacturer] = useState("");
-  const [purchasePrice, setPurchasePrice] = useState();
-  const medicineType=props.medicineType;
-  const [medicineCateogry, setMedicineCategory] = useState("Default");
+  const [medicineName, setMedicineName] = useState(props.currentValue.medicineName);
+  const [genericName, setGenericName] = useState(props.currentValue.genericName);
+  const [description, setDescription] = useState(props.currentValue.description);
+  const [sellingPrice, setSellingPrice] = useState(props.currentValue.sellingPrice);
+  const [pcsPerBox, setPcsPerBox] = useState(props.currentValue.pcsPerBox);
+  const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
+  const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
+  const [medicineType,setMedicineType]=useState(props.medicineType);
+  const [medicineCateogry, setMedicineCategory] = useState("defaultCategory");
 
   const setError=(error)=>{
     props.onError(error);
   }
 
+  useEffect(()=>{
+    setMedicineType(props.medicineType)
+  },[props])
+
   const handleMedicineType=(data)=>{
+    console.log(data);
+    setMedicineType(data);
+    props.handleCurrentValue({
+      medicineName:medicineName,
+      genericName:genericName,
+      description:description,
+      pcsPerBox:pcsPerBox,
+      sellingPrice:sellingPrice,
+      stripsPerBox:props.currentValue.stripsPerBox,
+      pcsPerStrip:props.currentValue.pcsPerStrip,
+      manufacturer:manufacturer,
+      purchasePrice:purchasePrice,
+      medicineCateogry:medicineCateogry
+    });
     props.onHandleType(data);
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (medicineType === "default" || medicineType === "Default") {
+    if (medicineType === "default" || medicineType === "default") {
       setError("Medicine Type is required");
       return;
     }
-    if (medicineCateogry === "default" || medicineCateogry === "Default") {
+    if (medicineCateogry === "defaultCategory" || medicineCateogry === "defaultCategory") {
       setError("Medicine Category is required");
       return;
     }
@@ -99,6 +117,7 @@ const NonStripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
+              value={props.medicineType}
               onChange={(e) => handleMedicineType(e.target.value)}
             >
               <option value="default">Select an option</option>
@@ -119,7 +138,7 @@ const NonStripsForm = (props) => {
               placeholder="Select an option"
               onChange={(e) => setMedicineCategory(e.target.value)}
             >
-              <option value="default">Select an option</option>
+              <option value="defaultCategory">Select an option</option>
               {categories.length !== 0 &&
                 categories.map((category) => (
                   <option value={category._id}>{category.cateogry}</option>
