@@ -174,7 +174,7 @@ function App() {
               />
               <Route exact path="/myOrders" element={user && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
               <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
-              <Route exact path="/orderDetails" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderDetails/:userId/:orderId" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>
