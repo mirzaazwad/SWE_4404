@@ -1,7 +1,7 @@
 import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
@@ -9,12 +9,15 @@ import "../../index.css";
 import Table from "react-bootstrap/Table";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSelector } from "react-redux";
+import { useSocket } from "../../Hooks/useSocket";
+import AddExistingMedicine from "../partials/inventoryManagement/addExistingMedicine";
 
 const Inventory = () => {
   const user = useSelector((state)=>state.userState.user);
   const [sellerId, setSellerId] = useState();
   const id = useParams();
   const _id = id.id;
+  useSocket(_id,[]);
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
   const [medicines, setMedicines] = useState([]);
   const [types, setTypes] = useState([]);
@@ -22,18 +25,30 @@ const Inventory = () => {
   const [amount, setAmount] = useState(0);
   const [pharmacyID,setPharmacyID]=useState();
   const [error,setError]=useState(null);
-  const [medicinesEmpty,setMedicinesEmpty]=useState(true);
+  const [showMedicines,setShowMedicines]=useState(false);
+  const [loading,setLoading]=useState(false);
+  const [togglePcs,setTogglePcs]=useState(0);
+  const [filterChangeValue,setFilterChangeValue]=useState("");
+
 
   const addToStock = (e) => {
     e.preventDefault();
     handleClose();
-    console.log(stockType);
-    console.log(amount);
+    let currentAmount=0;
+    if(stockType==="Pcs"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
+    }
+    else if(stockType==="Boxes"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
+    }
+    else{
+      currentAmount=medicines[current_medicine_index-1].Amount.Strips;
+    }
     console.log('pharmacy ID: ',pharmacyID)
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:stockType.option,
-      amount:Number(amount)+Number(medicines[current_medicine_index-1].Amount)
+      stock:stockType,
+      amount:Number(amount)+Number(currentAmount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
     }})
@@ -43,17 +58,24 @@ const Inventory = () => {
   const subToStock = (e) => {
     e.preventDefault();
     handleClose();
-    console.log(stockType);
-    console.log(amount);
-    console.log('pharmacy ID: ',pharmacyID)
-    if(Number(medicines[current_medicine_index-1].Amount)-Number(amount)<0){
+    let currentAmount=0;
+    if(stockType==="Pcs"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Pcs;
+    }
+    else if(stockType==="Boxes"){
+      currentAmount=medicines[current_medicine_index-1].Amount.Boxes;
+    }
+    else{
+      currentAmount=medicines[current_medicine_index-1].Amount.Strips;
+    }
+    if(Number(currentAmount)-Number(amount)<0){
       setError("Stock cannot be negative");
       return;
     }
     axios.patch('/api/profile/inventory/addToStock/'+pharmacyID,{
       index:current_medicine_index-1,
-      stock:stockType.option,
-      amount:Number(medicines[current_medicine_index-1].Amount)-Number(amount)
+      stock:stockType,
+      amount:Number(currentAmount)-Number(amount)
     },{headers: {
       'Authorization': `Bearer ${user.token}`
     }})
@@ -61,7 +83,9 @@ const Inventory = () => {
   };
 
   useEffect(() => {
-    axios
+    const retrieveData=async()=>{
+      setLoading(true);
+      await axios
       .get("/api/profile/user/getUserSellerId/" + _id, {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -71,7 +95,7 @@ const Inventory = () => {
         setSellerId(response.data._id);
       })
       .catch((err) => console.log(err));
-    axios
+    await axios
       .get("/api/profile/inventory/getTypes", {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -80,22 +104,17 @@ const Inventory = () => {
       .then((result) => {
         setTypes(result.data.result);
       });
-    axios
+    await axios
       .get("/api/profile/inventory/getMedicines/" + sellerId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
       })
-      .then( (result) => {
+      .then( async (result) => {
         if(result.data!==null){
           let temp = result.data.Inventory;
           if(result.data._id!==null){
             setPharmacyID(result.data._id);
-          }
-          if(result.data!==null){
-            if(result.data.Inventory===null){
-              setMedicinesEmpty(true);
-            }
           }
           let res = [];
           for (let i = 0; i < temp.length; i++) {
@@ -107,13 +126,16 @@ const Inventory = () => {
               Manufacturer: temp[i].Manufacturer,
               SellingPrice: temp[i].SellingPrice,
               PurchasePrice: temp[i].PurchasePrice,
-              Amount: temp[i].Stock.Pcs,
+              Amount:{...temp[i].Stock},
             };
             res.push(medicine);
           }
           setMedicines(res);
+          setLoading(false);
         }
       });
+    }
+    retrieveData();
   }, [sellerId,_id,user.token]);
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
@@ -129,8 +151,20 @@ const Inventory = () => {
     setFilterOption(event.target.value);
   };
 
+  const filterByToggle = async (toggleVal)=>{
+    setTogglePcs(toggleVal);
+    if(toggleVal===2){
+      setFilteredMedicines(filteredMedicines.filter((medicines)=>medicines.Amount.hasOwnProperty('Strips')));
+    }
+    else{
+      console.log('Filter Change Value is: ',filterChangeValue);
+      handleFilterValueChange(filterChangeValue);
+    }
+  }
+
   const handleFilterValueChange = (event) => {
-    const value = event.target.value;
+    const value = event;
+    setFilterChangeValue(value);
     if(value===""){
       setFilteredMedicines(medicines);
     }
@@ -159,22 +193,25 @@ const Inventory = () => {
     console.log("editing medicines" + value);
   };
 
+  const handleClosing=(data)=>{
+    setShowMedicines(data);
+  }
+
   
 
-  if (medicines.length!==0 || medicinesEmpty) {
+  if (!loading) {
     return (
       <div>
         <div>
-          <NavbarPharmacy id={_id} />
+          <NavbarPharmacy id={_id} user={user}/>
         </div>
         <section className="inventory-section">
           <div className="d-flex w-75 m-auto  flex-column">
             <div className="d-flex justify-content-between mb-2">
-              <Link to={"/inventoryManagementSystem/addMedicine/" + id.id}>
-                <Button className="btn btn-add" variant="primary">
+                <Button className="btn btn-add" variant="primary" onClick={()=>setShowMedicines(true)}>
                   Add new medicine <i className="bx bx-plus-circle bx-sm"></i>
                 </Button>{" "}
-              </Link>
+              <AddExistingMedicine id={_id} user={user} show={showMedicines} onClosing={handleClosing}/>
               <div className="errorMessage" style={{color:"red"}}>
                 {error}
               </div>
@@ -195,7 +232,7 @@ const Inventory = () => {
                   className="w-auto"
                   type="text"
                   placeholder="Enter value"
-                  onChange={handleFilterValueChange}
+                  onChange={(e)=>handleFilterValueChange(e.target.value)}
                 />{" "}
               </div>
             </div>
@@ -211,13 +248,13 @@ const Inventory = () => {
                   <Form.Select
                     aria-label="Default select example"
                     onChange={(e) =>
-                      setStockType({ option: e.target.value, amount: amount })
+                      setStockType(e.target.value)
                     }
                   >
                     <option>Select quantity type</option>
                     <option value="Pcs">Pcs</option>
                     <option value="Strips">Strips</option>
-                    <option value="Box">Box</option>
+                    <option value="Boxes">Boxes</option>
                   </Form.Select>
                   <Form.Label>Quantity:</Form.Label>
                   <Form.Control
@@ -247,7 +284,7 @@ const Inventory = () => {
                     <th> SL </th> <th> Medicine Name </th>{" "}
                     <th> Generic Name </th> <th> Type </th>{" "}
                     <th> Manufacturer </th> <th> Sell Price </th>{" "}
-                    <th> Purchase Price </th> <th> Amount(Pcs) </th>{" "}
+                    <th> Purchase Price </th> <th onClick={()=>filterByToggle((togglePcs+1)%3)}> {(togglePcs===0 && "Amount(Pcs)")||(togglePcs===1 && "Amount(Boxes)")||(togglePcs===2 && "Amount(Strips)")} </th>{" "}
                     <th> Action </th>{" "}
                   </tr>{" "}
                 </thead>{" "}
@@ -270,7 +307,7 @@ const Inventory = () => {
                       <td> {medicine.Manufacturer} </td>{" "}
                       <td> {medicine.SellingPrice} </td>{" "}
                       <td> {medicine.PurchasePrice} </td>{" "}
-                      <td> {medicine.Amount} </td>{" "}
+                      <td>{(togglePcs===0 && (<span>{medicine.Amount.Pcs}</span>))||(togglePcs===1 && (<span>{medicine.Amount.Boxes}</span>))||(togglePcs===2 && (<span>{medicine.Amount.Strips}</span>))}  </td>{" "}
                       <td>
                         <Button
                           variant="secondary"

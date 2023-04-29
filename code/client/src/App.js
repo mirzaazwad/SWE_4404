@@ -16,6 +16,8 @@ import Medicine from "./Components/viewPharmacies/medicineDetails";
 import {CartProvider} from './Contexts/cartAction.js';
 import MyOrders from "./Components/cartManagementSystem/myOrders";
 import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
+import ChatPage from "./Components/Chat/chatRoom";
+import './index.css';
 
 function App() {
   let user = useSelector((state) => state.userState.user);
@@ -77,6 +79,7 @@ function App() {
                   )
                 }
               />
+          <Route exact path='/profileSeller/chats/:id' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
               <Route
                 exact
                 path="/profileBuyer/changePassword/:id"
