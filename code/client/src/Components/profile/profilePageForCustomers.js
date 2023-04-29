@@ -9,10 +9,12 @@ import { useEffect } from 'react';
 import {useDispatch, useSelector } from 'react-redux';
 import { setBuyerUser } from '../../Contexts/action';
 import CollapsibleChat from '../Chat/collapsableChat';
+import { useSocket } from '../../Hooks/useSocket';
 
 const  ProfilePageForCustomers = () => {
   const user = useSelector((state)=>state.userState.user);
   const {id}=useParams();
+  const socket=useSocket();
   const dispatch=useDispatch();
   useEffect(()=>{
     const retrieveUser = async() =>{
@@ -24,7 +26,6 @@ const  ProfilePageForCustomers = () => {
     };
     retrieveUser();
   },[])
-  console.log(id+"6411760cc1e404df5e624ef8");
   return (     
     <div>
       <NavbarCustomer id={id}/>
@@ -37,7 +38,7 @@ const  ProfilePageForCustomers = () => {
         <div className="d-flex justify-content-around h-100 mx-auto my-5 w-100" style={{alignItems : 'center'}}>
         <div className="my-3 d-none d-lg-flex"><ProfilePicture id={id}/></div>
           <div className="profile-form-outer w-50 mt-5">
-            <ProfileFormCustomer id={id}/>
+            <ProfileFormCustomer socket={socket} id={id}/>
           </div>
         </div>
       </div>

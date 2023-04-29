@@ -9,11 +9,14 @@ import "../../index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
+import PhoneVerify from "../partials/phone/phoneVerify";
+import { useSocket } from "../../Hooks/useSocket";
 
 const ProfileFormCustomer = (id) => {
   const _id = id;
   const buyer = useSelector((state) => state.userState.buyerState);
   const user = useSelector((state) => state.userState.user);
+  const socket=id.socket;
   const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
@@ -26,6 +29,11 @@ const ProfileFormCustomer = (id) => {
   const [errorPassword,setErrorPassword] = useState(false);
   const [password, changePassword] = useState(null);
   const [loaded,setLoaded] = useState(false);
+  const [showPhoneVerify,setShowPhoneVerify]=useState(false);
+  const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
+  const handleClosePhoneVerify=()=>{
+    setShowPhoneVerify(false);
+  }
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -64,6 +72,17 @@ const ProfileFormCustomer = (id) => {
     })
   };
 
+  const setPhoneNumber=(phone)=>{
+    setPhoneNumberChanged(true);
+    if(phone.length!=11){
+      setError("Phone Number Must be 11 digits");
+    }
+    else{
+      setError("");
+    }
+    setPhone(phone);
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     turnOffEdit();
@@ -71,12 +90,12 @@ const ProfileFormCustomer = (id) => {
     setError("");
     await verify(_id.id,CryptoJS.SHA512(password).toString());
     if(!errorPassword){
-      await axios
+      if(!phoneNumberChanged){
+        await axios
       .patch(
         "/api/profile/user/updateUser/" + _id.id,
         {
           username: username,
-          phone: phone,
           address: address,
         },
         {
@@ -89,6 +108,27 @@ const ProfileFormCustomer = (id) => {
         handleClose();
         dispatch(setBuyerUser(result.data));
       })
+      }
+      else{
+        handleClose();
+        let OTP = Math.floor(100000 + Math.random() * 900000).toString();
+        let currentDate=new Date();
+        socket.emit('OTP',{phone:phone,otp:OTP,sendingTime:currentDate});
+        await axios.post('/api/mobile/OTPsend',{
+          phone:phone,
+          otp:OTP,
+          sendingTime:currentDate
+        },{
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }).then(()=>{
+          console.log('comes here');
+          setShowPhoneVerify(true);
+        }).catch((err)=>{
+          setError(err.response.data.error);
+        })
+      }
     }
     else{
       console.log('comes here');
@@ -111,7 +151,7 @@ const ProfileFormCustomer = (id) => {
           </button>
         </div>
         <Form>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
@@ -121,17 +161,15 @@ const ProfileFormCustomer = (id) => {
               onChange={(e) => setUsername(e.target.value)}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label>Contact No.</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Enter contact no."
-              disabled={isDisabled}
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Group className="mb-3">
+          <Form.Label>Contact No.</Form.Label>
+          <InputGroup>
+          <InputGroup.Text>+880</InputGroup.Text>
+          <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled} value ={phone} onChange={(e)=>setPhoneNumber(e.target.value)} />
+          </InputGroup>
+          <div className="errorMessage" style={{color:"red"}}>{error}</div>
+        </Form.Group>
+          <Form.Group className="mb-3">
             <Form.Label>Address</Form.Label>
             <Form.Control
               type="address"
@@ -209,6 +247,7 @@ const ProfileFormCustomer = (id) => {
           </Modal.Footer>
         </Modal>
       </Form>
+      <PhoneVerify _id={_id.id} user={user} data={{phone:phone,username:username,address:address}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
       </div>
     );
   }

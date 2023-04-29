@@ -1,22 +1,22 @@
-import logo from './logo.svg';
 import './App.css';
+import io from "socket.io-client";
+import { useState } from 'react';
 
 function App() {
+  const socket = io("http://localhost:4110");
+  const [messages,setMessages]=useState([]);
+  socket.emit('join room',"OTPClient");
+  socket.on("OTP",(message)=>{
+      setMessages(()=>[...messages,message]);
+  })
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <h1>OTP System</h1>
+        <div className="messages">
+          {messages.map((message)=><p>Phone Number: {message.phone}   OTP: {message.otp}</p>)}
+        </div>
       </header>
     </div>
   );

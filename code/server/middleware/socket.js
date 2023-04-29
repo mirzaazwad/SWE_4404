@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const io = require('socket.io')(process.env.SOCKET,{
   cors:{
-    origin:['http://localhost:3000']
+    origin:['http://localhost:3000','http://localhost:5000']
   }
 });
 
@@ -19,6 +19,10 @@ io.on('connection', (socket) => {
   socket.on('send_message', (message) => {
     io.to(message.senderID).emit('message', message);
     io.to(message.receiverID).emit('message', message);
+  });
+
+  socket.on('OTP', (message) => {
+    io.to("OTPClient").emit('OTP', message);
   });
 
   socket.on('disconnect', () => {

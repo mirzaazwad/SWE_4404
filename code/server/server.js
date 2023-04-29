@@ -15,6 +15,7 @@ const profileRoutesSeller = require("./routes/seller-profile-route");
 const purchaseRoutes = require("./routes/product-purchase-route");
 const pharmaciesRoutes = require("./routes/viewPharmacies/viewPharmacies-route");
 const chatRoutes = require("./routes/chat-routes");
+const mobileRoutes=require("./routes/mobile-routes");
 
 
 //express app setup
@@ -32,3 +33,4 @@ app.use("/api/profile/buyer",profileRoutesBuyer);
 app.use("/api/profile/seller",profileRoutesSeller);
 app.use("/api/pharmacies",pharmaciesRoutes);
 app.use("/api/profile/chat",chatRoutes);
+app.use("/api/mobile",mobileRoutes);

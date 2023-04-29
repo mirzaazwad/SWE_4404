@@ -11,7 +11,6 @@ export const useSocket = (id) =>{
     socket.emit('join room',id);
     socket.on("message",(message)=>{
       if(set.has(message)){
-        console.log('wow');
         dispatch(subNotification(1));
       }
       if(message.senderID===id){
