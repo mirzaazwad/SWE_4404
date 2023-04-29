@@ -41,7 +41,7 @@ const MedicineDetails = () => {
         {
           pcsPrice = medicine.SellingPrice*quantityPcs;
           stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
-<          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.StripsPerBox*medicine.PcsPerStrip;
+        boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.StripsPerBox*medicine.PcsPerStrip;
         }
         else
         {
