@@ -3,7 +3,7 @@
 :root {
   --customMagenta: #EB006F;
   --customDarkBlue: #103686;
-  --customBlue: #3354a9;
+  --customBlue: #3b6ce7;
   --white: #fff;
   font-family: 'Poppins', sans-serif;
 }
@@ -19,18 +19,14 @@ body {
 .pharmacy-card-image {
   transition: transform 0.2s ease-in-out;
 }
-
-.pharmacy-card:hover .pharmacy-card-image {
-  transform: scale(1.1);
-  
-  
-}
 .pharmacy-card:hover{
   cursor: pointer;
+  transform: scale(1.05);
 }
 .pharmacy-card{
   width: 300px!important;
   height: 300px!important;
+  background-color: var(--customMagenta) !important;
 }
 .pharmacy-card-image{
   width: 300px!important;
@@ -74,8 +70,93 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn.btn-placeOrder{
+  display: flex;
+  justify-content: center !important;
+  margin: auto !important;
+  height: 100% !important;
+  width: 50%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-checkOut{
+  height: 100% !important;
+  width: 100%;
+  vertical-align: middle;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.heading-checkOut{
+  margin-top: 5rem;
+  display: flex;
+  justify-content: center;
+  font-size: 5rem !important;
+}
 .pharmacy-container{
   margin-top:5rem!important;
+}
+.medicine-card
+{
+  width: 125% !important;
+  background-color: var(--customMagenta) !important;
+  height: 12rem !important;
+}
+
+.stock-P{
+  color: white !important;
+  text-decoration: none !important;
+}
+.description-text{
+  color: white !important;
+}
+.medicine-details-card{
+  margin-top: 7%;
+  height: 100% !important;
+}
+.billing-details-card{
+  margin-top: 5%;
+  height: 100% !important;
+}
+.medicine-details-cardHeader{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.billing-details-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+.order-summary-card{
+  margin-top: 5%;
+  height: 100% !important;
+}
+.order-summary-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
+.addRemove-buttons{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 150px;
+}
+.my-orders{
+  margin-top: 5rem;
+}
+.order-details-card{
+width: 75%;
+}
+.cart-table{
+  display: contents;
+  width: 100%;
+
 }
 .btn-login {
   display: flex;
@@ -84,6 +165,10 @@ code {
   height: 20%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.search-input{
+  width: 50%;
+  margin-bottom: 3%;
 }
 .btn-save{
   --bs-btn-bg: var(--customBlue) !important;
@@ -94,12 +179,27 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
-
-
+.btn-delete{
+  --bs-btn-bg: var(--customMagenta) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 100%;
+  --bs-btn-hover-bg: var(--customBlue)!important;
+  --bs-btn-hover-border-color : var(--customBlue)!important;
+}
+.btn.btn-increase{
+  --bs-btn-bg: var(--customDarkBlue) !important;
+}
 .customCart{
   border-color: transparent !important;
 }
-
+.cart-badge {
+  right: auto;
+  top: auto !important;
+  font-size: 10px;
+  font-weight: 600;
+}
 
 .btn-editProfile i {
   margin-left: 5px;
@@ -114,6 +214,20 @@ code {
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn-add i {
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.btn-buyMore{
+  width: 60%;
+}
+.btn-buyMore i{
+  margin-left: 5px;
+  vertical-align: middle;
+}
+.btn-addCart{
+  width: 60%;
+}
+.btn-addCart i{
   margin-left: 5px;
   vertical-align: middle;
 }
@@ -157,8 +271,6 @@ code {
   height: 20%;
   /* width: 25%; */
   --bs-btn-hover-bg: var(--customMagenta)!important;
-  --bs-btn-hover-border-color : var(--customMagenta)!important;
-
 }
 .btn-login{
   --bs-btn-bg: var(--customBlue) !important;

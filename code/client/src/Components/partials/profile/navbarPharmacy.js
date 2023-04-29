@@ -4,7 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useLogout } from '../../../Hooks/useLogout';
-import { useNavigate } from 'react-router';
+import { useNavigate} from 'react-router-dom';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import { useParams } from 'react-router';
 import {Navigate} from "react-router-dom";

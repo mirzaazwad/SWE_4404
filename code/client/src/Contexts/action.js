@@ -8,7 +8,6 @@ const initialState = {
   sellerDetails: {},
   notificationCount:0
 }
-
 export const userSlice=createSlice({
   name:"userState",
   initialState,

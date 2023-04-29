@@ -48,7 +48,7 @@ const  ProfilePageForPharmacy = () => {
       <div className="d-flex justify-content-around h-100 mx-auto my-5 w-100" style={{alignItems : 'center'}}>
       <div className="my-3 d-none d-lg-flex"><ProfilePicture id={id}/></div>
         <div className="profile-form-outer w-50 mt-5">
-          <ProfileFormPharmacy id={id}/>
+          <ProfileFormPharmacy socket={socket} id={id}/>
         </div>
       </div>
     </div>

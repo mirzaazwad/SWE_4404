@@ -16,7 +16,7 @@ const ForgotPasswordEmailVerify = (props) => {
     const [enterotp,setEnterotp]=useState(true);
     const email=props.email;
     const handleTimerExpire = () =>{
-
+      setisLocked(true);
     }
 
     const resend = () =>{

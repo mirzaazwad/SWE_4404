@@ -1,6 +1,6 @@
 import axios from "axios";
 import DOMPurify from "dompurify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 
@@ -11,22 +11,39 @@ const StripsForm = (props) => {
   const user = props.user;
   const types=props.types;
   const categories=props.categories;
-  const [medicineName, setMedicineName] = useState("");
-  const [genericName, setGenericName] = useState("");
-  const [description, setDescription] = useState("");
-  const [stripsPerBox, setStripsPerBox] = useState();
-  const [sellingPrice, setSellingPrice] = useState();
-  const [pcsPerStrip, setPcsPerStrip] = useState();
-  const [manufacturer, setManufacturer] = useState("");
-  const [purchasePrice, setPurchasePrice] = useState();
-  const medicineType=props.medicineType;
-  const [medicineCateogry, setMedicineCategory] = useState("Default");
+  const [medicineName, setMedicineName] = useState(props.currentValue.medicineName);
+  const [genericName, setGenericName] = useState(props.currentValue.genericName);
+  const [description, setDescription] = useState(props.currentValue.description);
+  const [stripsPerBox, setStripsPerBox] = useState(props.currentValue.stripsPerBox);
+  const [sellingPrice, setSellingPrice] = useState(props.currentValue.sellingPrice);
+  const [pcsPerStrip, setPcsPerStrip] = useState(props.currentValue.pcsPerStrip);
+  const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
+  const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
+  const [medicineType,setMedicineType]=useState(props.medicineType);
+  const [medicineCateogry, setMedicineCategory] = useState("defaultCategory");
 
   const setError=(error)=>{
     props.onError(error);
   }
 
+  useEffect(()=>{
+    setMedicineType(props.medicineType)
+  },[props])
+
   const handleMedicineType=(data)=>{
+    setMedicineType(data);
+    props.handleCurrentValue({
+      medicineName:medicineName,
+      genericName:genericName,
+      description:description,
+      stripsPerBox:stripsPerBox,
+      sellingPrice:sellingPrice,
+      pcsPerStrip:pcsPerStrip,
+      manufacturer:manufacturer,
+      purchasePrice:purchasePrice,
+      medicineCateogry:medicineCateogry,
+      pcsPerBox:props.currentValue.pcsPerBox
+    });
     props.onHandleType(data);
   }
 
@@ -36,7 +53,7 @@ const StripsForm = (props) => {
       setError("Medicine Type is required");
       return;
     }
-    if (medicineCateogry === "default" || medicineCateogry === "Default") {
+    if (medicineCateogry === "default" || medicineCateogry === "defaultCategory") {
       setError("Medicine Category is required");
       return;
     }
@@ -103,6 +120,7 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
+              value={props.medicineType}
               onChange={(e) => handleMedicineType(e.target.value)}
             >
               <option value="default">Select an option</option>
@@ -123,7 +141,7 @@ const StripsForm = (props) => {
               placeholder="Select an option"
               onChange={(e) => setMedicineCategory(e.target.value)}
             >
-              <option value="default">Select an option</option>
+              <option value="defaultCategory">Select an option</option>
               {categories.length !== 0 &&
                 categories.map((category) => (
                   <option value={category._id}>{category.cateogry}</option>
