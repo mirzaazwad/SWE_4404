@@ -57,4 +57,26 @@ const getOrder = async (req, res) => {
   }
 };
 
-module.exports = { postOrder, getOrder };
+const getOrderDetails = async (req, res) => {
+  const { userId, orderId } = req.params;
+  
+  try {
+    // Find the order with the given order ID and user ID
+    const order = await Order.findOne({ userId: userId});
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+    
+    // Get the specific order data that matches the order ID
+    const orderData = order.order_data.find(data => data._id.toString() === orderId);
+    console.log(orderData);
+    return res.status(200).json({ order: orderData });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: 'Server Error' });
+  }
+};
+
+
+
+module.exports = { postOrder, getOrder, getOrderDetails };
