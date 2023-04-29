@@ -10,7 +10,7 @@ const medicineSchema = new Schema({
   },
   GenericName: {
     type: String,
-    required: true,
+    required: true, 
   },
   TypeID: {
     type: String,

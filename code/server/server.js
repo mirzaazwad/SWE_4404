@@ -19,6 +19,8 @@ const mobileRoutes=require("./routes/mobile-routes");
 
 
 //express app setup
+const pharmacyRoutes = require("./routes/viewPharmacies/medicinesOfPharmacy-route");
+const orderRoutes = require("./routes/order-routes");
 const app=express();
 app.use(express.json());
 app.use(cors());
@@ -28,9 +30,11 @@ app.use('/api/make-payment',purchaseRoutes);
 app.use("/api/profile/addMedicine",medicineAddRoutes);
 app.use("/api/profile/inventory",inventoryRoutes);
 app.use("/api",loginSignUpRoutes);
+app.use("/api/order",orderRoutes);
 app.use("/api/profile/user",profileRoutesUser);
 app.use("/api/profile/buyer",profileRoutesBuyer);
 app.use("/api/profile/seller",profileRoutesSeller);
 app.use("/api/pharmacies",pharmaciesRoutes);
 app.use("/api/profile/chat",chatRoutes);
 app.use("/api/mobile",mobileRoutes);
+app.use("/api/pharmacy",pharmacyRoutes);
