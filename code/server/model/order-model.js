@@ -26,7 +26,12 @@ const OrderSchema = new Schema({
         country: String,
         payment: String
       }
-    ]
+    ],
+    status: {
+      type: String,
+      default: 'Pending'
+      
+    }
   }]
 });
 
