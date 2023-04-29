@@ -16,6 +16,21 @@ const OrderSchema = new Schema({
     medicines: {
       type: Array,
       required: true
+    },
+    customer_data: [
+      {
+        fullName: String,
+        address: String,
+        city: String,
+        postalCode: String,
+        country: String,
+        payment: String
+      }
+    ],
+    status: {
+      type: String,
+      default: 'Pending'
+      
     }
   }]
 });

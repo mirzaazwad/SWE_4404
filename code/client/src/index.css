@@ -141,6 +141,13 @@ code {
   font-weight: bold;
   text-align: center;
 }
+.order-details-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+}
 .addRemove-buttons{
   display: flex;
   justify-content: space-between;
@@ -150,9 +157,17 @@ code {
 .my-orders{
   margin-top: 5rem;
 }
-.order-details-card{
+.order-card{
 width: 75%;
 }
+.order-details-card{
+  margin-top: 5rem !important;
+  width: 50% !important;
+  display: flex;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
 .cart-table{
   display: contents;
   width: 100%;

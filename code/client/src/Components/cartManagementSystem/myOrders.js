@@ -13,9 +13,8 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(`http://localhost:4000/api/order/getOrder/${userId}`);
-        setOrders(res.data.order_data);
-        console.log("orders");
-        console.log(res.data.order_data);
+        const sortedOrders = res.data.order_data.sort((a, b) => new Date(b.date) - new Date(a.date));
+        setOrders(sortedOrders);
       } catch (err) {
         if (err.response && err.response.status === 401) {
             console.log("Failed to fetch order");
@@ -24,7 +23,7 @@ const MyOrders = () => {
         }
       }
     };
-
+  
     fetchOrders();
   }, []);
 
