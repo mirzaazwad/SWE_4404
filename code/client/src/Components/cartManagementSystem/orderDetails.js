@@ -1,19 +1,24 @@
 import React from 'react';
 import Card from 'react-bootstrap/Card';
+import NavbarCustomer from "../partials/profile/navbarCustomer";
 
 const OrderDetailsCard = ({ order }) => {
   return (
-    <Card>
-    <Card.Header>{order._id}</Card.Header>
+    <div>
+      <div className="mb-5">
+        <NavbarCustomer />
+      </div>
+      <div>
+      <Card className='order-details-card'>
+    <Card.Header className='order-details-card-header'>Order Details</Card.Header>
     <Card.Body>
-      <Card.Title>{order.productName}</Card.Title>
-      <Card.Text>
-        <p>Quantity: {order.quantity}</p>
-        <p>Status: {order.status}</p>
-        <p>Price: {order.price}</p>
-      </Card.Text>
+      
     </Card.Body>
   </Card>
+      </div>
+
+    </div>
+    
   );
 };
 
