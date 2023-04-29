@@ -25,7 +25,7 @@ const CheckOutPage = ({}) => {
   const handleCheckOut = async () => {
     let user = JSON.parse(localStorage.getItem('user'));
     let userId = user._id;
-    const response = await axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
+    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
       customer_data: {
         fullName: fullName,
@@ -36,8 +36,9 @@ const CheckOutPage = ({}) => {
         payment: payment
       },
     })
-    console.log(response);
-    dispatch(clearItems());
+    console.log(cart);
+    await dispatch(clearItems());
+    console.log(cart);
   };
   return (
     <div>
