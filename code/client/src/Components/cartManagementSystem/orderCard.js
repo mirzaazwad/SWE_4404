@@ -8,8 +8,19 @@ const OrderCard = ({ order }) => {
   const user = localStorage.getItem('user');
   const userId = JSON.parse(user)._id;
   const [totalPrice, setTotalPrice] = useState(0);
+  const [statusColor, setStatusColor] = useState('warning');
   
   useEffect(() => {
+    if (order.status === 'Pending') {
+      setStatusColor('warning');
+    } else if (order.status === 'Delivered') {
+      setStatusColor('success');
+    } else if (order.status === 'Cancelled') {
+      setStatusColor('danger');
+    }
+    else{
+      setStatusColor('primary');
+    }
     let price = 0;
     order.medicines.forEach(item => {
       price += item.price;
@@ -39,7 +50,7 @@ const OrderCard = ({ order }) => {
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">
-              Status: <Badge bg="success">{order.status}</Badge>
+              Status: <Badge bg={statusColor}>{order.status}</Badge>
             </small>
           </Card.Footer>
         </Card>
