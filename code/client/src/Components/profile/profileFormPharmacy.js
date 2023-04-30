@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
 import PhoneVerify from "../partials/phone/phoneVerify";
+import MapModal from "../partials/profile/mapModal";
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
@@ -29,6 +30,11 @@ const ProfileFormPharmacy=(id)=> {
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [showPhoneVerify,setShowPhoneVerify]=useState(false);
   const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
+  const [isValid,setIsValid]=useState(true);
+  const [location,setLocation]=useState(null);
+  const [showMAP,setShowMAP]=useState(false);
+  const [stopDropDown,setStopDropDown]=useState(false);
+
   const handleClosePhoneVerify=()=>{
     setShowPhoneVerify(false);
   }
@@ -38,19 +44,36 @@ const ProfileFormPharmacy=(id)=> {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
+  const getPlaceDetails = async (lat, lng) => {
+    if(lat && lng){
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
+      );
+      const data = await response.json();
+      if (data.status === "OK") {
+        setAddress(data.results[0].formatted_address);
+        return data.results[0].formatted_address;
+      } else {
+        console.log("Geocode was not successful for the following reason:", data.status);
+        return null;
+      }
+    }
+  };
+
   useEffect(()=>{
     setUsername(seller.username);
     setPhone(seller.phone);
-    setAddress(seller.address);
+    if(seller.address){
+      getPlaceDetails(seller.address.lat,seller.address.lng);
+    }
     setPharmacy(sellerDetails.pharmacy);
-    console.log(sellerDetails.pharmacy);
   },[seller,sellerDetails])
   const [password,setPassword]=useState(null);
 
 
-  const turnOnEdit = () => {
+  const turnOnEdit = (data) => {
     setIsDisabled(false);
-    setIsEditing(true);
+    setIsEditing(data);
   }
   const turnOffEdit = () => {
     setIsDisabled(true);
@@ -63,17 +86,15 @@ const ProfileFormPharmacy=(id)=> {
         Authorization: `Bearer ${user.token}`,
       },
     }).then((result)=>{
-      console.log(result);
       setErrorPassword(!result.data.success);
     }).catch((error)=>{
-      console.log(error);
       setErrorPassword(true);
     })
   };
 
   const setPhoneNumber=(phone)=>{
     setPhoneNumberChanged(true);
-    if(phone.length!=11){
+    if(phone.length!==11){
       setError("Phone Number Must be 11 digits");
     }
     else{
@@ -87,6 +108,10 @@ const ProfileFormPharmacy=(id)=> {
     turnOffEdit();
     setisLocked(true);
     setError("");
+    if(location===null){
+      setError("Location must be provided for pharmacy");
+      return;
+    }
     await verify(_id.id,CryptoJS.SHA512(password).toString());
     if(!errorPassword){
       if(!phoneNumberChanged){
@@ -95,7 +120,7 @@ const ProfileFormPharmacy=(id)=> {
         "/api/profile/user/updateUser/" + _id.id,
         {
           username: username,
-          address: address,
+          address: location,
         },
         {
           headers: {
@@ -104,7 +129,6 @@ const ProfileFormPharmacy=(id)=> {
         }
       )
       .then((result) => {
-        console.log(result);
         dispatch(setSellerUser(result.data));
       })
       await axios.patch('/api/profile/seller/'+seller.email,{
@@ -113,7 +137,6 @@ const ProfileFormPharmacy=(id)=> {
       },{headers: {
         'Authorization': `Bearer ${user.token}`
       }}).then((result)=>{
-        console.log(result);
         handleClose();
         dispatch(setSellerDetails(result.data));
       });
@@ -139,7 +162,6 @@ const ProfileFormPharmacy=(id)=> {
       }
     }
     else{
-      console.log('comes here');
       setError("Password is incorrect");
     }
     setIsEditing(false);
@@ -150,10 +172,12 @@ const ProfileFormPharmacy=(id)=> {
     <div>
       <div className="profileInfo d-flex justify-content-between">
         <h4 className="InfoHeader mb-4">Personal Information</h4>
-        <button className="btn btn-outline-dark btn-editProfile " onClick={turnOnEdit}>Edit Profile
+        <button className="btn btn-outline-dark btn-editProfile " onClick={()=>turnOnEdit(!isEditing)}>Edit Profile
         <i className='bx bx-cog bx-sm' ></i></button>
       </div>
       <Form>
+        <div className="error">{error}</div>
+      <MapModal startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} isValid={isValid} setLocation={setLocation} setIsValid={setIsValid}/>
       <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Pharmacy Name</Form.Label>
           <Form.Control type="pharmacyName" placeholder="Enter name of your pharmacy" disabled={isDisabled} value={pharmacy} onChange={(e)=>setPharmacy(e.target.value)}/>
@@ -172,16 +196,17 @@ const ProfileFormPharmacy=(id)=> {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Address</Form.Label>
-          <Form.Control type="address" placeholder="Address" disabled={isDisabled} value={address} onChange={(e)=>setAddress(e.target.value)}/>
+          <Form.Control type="address" placeholder="Address" disabled={isDisabled} value={address} onChange={(e)=>setAddress(e.target.value)} disabled={true}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
           <Form.Control type="email" placeholder="Enter email"   disabled={true} value = {seller.email} />
         </Form.Group>
-        <Form.Group className="mb-3" controlId="formBasicPassword">
-          {isEditing &&(<a href={"changePassword/" + user._id}>Change Password</a>)}
-        </Form.Group>
-        
+       
+        <InputGroup className="mb-3" controlId="formBasicPassword">
+        {isEditing && (<Button onClick={()=>setShowMAP(true)}>Add/Change Location Information</Button>)}
+          {isEditing &&(<a href={"changePassword/" + user._id} style={{marginLeft:"75%"}}>Change Password</a>)}
+        </InputGroup>
         {isEditing && (
           <Button className="btn btn-outline-dark btn-save" disabled={isLocked} onClick={handleShow}>
             Save

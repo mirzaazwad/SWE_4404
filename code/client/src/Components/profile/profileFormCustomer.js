@@ -23,7 +23,6 @@ const ProfileFormCustomer = (id) => {
   const [isLocked, setisLocked] = useState(false);
   const [username, setUsername] = useState("");
   const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState("");
   const [error,setError]=useState("");
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [errorPassword,setErrorPassword] = useState(false);
@@ -40,7 +39,6 @@ const ProfileFormCustomer = (id) => {
   useEffect(() => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
-    setAddress(buyer.address);
     setLoaded(true);
   }, [buyer]);
 
@@ -48,9 +46,9 @@ const ProfileFormCustomer = (id) => {
     changePassword(e.target.value);
     setError("");
   }
-  const turnOnEdit = () => {
+  const turnOnEdit = (data) => {
     setIsDisabled(false);
-    setIsEditing(true);
+    setIsEditing(data);
   };
 
   const turnOffEdit = () => {
@@ -95,8 +93,7 @@ const ProfileFormCustomer = (id) => {
       .patch(
         "/api/profile/user/updateUser/" + _id.id,
         {
-          username: username,
-          address: address,
+          username: username
         },
         {
           headers: {
@@ -144,7 +141,7 @@ const ProfileFormCustomer = (id) => {
           <h4 className="InfoHeader mb-4">Personal Information</h4>
           <button
             className="btn btn-outline-dark btn-editProfile "
-            onClick={turnOnEdit}
+            onClick={()=>turnOnEdit(!isEditing)}
           >
             Edit Profile
             <i className="bx bx-cog bx-sm"></i>
@@ -169,16 +166,6 @@ const ProfileFormCustomer = (id) => {
           </InputGroup>
           <div className="errorMessage" style={{color:"red"}}>{error}</div>
         </Form.Group>
-          <Form.Group className="mb-3">
-            <Form.Label>Address</Form.Label>
-            <Form.Control
-              type="address"
-              placeholder="Address"
-              disabled={isDisabled}
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-            />
-          </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -247,7 +234,7 @@ const ProfileFormCustomer = (id) => {
           </Modal.Footer>
         </Modal>
       </Form>
-      <PhoneVerify _id={_id.id} user={user} data={{phone:phone,username:username,address:address}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+      <PhoneVerify _id={_id.id} user={user} data={{phone:phone,username:username}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
       </div>
     );
   }
