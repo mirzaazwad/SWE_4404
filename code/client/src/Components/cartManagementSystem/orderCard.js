@@ -39,7 +39,7 @@ const OrderCard = ({ order }) => {
               <div className='d-flex justify-content-between'>
                 <div>
                   <p>
-                    <i className='bx bx-calendar'></i> {new Date(order.date).toLocaleDateString('en-US')}
+                    <i className='bx bx-calendar'></i> {new Date(order.date).toLocaleString()}
                   </p>
                 </div>
                 <div>
