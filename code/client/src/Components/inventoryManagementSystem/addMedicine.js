@@ -34,7 +34,9 @@ const AddMedicine = () => {
       manufacturer:"",
       purchasePrice:"",
       medicineCateogry:"",
-      pcsPerBox:""
+      pcsPerBox:"",
+      imageURL:"",
+      prescription:false
   });
   const handleCategory = (data) =>{
     setShowCategory(data);
