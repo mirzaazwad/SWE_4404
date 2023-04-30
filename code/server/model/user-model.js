@@ -37,7 +37,12 @@ const userSchema = new Schema({
     type:String
   },
   address:{
-    type:String
+    lat:{
+      type:Number
+    },
+    lng:{
+      type:Number
+    }
   }
 },{timestamps:true});
 
