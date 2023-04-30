@@ -36,7 +36,7 @@ const NavbarCustomer=()=>{
           >
             <Nav.Link href={`/profileBuyer/${id}`}>Profile</Nav.Link>
             <Nav.Link href={`/ViewPharmacies/${id}`}>Pharmacies</Nav.Link>
-            <Nav.Link href="#action2">Prescriptions</Nav.Link>
+            <Nav.Link href={`/prescription`}>Prescriptions</Nav.Link>
             <Nav.Link href={`/myOrders`}>My Orders</Nav.Link>
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
             
