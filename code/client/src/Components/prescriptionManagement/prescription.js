@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { Card, Button, Container, Form, InputGroup } from 'react-bootstrap';
+import { Card, Button, Form} from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import NavbarCustomer from '../partials/profile/navbarCustomer';
 
 const Prescription = ({ currentUser }) => {
   const [image,setImage]=useState();
-  const [image_Location,setImage_Location]=useState('/demoProilePicture.jpg');
   const [prescriptions, setPrescriptions] = useState([]);
   const [prescriptionName, setPrescriptionName] = useState('');
   const user = localStorage.getItem('user');
@@ -23,7 +22,6 @@ const Prescription = ({ currentUser }) => {
           "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
           formData
         );
-      setImage_Location(dataRes.data.url);
       const result=await axios.patch(`http://localhost:4000/api/prescriptions/uploadPrescription/${userId}`,{
         prescriptionImage:dataRes.data.url,
         prescriptionName : prescriptionName
@@ -77,18 +75,27 @@ const Prescription = ({ currentUser }) => {
       </Form>
       <hr/>
       <div className="mt-3">
-      {prescriptions.map((prescription) => (
-          <Card key={prescription._id}  className="prescription-card my-3">
-            <Card.Header className='prescription-card-header'></Card.Header>
-            <Card.Body>
-              <Card.Title>Prescription Name: {prescription.name}</Card.Title>
-              <Card.Text> Uploaded on: 
-                 {new Date(prescription.createdAt).toLocaleString()}
-              </Card.Text>
-            </Card.Body>
-          </Card>
-          ))}
-      </div>
+  {prescriptions.map((prescription) => {
+    const urlParts = prescription.prescriptionImage.split('http://res.cloudinary.com/dzerdaaku/image/upload/')[1].split('/');
+    const prop1 = urlParts[0];
+    const prop2 = urlParts[1];
+        
+    return (
+      <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id}>
+        <Card className="prescription-card my-3">
+          <Card.Header className='prescription-card-header'></Card.Header>
+          <Card.Body>
+            <Card.Title>Prescription Name: {prescription.name}</Card.Title>
+            <Card.Text> Uploaded on: 
+              {new Date(prescription.createdAt).toLocaleString()}
+            </Card.Text>
+          </Card.Body>
+        </Card>
+      </Link>
+    );
+  })}
+</div>
+
       </div>
       
     </div>
