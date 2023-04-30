@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
-import { removeItem, clearItems } from "../../Contexts/cartAction.js";
+import { clearItems } from "../../Contexts/cartAction.js";
 import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
@@ -21,22 +21,24 @@ const CheckOutPage = ({}) => {
       price += item.price;
     });
     setTotalPrice(price);
-  }, [cart]);
+  }, []);
   const handleCheckOut = async () => {
     let user = JSON.parse(localStorage.getItem('user'));
     let userId = user._id;
-    await axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
+    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
-      address: {
+      customer_data: {
         fullName: fullName,
         address: address,
         city: city,
         postalCode: postalCode,
-        country: country
+        country: country,
+        payment: payment
       },
-      payment: payment
-    });
+    })
+    console.log(cart);
     await dispatch(clearItems());
+    console.log(cart);
   };
   return (
     <div>
@@ -49,12 +51,14 @@ const CheckOutPage = ({}) => {
       </div>
 <div className="checkout-page d-flex justify-content-between">
       <div className="billing-details-card-container w-50 mx-4">
+
         <Card className="billing-details-card w-100">
+        <Form onSubmit={handleCheckOut}>
           <Card.Header className="billing-details-card-header">
             Billing Details
           </Card.Header>
           <Card.Body>
-            <Form onSubmit={handleCheckOut}>
+            
               <Form.Group className="mb-3" as={Row} controlId="fullName">
                 <Form.Label column sm={3}>
                   Full Name
@@ -154,11 +158,11 @@ const CheckOutPage = ({}) => {
                   />
                 </Col>
               </Form.Group>
-            </Form>
           </Card.Body>
           <Card.Footer>
           <Button className="btn btn-placeOrder" type="submit">Place Order</Button>
           </Card.Footer>
+          </Form>
         </Card>
       </div>
 
