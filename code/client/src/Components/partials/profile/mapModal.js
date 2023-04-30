@@ -4,15 +4,16 @@ import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import PlacesAutocomplete from "./placesAutocomplete";
 
 const MapModal = (props) => {
+  console.log("API Key",process.env.REACT_APP_GMPKEY);
   const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "AIzaSyDKjGpZZoglgi9S73FYzlcdBqmmd4fA-18",
+    googleMapsApiKey: process.env.REACT_APP_GMPKEY,
     libraries: ["places"],
   });
   if (!isLoaded) {
     return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)
   } 
   else{
-    return (<Map startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} isValid={props.isValid} setLocation={props.setLocation} setIsValid={props.setIsValid}></Map>)
+    return (<Map startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} setLocation={props.setLocation}></Map>)
   }
 }
 
@@ -21,6 +22,7 @@ const Map = (props)=>{
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
   const [address,setAddress]=useState("");
+  const [isValid,setIsValid]=useState(false);
 
   const handleMapClick = (event) => {
     setMarkerPosition({
@@ -31,7 +33,7 @@ const Map = (props)=>{
 
   const getPlaceDetails = async (lat, lng) => {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDKjGpZZoglgi9S73FYzlcdBqmmd4fA-18`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
     );
     const data = await response.json();
     if (data.status === "OK") {
@@ -48,6 +50,7 @@ const Map = (props)=>{
 
   useEffect(()=>{
     setNewAddress();
+    setIsValid(true);
   },[markerPosition])
 
   const handleMarkerDragEnd = (event) => {
@@ -66,6 +69,7 @@ const Map = (props)=>{
           lng: position.coords.longitude,
         };
         setMarkerPosition(userLocation);
+        setIsValid(true);
       });
     } else {
       console.log('cant get location in legacy browser');
@@ -74,7 +78,7 @@ const Map = (props)=>{
 
   const setLocation=(e)=>{
     e.preventDefault();
-    if(props.isValid){
+    if(isValid){
       setError("");
       props.setLocation(markerPosition);
       props.handleClose();
@@ -92,7 +96,7 @@ const Map = (props)=>{
       <Modal.Body>
       <div className="errorMessage" style={{color:"red"}}>{error}</div>
       <div className="places-container">
-        <PlacesAutocomplete startDropDown={props.startDropDown} dropdown={props.dropdown} currentAddress={address} setNewPosition={setMarkerPosition} isValid={props.isValid} setIsValid={props.setIsValid}/>
+        <PlacesAutocomplete startDropDown={props.startDropDown} dropdown={props.dropdown} currentAddress={address} setNewPosition={setMarkerPosition} isValid={isValid} setIsValid={setIsValid}/>
       </div>
         <GoogleMap zoom={16} center={markerPosition} mapContainerClassName="map-container">
         {markerPosition && (

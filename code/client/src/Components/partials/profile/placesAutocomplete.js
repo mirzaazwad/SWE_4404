@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import usePlacesAutocomplete, {
   getGeocode,
   getLatLng,
@@ -13,15 +13,28 @@ const PlacesAutocomplete = (props) => {
     clearSuggestions,
   } = usePlacesAutocomplete();
 
-
-  useEffect(()=>{
-    setValue(props.currentAddress);
-  },[props.currentAddress])
+  const [addressReceived,setAddressReceived]=useState(false);
 
   const changeValue=(e)=>{
+    setAddressReceived(false);
     props.startDropDown(true);
     setValue(e.target.value);
   }
+
+  const addAddress=(e)=>{
+    setAddressReceived(true);
+    setValue(e);
+  }
+
+  useEffect(()=>{
+    if(!addressReceived){
+      props.setIsValid(false);
+    }
+  },[changeValue])
+
+  useEffect(()=>{
+    addAddress(props.currentAddress);
+  },[props.currentAddress])
 
   const handleSelect = async (address) => {
     props.setIsValid(true);

@@ -30,7 +30,6 @@ const ProfileFormPharmacy=(id)=> {
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [showPhoneVerify,setShowPhoneVerify]=useState(false);
   const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
-  const [isValid,setIsValid]=useState(true);
   const [location,setLocation]=useState(null);
   const [showMAP,setShowMAP]=useState(false);
   const [stopDropDown,setStopDropDown]=useState(false);
@@ -47,7 +46,7 @@ const ProfileFormPharmacy=(id)=> {
   const getPlaceDetails = async (lat, lng) => {
     if(lat && lng){
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=AIzaSyDKjGpZZoglgi9S73FYzlcdBqmmd4fA-18`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
       );
       const data = await response.json();
       if (data.status === "OK") {
@@ -63,7 +62,9 @@ const ProfileFormPharmacy=(id)=> {
   useEffect(()=>{
     setUsername(seller.username);
     setPhone(seller.phone);
-    getPlaceDetails(seller.address.lat,seller.address.lng);
+    if(seller.address){
+      getPlaceDetails(seller.address.lat,seller.address.lng);
+    }
     setPharmacy(sellerDetails.pharmacy);
     console.log(sellerDetails.pharmacy);
   },[seller,sellerDetails])
@@ -176,7 +177,7 @@ const ProfileFormPharmacy=(id)=> {
       </div>
       <Form>
         <div className="error">{error}</div>
-      <MapModal startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} isValid={isValid} setLocation={setLocation} setIsValid={setIsValid}/>
+      <MapModal startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
       <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Pharmacy Name</Form.Label>
           <Form.Control type="pharmacyName" placeholder="Enter name of your pharmacy" disabled={isDisabled} value={pharmacy} onChange={(e)=>setPharmacy(e.target.value)}/>
