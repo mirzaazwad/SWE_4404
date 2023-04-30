@@ -183,6 +183,13 @@ width: 75%;
   background-color: var(--customMagenta) !important;
   color: white !important;
 }
+.view-prescription-card{
+  width: 50% !important;
+  display: flex;
+  margin-top: 5rem  !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
 .cart-table{
   display: contents;
