@@ -19,6 +19,7 @@ import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
 import ChatPage from "./Components/Chat/chatRoom";
 import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import './index.css';
+import Prescription from "./Components/prescriptionManagement/prescription";
 
 function App() {
   let user = useSelector((state) => state.userState.user);
@@ -175,6 +176,7 @@ function App() {
               <Route exact path="/myOrders" element={user && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
               <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderDetails/:userId/:orderId" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/prescription" element={user && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>
