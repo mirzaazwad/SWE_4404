@@ -5,5 +5,6 @@ const medicineDetailsController = require('../../controller/medicineDetailsContr
 
 router.get('/:id', pharmacyController.getAllMedicines); 
 router.get('/:id/medicine/:medicineId', medicineDetailsController.getMedicine);
+router.get('/getAllCategories', medicineDetailsController.getAllCategories);
 
 module.exports = router;

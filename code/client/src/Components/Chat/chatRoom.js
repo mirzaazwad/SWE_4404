@@ -8,29 +8,24 @@ import {
   MDBTypography,
   MDBInputGroup,
 } from "mdb-react-ui-kit";
-import { Send, Search, ArrowLeftCircle } from "react-bootstrap-icons";
+import { Search } from "react-bootstrap-icons";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
-import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import ChatTile from "../partials/chats/chatsTile";
 import axios from "axios";
 import io from "socket.io-client";
-import toDateString from "../../LibraryFunctions/toDateString";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import ChatBox from "../partials/chats/chatBox";
-import toDate from "../../LibraryFunctions/toDate";
-import { setNotification } from "../../Contexts/action";
 import timeElapsed from "../../LibraryFunctions/timeElapsed";
+import SendMessageChatRoom from "../partials/chats/chatSendMessage";
 
 const ChatPage = () => {
   const { id } = useParams();
-  const dispatch=useDispatch();
   const user = useSelector((state) => state.userState.user);
   const socket = io("http://localhost:4110");
   const [receiver, setReceiver] = useState({});
   const [currentSender, setCurrentSender] = useState({});
   const [currentSenderID, setCurrentSenderID] = useState("");
-  const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
   const [senders, setSenders] = useState([]);
   const [filteredValues,setFilter]=useState([]);
@@ -38,7 +33,7 @@ const ChatPage = () => {
   const [toggle,setToggle]=useState(false);
   const [messagesMap,setMessagesMap]=useState(new Map());
   const [newMessage,setNewMessage]=useState(null);
-  const [messages,setMessages]=useState([]);
+  const [noSubscriber,setNoSubscriber]=useState(false);
 
   const changeContacts = (input) =>{
     console.log(input);
@@ -51,17 +46,6 @@ const ChatPage = () => {
     }
   }
 
-  const getSender = async(senderID)=>{
-    const result=await axios.get('/api/profile/user/getUser/'+senderID, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-      },
-    });
-    let temp=senders;
-    senders.push(result);
-    setSenders(temp);
-  }
-
   const retrieveUsers = async () => {
     setLoading(true);
     const value = await axios.get("/api/profile/chat/senders/" + id, {
@@ -72,6 +56,9 @@ const ChatPage = () => {
     setSenders(value.data)
     setFilter(value.data);
     value.data.forEach((sent)=>messagesMap.set(sent.senderID,{lastMessage:sent.lastMessage,lastMessageTime:sent.lastMessageTime}));
+    if(value.data.length===0){
+      setNoSubscriber(true);
+    }
     setLoading(false);
   };
 
@@ -101,7 +88,7 @@ const ChatPage = () => {
     };
     getReceiver();
     retrieveUsers();
-  }, []);
+  }, [noSubscriber]);
 
   const ToggleChat = async(sent) =>{
     setCurrentSender(sent);
@@ -125,28 +112,6 @@ const ChatPage = () => {
     }
   },[senders])
 
-
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    let msg = {
-      senderID: currentSender.senderID,
-      receiverID: id,
-      SentTime: toDateString(new Date()),
-      messageContent: message,
-    };
-    if (message) {
-      socket.emit("send_message", msg);
-      msg.readStatus="sender";
-      await axios.post("/api/profile/chat/send", msg, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      });
-      setMessage("");
-    }
-  };
-
   if (!loading) {
     return (
       <MDBContainer
@@ -166,12 +131,6 @@ const ChatPage = () => {
                   <MDBCol md="6" lg="5" xl="4" className="mb-4 mb-md-0">
                     <div className="p-3">
                       <MDBInputGroup className="rounded mb-3">
-                        <Button
-                          className="input-group-text border-0"
-                          id="search-addon"
-                        >
-                          <ArrowLeftCircle />
-                        </Button>
                         <input
                           className="form-control rounded"
                           placeholder="Search"
@@ -208,6 +167,7 @@ const ChatPage = () => {
                             index={index}
                             user={user}
                             currentSender={currentSenderID}
+                            noSubscriber={noSubscriber}
                           /></button>
                           ))}
                         </MDBTypography>
@@ -215,24 +175,8 @@ const ChatPage = () => {
                     </div>
                   </MDBCol>
                   <MDBCol md="6" lg="7" xl="8">
-                    <ChatBox id={id} senderID={currentSenderID} receiverImageURL={receiver.imageURL} senderImageURL={currentSender.senderImageURL} user={user} socket={socket} message={newMessage}/>
-                      <form className="text-muted d-flex justify-content-start align-items-center pe-3 pt-3 mt-2" onSubmit={handleSubmit}> 
-                      <img
-                        src={receiver.imageURL}
-                        alt="avatar 3"
-                        style={{ width: "40px", height: "100%" }}
-                      />
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        placeholder="Type message"
-                        value={message}
-                        onChange={(e)=>setMessage(e.target.value)}
-                      />
-                      <Button className="ms-3" type="submit">
-                        <Send />
-                      </Button>
-                      </form>
+                    <ChatBox handleReload={setNoSubscriber}  noSubscriber={noSubscriber} id={id} senderID={currentSenderID} receiverImageURL={receiver.imageURL} senderImageURL={currentSender.senderImageURL} user={user} socket={socket} message={newMessage}/>
+                    <SendMessageChatRoom noSubscriber={noSubscriber} user={user} receiverID={id} imageURL={receiver.imageURL} senderID={currentSender.senderID} socket={socket} />
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

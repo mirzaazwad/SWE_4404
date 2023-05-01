@@ -2,6 +2,7 @@ import axios from "axios";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { Button, Form, InputGroup } from "react-bootstrap";
+import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const StripsForm = (props) => {
@@ -20,6 +21,10 @@ const StripsForm = (props) => {
   const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
   const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
   const [medicineType,setMedicineType]=useState(props.medicineType);
+  const [image,setImg]=useState(null);
+  const [imageURL,setImageURL] = useState(props.currentValue.imageURL);
+  const [prescription,setPrescription]=useState(props.currentValue.setPrescription);
+  const [locked,isLocked]=useState(false);
   const [medicineCateogry, setMedicineCategory] = useState("defaultCategory");
 
   const setError=(error)=>{
@@ -42,12 +47,31 @@ const StripsForm = (props) => {
       manufacturer:manufacturer,
       purchasePrice:purchasePrice,
       medicineCateogry:medicineCateogry,
-      pcsPerBox:props.currentValue.pcsPerBox
+      pcsPerBox:props.currentValue.pcsPerBox,
+      imageURL:imageURL,
+      prescription:prescription
     });
     props.onHandleType(data);
   }
 
+  const setImage=async(e)=>{
+    setImg(e);
+    if(e){
+      isLocked(true);
+      const formData = new FormData();
+        formData.append("file", e);
+        formData.append("upload_preset", "med_guard");
+        const dataRes = await axios.post(
+          "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
+          formData
+        );
+      setImageURL(dataRes.data.url);
+      isLocked(false);
+    }
+  }
+
   const handleSubmit = async(e) => {
+    isLocked(true);
     e.preventDefault();
     if (medicineType === "default" || medicineType === "Default") {
       setError("Medicine Type is required");
@@ -70,7 +94,9 @@ const StripsForm = (props) => {
             Manufacturer: manufacturer,
             SellingPrice: sellingPrice,
             PurchasePrice: purchasePrice,
-            Description: description
+            Description: description,
+            imageURL:imageURL,
+            prescription:prescription
         },
         {
           headers: {
@@ -79,7 +105,7 @@ const StripsForm = (props) => {
         }
       )
       .catch((err) => console.log(err));
-      axios
+      await axios
         .patch(
           "/api/profile/addMedicine/addNewMedicine/" + sellerId,
           {
@@ -93,6 +119,8 @@ const StripsForm = (props) => {
             SellingPrice: sellingPrice,
             PurchasePrice: purchasePrice,
             Description: description,
+            imageURL:imageURL,
+            prescription:prescription
           },
           {
             headers: {
@@ -104,6 +132,7 @@ const StripsForm = (props) => {
           return navigate("/inventoryManagementSystem/inventory/" + _id);
         })
         .catch((err) => console.log(err));
+        isLocked(false);
   };
 
   return (
@@ -310,6 +339,18 @@ const StripsForm = (props) => {
           onChange={(e) => setDescription(DOMPurify.sanitize(e.target.value))}
         />
       </InputGroup>
+      <Form.Group className="mb-4">
+          <Form.Label>Upload Image for Medicine Identification<span style={{color:"red"}}>*</span></Form.Label>
+          <Form.Control type="file" name="file"
+                      accept="image/*"
+                      id="imageFileProfile"
+                      onChange={(e) => setImage(e.target.files[0])} required/>
+        </Form.Group>
+        <Form.Group className="mb-4">
+        <Form.Label>Prescription Required ?</Form.Label>
+        <Switch color="primary" onChange={()=>setPrescription(!prescription)}>
+        </Switch>
+        </Form.Group>
       <div className="d-flex justify-content-center">
         <Button
           className="btn btn-addMedicine w-25"

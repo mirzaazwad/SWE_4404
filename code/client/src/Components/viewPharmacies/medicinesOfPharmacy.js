@@ -9,22 +9,35 @@ import Button from "react-bootstrap/Button";
 const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [categories, setCategories] = useState([]);
   const { id } = useParams();
 
+  const fetchMedicines = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/pharmacy/${id}`
+      );
+      setMedicines(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  const fetchCategories = async () => {
+    try {
+      const response = await axios.get(`http://localhost:4000/api/pharmacy/getAllCategories/`);
+      console.log(response.data);
+      setCategories(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   useEffect(() => {
-    const fetchMedicines = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:4000/api/pharmacy/${id}`
-        );
-        console.log(response.data);
-        setMedicines(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchMedicines();
+    fetchCategories();
   }, []);
+  
 
   const filteredMedicines = medicines.filter((medicine) =>
     medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -55,23 +68,11 @@ const PharmacyMedicines = () => {
                 <Card className="medicine-card">
                   <Link to={`/pharmacy/${id}/medicine/${medicine._id}`} style={{textDecoration: 'none', color: 'white'}}>
                     <Card.Body>
+                      
                       <Card.Title>{medicine.MedicineName}</Card.Title>
                       <Card.Subtitle className="description-text mb-2">
                         {medicine.Description}
                       </Card.Subtitle>
-                      <Card.Text>
-                        <p>Stock: 
-                        {medicine.Stock.Pcs && (
-                          <p>{medicine.Stock.Pcs} Pieces</p>
-                        )}
-                        {medicine.Stock.Strips && (
-                          <p>{medicine.Stock.Strips} Strips</p>
-                        )}
-                        {medicine.Stock.Boxes && (
-                          <p>{medicine.Stock.Boxes} Boxes</p>
-                        )}
-                        </p>
-                      </Card.Text>
                     </Card.Body>
                   </Link>
                 </Card>

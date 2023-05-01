@@ -6,13 +6,10 @@ import axios from "axios";
 const ChatBox = (props) => {
   const [messages,setMessages]=useState([]);
   const [isLoading,setIsLoading]=useState(true);
-  const socket = props.socket;
   useEffect(()=>{
     setIsLoading(true);
     async function retrieveMessages(){
       setIsLoading(true);
-      console.log(props.senderID);
-      console.log(props.id);
       const value=await axios.post("/api/profile/chat/messages",{
         senderID:props.senderID,
         receiverID:props.id
@@ -33,11 +30,14 @@ const ChatBox = (props) => {
   useEffect(()=>{
     const message=props.message;
     if(message!==null){
+      if(props.noSubscriber===true){
+        props.handleReload(false);
+      }
       setMessages((messages) => [...messages, message]);
     }
   },[props.message])
 
-  if(!isLoading){
+  if(props.noSubscriber===true || !isLoading){
     return ( 
       <div
         className="scrollable pt-3 pe-3"
