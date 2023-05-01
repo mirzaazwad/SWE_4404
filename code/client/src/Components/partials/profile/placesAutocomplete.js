@@ -39,7 +39,7 @@ const PlacesAutocomplete = (props) => {
   const handleSelect = async (address) => {
     props.setIsValid(true);
     console.log('Props shows that it is valid',props.isValid);
-    setValue(address, false);
+    addAddress(address);
     clearSuggestions();
     const results = await getGeocode({ address });
     const { lat, lng } = await getLatLng(results[0]);

@@ -30,7 +30,6 @@ const ProfileFormPharmacy=(id)=> {
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
   const [showPhoneVerify,setShowPhoneVerify]=useState(false);
   const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
-  const [isValid,setIsValid]=useState(true);
   const [location,setLocation]=useState(null);
   const [showMAP,setShowMAP]=useState(false);
   const [stopDropDown,setStopDropDown]=useState(false);
@@ -59,6 +58,12 @@ const ProfileFormPharmacy=(id)=> {
       }
     }
   };
+
+  useEffect(()=>{
+    if(location!==null){
+      getPlaceDetails(location.lat,location.lng);
+    }
+  },[location])
 
   useEffect(()=>{
     setUsername(seller.username);
@@ -177,7 +182,7 @@ const ProfileFormPharmacy=(id)=> {
       </div>
       <Form>
         <div className="error">{error}</div>
-      <MapModal startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} isValid={isValid} setLocation={setLocation} setIsValid={setIsValid}/>
+      <MapModal setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
       <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Pharmacy Name</Form.Label>
           <Form.Control type="pharmacyName" placeholder="Enter name of your pharmacy" disabled={isDisabled} value={pharmacy} onChange={(e)=>setPharmacy(e.target.value)}/>
@@ -196,7 +201,7 @@ const ProfileFormPharmacy=(id)=> {
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Address</Form.Label>
-          <Form.Control type="address" placeholder="Address" disabled={isDisabled} value={address} onChange={(e)=>setAddress(e.target.value)} disabled={true}/>
+          <Form.Control type="address" placeholder="Address" value={address} onChange={(e)=>setAddress(e.target.value)} disabled={true}/>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Email address</Form.Label>
@@ -245,7 +250,7 @@ const ProfileFormPharmacy=(id)=> {
                 </Modal.Footer>
               </Modal>
               </Form>
-              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:address}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
     </div>
   );
 }
