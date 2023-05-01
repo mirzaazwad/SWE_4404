@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const medicineSchema = new Schema({
   MedicineName: {
     type: String,
-    required: true,
-    unique:true
+    required: true
   },
   GenericName: {
     type: String,
@@ -56,20 +55,24 @@ const medicineSchema = new Schema({
   Description:{
     type:String
   },
-  requiresPrescription:{
-    type:Boolean
+  prescription:{
+    type:Boolean,
+    default:false
+  },
+  imageURL:{
+    type:String,
+    required:true
   }
 });
 
 medicineSchema.statics.addNewMedicine = async function(medicine){
-  console.log('comes here');
   try{
-    const result2=await this.find(...medicine);
-    if(result2){
+    const result2=await this.find({...medicine});
+    if(result2[0]){
       throw Error('medicine already exists');
     }
     else{
-      const result=this.create({...medicine,requiresPrescription:false});
+      const result=this.create({...medicine});
       return result;
     }
   }

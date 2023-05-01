@@ -24,6 +24,7 @@ const CollapsibleChat = (props) => {
   const [messageNotifier,setMessageNotifier]=useState(null);
   const [notifications,setNotifications] = useState(0);
 
+  const user = props.JWT;
   const toggleRead = async() =>{
     await axios.post('/api/profile/chat/toggleReadReceiver',{
       senderID:props.receiverID,
@@ -45,7 +46,6 @@ const CollapsibleChat = (props) => {
 
   const [message, setMessage] = useState("");
   const [loading,setLoading]=useState(false);
-  const user = props.JWT;
 
   useEffect(() => {
     setLoading(true);
@@ -153,7 +153,7 @@ const CollapsibleChat = (props) => {
           position: "absolute",
           zIndex: "5",
           marginRight: "0%",
-          marginTop: "2%",
+          marginTop: "0%",
         }}
       >
         <MDBBtn onClick={toggleShow} size="sm" block>

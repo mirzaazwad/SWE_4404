@@ -40,6 +40,7 @@ const PhoneVerify = (props) => {
         await handleResend();
       }
       else{
+      if(user.userType==="seller"){
         await axios
       .patch(
         "/api/profile/user/updateUser/" + _id,
@@ -56,14 +57,8 @@ const PhoneVerify = (props) => {
       )
       .then((result) => {
         handleClose();
-        if(user.userType==="seller"){
-          dispatch(setSellerUser(result.data));
-        }
-        else{
-          dispatch(setBuyerUser(result.data));
-        }
+        dispatch(setSellerUser(result.data));
       })
-      if(user.userType==="seller"){
         await axios.patch('/api/profile/seller/'+props.data.email,{
           email:props.data.email,
           pharmacy:props.data.pharmacy
@@ -74,6 +69,25 @@ const PhoneVerify = (props) => {
           handleClose();
           dispatch(setSellerDetails(result.data));
         });
+      }
+      else{
+        await axios
+      .patch(
+        "/api/profile/user/updateUser/" + _id,
+        {
+          username: props.data.username,
+          phone: props.data.phone
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+          },
+        }
+      )
+      .then((result) => {
+        handleClose();
+        dispatch(setBuyerUser(result.data));
+      })
       }
       }
     })

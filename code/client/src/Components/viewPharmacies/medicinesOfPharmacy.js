@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import CollapsibleChat from "../Chat/collapsableChat";
 
 const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
-  const { id } = useParams();
+  const user=JSON.parse(localStorage.getItem("user"));
+  const location=useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('id');
+  const cid = queryParams.get('cid');
+  const pid=queryParams.get('pid');
 
   const fetchMedicines = async () => {
     try {
@@ -46,6 +52,7 @@ const PharmacyMedicines = () => {
   return (
     <div>
       <NavbarCustomer id={id} />
+      <CollapsibleChat senderID={pid} receiverID={cid}  JWT={user}/>
       <section>
         <div className="container-fluid pharmacy-container">
           {/* <h1>Medicines Available:</h1> */}

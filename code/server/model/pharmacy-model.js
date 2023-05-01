@@ -5,8 +5,7 @@ const Schema = mongoose.Schema;
 const medicineSchema = new Schema({
   MedicineName: {
     type: String,
-    required: true,
-    unique:true
+    required: true
   },
   GenericName: {
     type: String,
@@ -55,6 +54,14 @@ const medicineSchema = new Schema({
   },
   Description:{
     type:String
+  },
+  prescription:{
+    type:Boolean,
+    default:false
+  },
+  imageURL:{
+    type:String,
+    required:true
   },
   Stock: 
     {Pcs: {

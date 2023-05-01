@@ -13,6 +13,7 @@ const PharmacyPage = () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/");
         setPharmacies(response.data.pharmacies);
+        console.log(response.data.pharmacies);
       } catch (error) {
         console.log(error);
       }
@@ -30,11 +31,11 @@ const PharmacyPage = () => {
           <div className="row">
             {pharmacies.map((pharmacy) => (
               <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
-                <Link to={`/Pharmacy/${pharmacy.id}`} style={{textDecoration: 'none', color: 'white'}} >
+                <Link to={`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
                   <PharmacyCard
                     name={pharmacy.name}
                     location={pharmacy.location}
-                    image={'https://www.mawbiz.com.bd/application/views/module/product_image/IMG_3556_1.JPG'}
+                    image={pharmacy.imageURL}
                     color= {'#EB006F'}
                   />
                 </Link>
