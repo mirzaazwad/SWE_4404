@@ -37,7 +37,7 @@ const getUserLocation = () => {
 ```
 
 To get the distance from the current location for sorting by distance
-```
+```js
 const getDistance=(lat,lng)=>{
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(position => {
