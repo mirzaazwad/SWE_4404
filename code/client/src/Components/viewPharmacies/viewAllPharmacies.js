@@ -13,6 +13,7 @@ const PharmacyPage = () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/");
         setPharmacies(response.data.pharmacies);
+        console.log(response.data.pharmacies);
       } catch (error) {
         console.log(error);
       }
@@ -34,7 +35,7 @@ const PharmacyPage = () => {
                   <PharmacyCard
                     name={pharmacy.name}
                     location={pharmacy.location}
-                    image={'https://www.mawbiz.com.bd/application/views/module/product_image/IMG_3556_1.JPG'}
+                    image={pharmacy.imageURL}
                     color= {'#EB006F'}
                   />
                 </Link>
