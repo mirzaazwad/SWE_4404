@@ -12,13 +12,13 @@ const MapModal = (props) => {
     return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)
   } 
   else{
-    return (<Map startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} isValid={props.isValid} setLocation={props.setLocation} setIsValid={props.setIsValid}></Map>)
+    return (<Map startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} setLocation={props.setLocation}></Map>)
   }
 }
 
 const Map = (props)=>{
   const center = useMemo(() => ({ lat: 23.747423126189574, lng: 90.37496070911327 }), []);
-  const [markerPosition, setMarkerPosition] = useState(center);
+  const [markerPosition, setMarkerPosition] = useState({ lat: 23.747423126189574, lng: 90.37496070911327 });
   const [error,setError]=useState("");
   const [address,setAddress]=useState("");
   const [isValid,setIsValid]=useState(false);
@@ -49,10 +49,12 @@ const Map = (props)=>{
   }
 
   useEffect(()=>{
+    setIsValid(true);
     setNewAddress();
-  },[markerPosition])
+  },[markerPosition,setMarkerPosition])
 
   const handleMarkerDragEnd = (event) => {
+    setIsValid(true);
     setMarkerPosition({
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
@@ -76,7 +78,7 @@ const Map = (props)=>{
 
   const setLocation=(e)=>{
     e.preventDefault();
-    if(props.isValid){
+    if(isValid){
       setError("");
       props.setLocation(markerPosition);
       props.handleClose();
