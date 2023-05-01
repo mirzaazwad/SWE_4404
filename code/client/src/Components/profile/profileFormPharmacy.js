@@ -60,6 +60,12 @@ const ProfileFormPharmacy=(id)=> {
   };
 
   useEffect(()=>{
+    if(location!==null){
+      getPlaceDetails(location.lat,location.lng);
+    }
+  },[location])
+
+  useEffect(()=>{
     setUsername(seller.username);
     setPhone(seller.phone);
     if(seller.address){
@@ -244,7 +250,7 @@ const ProfileFormPharmacy=(id)=> {
                 </Modal.Footer>
               </Modal>
               </Form>
-              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:address}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
     </div>
   );
 }
