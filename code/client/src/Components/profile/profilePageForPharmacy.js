@@ -18,11 +18,11 @@ const  ProfilePageForPharmacy = () => {
       await axios.get('/api/profile/user/getUser/'+id,{headers: {
         'Authorization': `Bearer ${user.token}`
       }}).then(async (result)=>{
+        console.log(result);
         dispatch(setSellerUser(result.data));
         await axios.get('/api/profile/seller/'+result.data.email,{headers: {
           'Authorization': `Bearer ${user.token}`
         }}).then((res)=>{
-          console.log(res.data);
           dispatch(setSellerDetails(res.data));
         })
         .catch((error)=>{
