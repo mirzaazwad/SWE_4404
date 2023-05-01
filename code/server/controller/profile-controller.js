@@ -2,6 +2,7 @@ const buyerModel = require("../model/buyer-model");
 const userModel = require("../model/user-model");
 const sellerModel = require("../model/seller-model");
 const pharmacyModel = require("../model/pharmacy-model");
+const chatSubscriber = require('../model/chat-subscriber');
 const bcrypt = require("bcryptjs");
 
 
@@ -186,6 +187,8 @@ const updateProfilePicture = async(req,res)=>{
     await userModel.findByIdAndUpdate(_id,{
       imageURL:req.body.imageURL
     });
+    await chatSubscriber.findOneAndUpdate({senderID:_id},{$set:{senderImageURL:req.body.imageURL}});
+    await chatSubscriber.findOneAndUpdate({receiverID:_id},{$set:{receiverImageURL:req.body.imageURL}});
   }
   catch(err){
     res.status(400).json({success:false,error:err.message});
