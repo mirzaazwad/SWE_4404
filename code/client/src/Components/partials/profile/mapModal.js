@@ -24,6 +24,7 @@ const Map = (props)=>{
   const [isValid,setIsValid]=useState(false);
 
   const handleMapClick = (event) => {
+    setIsValid(true);
     setMarkerPosition({
       lat: event.latLng.lat(),
       lng: event.latLng.lng(),
@@ -98,7 +99,7 @@ const Map = (props)=>{
       <div className="places-container">
         <PlacesAutocomplete startDropDown={props.startDropDown} dropdown={props.dropdown} currentAddress={address} setNewPosition={setMarkerPosition} isValid={isValid} setIsValid={setIsValid}/>
       </div>
-        <GoogleMap zoom={16} center={markerPosition} mapContainerClassName="map-container">
+        <GoogleMap zoom={16} center={markerPosition} mapContainerClassName="map-container" onClick={handleMapClick}>
         {markerPosition && (
         <MarkerF
           position={markerPosition}
