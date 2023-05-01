@@ -154,7 +154,7 @@ function App() {
               />
               <Route
                 exact
-                path="/Pharmacy/:id"
+                path="/Pharmacy"
                 element={
                   user && user.verified === true ? (
                     <Pharmacy />
