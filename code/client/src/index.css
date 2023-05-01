@@ -92,6 +92,12 @@ code {
   justify-content: center;
   font-size: 5rem !important;
 }
+.heading-prescription{
+  display: flex;
+  justify-content: center;
+  font-size: 5rem !important;
+  margin-bottom: 2rem;
+}
 .pharmacy-container{
   margin-top:5rem!important;
 }
@@ -99,7 +105,7 @@ code {
 {
   width: 125% !important;
   background-color: var(--customMagenta) !important;
-  height: 12rem !important;
+  height: 10rem !important;
 }
 
 .stock-P{
@@ -167,6 +173,23 @@ width: 75%;
   margin-left: auto !important;
   margin-right: auto !important;
 }
+.prescription-card{
+  width: 75% !important;
+  display: flex;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.prescription-card-header{
+  background-color: var(--customMagenta) !important;
+  color: white !important;
+}
+.view-prescription-card{
+  width: 50% !important;
+  display: flex;
+  margin-top: 5rem  !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
 
 .cart-table{
   display: contents;
@@ -225,6 +248,15 @@ width: 75%;
   align-items: center;
   justify-content: center;
   height: 100% !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn-prescription-upload{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  align-items: center;
+  height: 100% !important;
+  width: 7rem;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -295,6 +327,12 @@ width: 75%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 
+}
+.upload-prescription{
+  margin-top: 5rem !important;
+  width: 75%;
+  margin-left: auto !important;
+  margin-right: auto !important;
 }
 .landingText{
   margin-top: 13px;
