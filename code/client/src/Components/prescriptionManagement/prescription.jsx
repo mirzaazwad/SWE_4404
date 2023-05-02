@@ -81,7 +81,7 @@ const Prescription = ({ currentUser }) => {
     const prop2 = urlParts[1];
         
     return (
-      <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id}>
+      <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none"}}>
         <Card className="prescription-card my-3">
           <Card.Header className='prescription-card-header'></Card.Header>
           <Card.Body>
