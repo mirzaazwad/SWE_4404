@@ -1,4 +1,4 @@
-const userModel = require('./user-model');
+const userModel = require('./user');
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
 
@@ -76,6 +76,6 @@ chatSubscriberSchema.statics.addChat = async function(senderID,receiverID,messag
   }
 }
 
-module.exports=mongoose.model("ChatSubscriber",chatSubscriberSchema);
+module.exports=mongoose.model("chat-subscriber",chatSubscriberSchema);
 
 
