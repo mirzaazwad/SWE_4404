@@ -4,7 +4,10 @@ import { clearItems } from "../../Contexts/cartAction.js";
 import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
+import { useToken } from '../../Hooks/useToken.js';
 const CheckOutPage = ({}) => {
+  const user=useToken();
+  const userId=user._id;
   const [fullName, setFullName] = useState();
   const [address, setAddress] = useState();
   const [city, setCity] = useState();
@@ -23,8 +26,6 @@ const CheckOutPage = ({}) => {
     setTotalPrice(price);
   }, []);
   const handleCheckOut = async () => {
-    let user = JSON.parse(localStorage.getItem('user'));
-    let userId = user._id;
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
       customer_data: {
@@ -35,6 +36,8 @@ const CheckOutPage = ({}) => {
         country: country,
         payment: payment
       },
+    },{
+      headers:{'Authorization': `Bearer ${user.token}`}
     })
     console.log(cart);
     await dispatch(clearItems());
