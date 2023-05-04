@@ -1,10 +1,10 @@
 const express=require('express');
 const requireAuth = require('../middleware/requireAuth');
-const {sendOTP,verifyOTP} = require('../controller/mobile');
+const OTPHandler = require('../controller/mobile');
 const router=express.Router();
 router.use(requireAuth);
 
-router.post('/OTPsend',sendOTP);
-router.post('/OTPverify',verifyOTP);
+router.post('/OTPsend',OTPHandler.sendOTP);
+router.post('/OTPverify',OTPHandler.verifyOTP);
 
 module.exports = router;

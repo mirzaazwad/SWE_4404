@@ -5,9 +5,10 @@ import { Button, Card, Form } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, removeItem, updateItem } from '../../Contexts/cartAction.js';
+import { useToken } from "../../Hooks/useToken";
 
 const MedicineDetails = () => {
-
+  const user=useToken();
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState) || [];
   const [medicine, setMedicine] = useState({});
@@ -21,7 +22,9 @@ const MedicineDetails = () => {
     try {
       const response = await axios.get(
         `http://localhost:4000/api/pharmacy/${id}/medicine/${medicineId}`
-      );
+        ,{
+          headers:{'Authorization': `Bearer ${user.token}`}
+        });
       setMedicine(response.data);
     } catch (error) {
       console.log(error);

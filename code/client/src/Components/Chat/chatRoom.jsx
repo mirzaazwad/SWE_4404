@@ -18,10 +18,11 @@ import { useSelector } from "react-redux";
 import ChatBox from "../partials/chats/chatBox";
 import timeElapsed from "../../LibraryFunctions/timeElapsed";
 import SendMessageChatRoom from "../partials/chats/chatSendMessage";
+import { useToken } from "../../Hooks/useToken";
 
 const ChatPage = () => {
   const { id } = useParams();
-  const user = useSelector((state) => state.userState.user);
+  const user = useToken();
   const socket = io("http://localhost:4110");
   const [receiver, setReceiver] = useState({});
   const [currentSender, setCurrentSender] = useState({});

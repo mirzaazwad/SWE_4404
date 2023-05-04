@@ -1,7 +1,9 @@
 const express = require('express');
-const router = express.Router();
 const orderController = require('../controller/order');
+const requireAuth = require('../middleware/requireAuth');
+const router=express.Router();
 
+router.use(requireAuth);
 // POST /postOrder/:userId
 router.post('/postOrder/:userId', orderController.postOrder);
 

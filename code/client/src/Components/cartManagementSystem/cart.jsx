@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeItem, clearItems } from '../../Contexts/cartAction.js';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import axios from 'axios';
 import { Navigate } from 'react-router-dom';
 
 export default function Cart() {
