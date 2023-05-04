@@ -10,9 +10,10 @@ import Category from "../partials/inventoryManagement/addCategory";
 import Type from "../partials/inventoryManagement/addType";
 import StripsForm from "../partials/inventoryManagement/stripsForm";
 import NonStripsForm from "../partials/inventoryManagement/nonStripsForm";
+import { useToken } from "../../Hooks/useToken";
 
 const AddMedicine = () => {
-  const user = useSelector((state)=>state.userState.user);
+  const user=useToken();
   const id = useParams();
   const _id = id.id;
   useSocket(_id,[]);

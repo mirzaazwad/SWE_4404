@@ -15,7 +15,7 @@ import MapModal from "../partials/profile/mapModal";
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
   const socket=id.socket;
-  const user=useSelector((state)=>state.userState.user);
+  const user=id.user;
   const seller=useSelector((state) => state.userState.sellerState);
   const sellerDetails=useSelector((state) => state.userState.sellerDetails);
   const dispatch = useDispatch();
@@ -46,13 +46,14 @@ const ProfileFormPharmacy=(id)=> {
   const getPlaceDetails = async (lat, lng) => {
     if(lat && lng){
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
+        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${"N"}`
       );
       const data = await response.json();
       if (data.status === "OK") {
         setAddress(data.results[0].formatted_address);
         return data.results[0].formatted_address;
       } else {
+        console.log(data);
         console.log("Geocode was not successful for the following reason:", data.status);
         return null;
       }

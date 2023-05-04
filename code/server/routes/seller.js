@@ -1,10 +1,10 @@
 const express=require('express');
-const {getSellerByEmail, patchSellerByEmail} = require('../controller/profile');
+const seller = require('../controller/profile');
 const requireAuth = require('../middleware/requireAuth');
 const router=express.Router();
 
 router.use(requireAuth);
-router.get('/:email',getSellerByEmail);
-router.patch('/:email',patchSellerByEmail);
+router.get('/:email',seller.getSellerByEmail);
+router.patch('/:email',seller.patchSellerByEmail);
 
 module.exports = router;

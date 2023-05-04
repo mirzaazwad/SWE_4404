@@ -3,16 +3,19 @@ import OrderCard from "./orderCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
+import { useToken } from "../../Hooks/useToken";
 
 const MyOrders = () => {
   const [orders, setOrders] = useState([]);
-  const user = localStorage.getItem("user");
-  const userId = JSON.parse(user)._id;
+  const user = useToken();
+  const userId = user._id;
 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/order/getOrder/${userId}`);
+        const res = await axios.get(`http://localhost:4000/api/order/getOrder/${userId}`,{
+          headers:{'Authorization': `Bearer ${user.token}`}
+        });
         const sortedOrders = res.data.order_data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOrders(sortedOrders);
       } catch (err) {

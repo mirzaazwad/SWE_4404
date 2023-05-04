@@ -11,11 +11,12 @@ import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
 import PhoneVerify from "../partials/phone/phoneVerify";
 import { useSocket } from "../../Hooks/useSocket";
+import { useToken } from "../../Hooks/useToken";
 
 const ProfileFormCustomer = (id) => {
   const _id = id;
   const buyer = useSelector((state) => state.userState.buyerState);
-  const user = useSelector((state) => state.userState.user);
+  const user = id.user;
   const socket=id.socket;
   const dispatch = useDispatch();
   const [isDisabled, setIsDisabled] = useState(true);
