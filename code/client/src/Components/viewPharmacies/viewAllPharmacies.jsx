@@ -4,14 +4,17 @@ import NavbarCustomer from '../partials/profile/navbarCustomer';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useToken } from '../../Hooks/useToken';
 
 const PharmacyPage = () => {
   const [pharmacies, setPharmacies] = useState([]);
-
+  const user=useToken();
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://localhost:4000/api/pharmacies/");
+        const response = await axios.get("http://localhost:4000/api/pharmacies/",{
+          headers:{'Authorization': `Bearer ${user.token}`}
+        });
         setPharmacies(response.data.pharmacies);
         console.log(response.data.pharmacies);
       } catch (error) {

@@ -6,12 +6,13 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import CollapsibleChat from "../Chat/collapsableChat";
+import { useToken } from "../../Hooks/useToken";
 
 const PharmacyMedicines = () => {
+  const user=useToken();
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
-  const user=JSON.parse(localStorage.getItem("user"));
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
@@ -22,7 +23,9 @@ const PharmacyMedicines = () => {
     try {
       const response = await axios.get(
         `http://localhost:4000/api/pharmacy/${id}`
-      );
+        ,{
+          headers:{'Authorization': `Bearer ${user.token}`}
+        });
       setMedicines(response.data);
     } catch (error) {
       console.log(error);
@@ -31,7 +34,9 @@ const PharmacyMedicines = () => {
   
   const fetchCategories = async () => {
     try {
-      const response = await axios.get(`http://localhost:4000/api/pharmacy/getAllCategories/`);
+      const response = await axios.get(`http://localhost:4000/api/pharmacy/getAllCategories/`,{
+        headers:{'Authorization': `Bearer ${user.token}`}
+      });
       console.log(response.data);
       setCategories(response.data);
     } catch (error) {

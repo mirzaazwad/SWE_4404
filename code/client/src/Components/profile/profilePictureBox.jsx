@@ -4,9 +4,9 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
+
 const ProfilePicture=(props)=>{
-  const user=useSelector((state)=>state.userState.user);
+  const user=props.user;
   const [modalShow, setModalShow] = useState(false);
   const [image,setImage]=useState();
   const [image_Location,setImage_Location]=useState('/demoProilePicture.jpg');

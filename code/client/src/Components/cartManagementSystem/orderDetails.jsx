@@ -4,8 +4,10 @@ import axios from "axios";
 import { useParams} from "react-router-dom";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import {Table} from 'react-bootstrap';
+import { useToken } from "../../Hooks/useToken";
 
 const OrderDetailsCard = () => {
+  const user=useToken();
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
 
@@ -14,7 +16,9 @@ const OrderDetailsCard = () => {
       try {
         const response = await axios.get(
           `http://localhost:4000/api/order/getOrderDetails/${userId}/${orderId}`
-        );
+        ,{
+          headers:{'Authorization': `Bearer ${user.token}`}
+        });
         setOrder(response.data.order);
       } catch (error) {
         console.log(error);

@@ -8,7 +8,7 @@ const Error404 = () => {
       <div className="innerContent">
         <h1 style={{marginTop:'5%',marginLeft:'5%'}}>Error 404</h1>
         <p style={{marginLeft:'5%'}}>The URL you requested is not available, sorry for the inconvenience</p>
-        <Image src="/dancing-monkey.gif" alt="there was supposed to be a dancing monkey to make you happy" style={{marginLeft:'5%'}}></Image>
+        <Image src="/background.jpg" alt="URL is invalid" style={{marginLeft:'5%',width:"40%",height:"50vh"}}></Image>
       </div>
     </div>
    );

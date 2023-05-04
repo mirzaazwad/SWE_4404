@@ -22,7 +22,7 @@ import './index.css';
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
 
-function App() {
+const App=()=> {
   let user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();
   if (user === null) {

@@ -10,9 +10,10 @@ import axios from 'axios';
 import CryptoJS from 'crypto-js';
 import { passwordAuth, confirmPasswordAuth } from '../../Authentication/Auth'; 
 import { useSelector } from 'react-redux';
+import { useToken } from '../../Hooks/useToken';
 
 const ChangePassword = () => {
-    const user = useSelector((state)=>state.userState.user);
+    const user = useToken();
     const navigate=useNavigate();
     const [currentPasswordVisibility, setCurrentPasswordVisibility] = useState(false);
     const [NewPasswordVisibility, setNewPasswordVisibility] = useState(false);

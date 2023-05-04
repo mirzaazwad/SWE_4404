@@ -12,9 +12,10 @@ import { useNavigate, useParams } from 'react-router-dom';
 import OTPValidityTimer from './OTPTimer';
 import { useDispatch } from 'react-redux';
 import { LOGIN } from '../../Contexts/action';
+import { useToken } from '../../Hooks/useToken';
 
 const EmailVerification = () => {
-  const currentUser=JSON.parse(localStorage.getItem('user'));
+  const currentUser=useToken();
   const navigate=useNavigate();
     if(!currentUser){
       navigate('/');
