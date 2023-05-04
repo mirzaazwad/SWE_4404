@@ -6,7 +6,7 @@ import PlacesAutocomplete from "./placesAutocomplete";
 const MapModal = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMPKEY,
-    libraries: ["places"],
+    // libraries: ["places"],
   });
   if (!isLoaded) {
     return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)
@@ -33,7 +33,7 @@ const Map = (props)=>{
 
   const getPlaceDetails = async (lat, lng) => {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${'N'}`
     );
     const data = await response.json();
     if (data.status === "OK") {

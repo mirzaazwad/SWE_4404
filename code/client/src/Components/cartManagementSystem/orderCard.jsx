@@ -3,10 +3,11 @@ import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useToken } from '../../Hooks/useToken';
 
 const OrderCard = ({ order }) => {
-  const user = localStorage.getItem('user');
-  const userId = JSON.parse(user)._id;
+  const user=useToken();
+  const userId = user._id;
   const [totalPrice, setTotalPrice] = useState(0);
   const [statusColor, setStatusColor] = useState('warning');
   
