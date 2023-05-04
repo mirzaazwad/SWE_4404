@@ -4,6 +4,7 @@ import { clearItems } from "../../Contexts/cartAction.js";
 import { Card, Form, Button, Row, Col, Table } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
+import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
 const CheckOutPage = ({}) => {
   const user=useToken();
@@ -132,33 +133,8 @@ const CheckOutPage = ({}) => {
                   Payment Method
                 </Form.Label>
                 <Col sm={9}>
-                  <Form.Check
-                    type="radio"
-                    id="paypal"
-                    name="paymentMethod"
-                    value="Mobile Banking"
-                    checked={payment === "Mobile Banking"}
-                    onChange={(e) => setPayment(e.target.value)}
-                    label="Mobile Banking"
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="stripe"
-                    name="paymentMethod"
-                    value="Visa/MasterCard"
-                    checked={payment === "Visa/MasterCard"}
-                    onChange={(e) => setPayment(e.target.value)}
-                    label="Visa/MasterCard"
-                  />
-                  <Form.Check
-                    type="radio"
-                    id="stripe"
-                    name="paymentMethod"
-                    value="Cash On Delivery"
-                    checked={payment === "Cash On Delivery"}
-                    onChange={(e) => setPayment(e.target.value)}
-                    label="Cash On Delivery"
-                  />
+                  <Button className="btn-login me-5" size="sm" onClick={()=>setPayment("Cash On Delivery")} style={{backgroundColor:payment==="Cash On Delivery"?"#EB006F":"#3b6ce7",border:"none"}}><Wallet/> Cash on Delivery</Button>
+                  <Button className="btn-login me-5" size="sm" onClick={()=>setPayment("Digital Payment")} style={{backgroundColor:payment==="Digital Payment"?"#EB006F":"#3b6ce7",border:"none"}}><CreditCard2Back/> Digital Payment</Button>
                 </Col>
               </Form.Group>
           </Card.Body>
