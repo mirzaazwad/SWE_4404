@@ -9,7 +9,7 @@ import "../../index.css";
 import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
-import PhoneVerify from "../partials/phone/phoneVerify";
+import PhoneVerify from "../partials/profile/phoneVerify";
 import MapModal from "../partials/profile/mapModal";
 
 const ProfileFormPharmacy=(id)=> {
@@ -43,36 +43,12 @@ const ProfileFormPharmacy=(id)=> {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const getPlaceDetails = async (lat, lng) => {
-    if(lat && lng){
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${"N"}`
-      );
-      const data = await response.json();
-      if (data.status === "OK") {
-        setAddress(data.results[0].formatted_address);
-        return data.results[0].formatted_address;
-      } else {
-        console.log(data);
-        console.log("Geocode was not successful for the following reason:", data.status);
-        return null;
-      }
-    }
-  };
-
-  useEffect(()=>{
-    if(location!==null){
-      getPlaceDetails(location.lat,location.lng);
-    }
-  },[location])
-
   useEffect(()=>{
     setUsername(seller.username);
     setPhone(seller.phone);
-    if(seller.address){
-      getPlaceDetails(seller.address.lat,seller.address.lng);
-    }
+    setAddress(seller.address);
     setPharmacy(sellerDetails.pharmacy);
+    setLocation(seller.coordinates);
   },[seller,sellerDetails])
   const [password,setPassword]=useState(null);
 
@@ -126,7 +102,8 @@ const ProfileFormPharmacy=(id)=> {
         "/api/profile/user/updateUser/" + _id.id,
         {
           username: username,
-          address: location,
+          address:address,
+          coordinates: location,
         },
         {
           headers: {
@@ -183,7 +160,7 @@ const ProfileFormPharmacy=(id)=> {
       </div>
       <Form>
         <div className="error">{error}</div>
-      <MapModal setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+      <MapModal currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
       <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Pharmacy Name</Form.Label>
           <Form.Control type="pharmacyName" placeholder="Enter name of your pharmacy" disabled={isDisabled} value={pharmacy} onChange={(e)=>setPharmacy(e.target.value)}/>
@@ -251,7 +228,7 @@ const ProfileFormPharmacy=(id)=> {
                 </Modal.Footer>
               </Modal>
               </Form>
-              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+              <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:address,coordinates:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
     </div>
   );
 }
