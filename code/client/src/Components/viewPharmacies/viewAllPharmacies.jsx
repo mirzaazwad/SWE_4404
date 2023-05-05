@@ -15,6 +15,7 @@ const PharmacyPage = () => {
         const response = await axios.get("http://localhost:4000/api/pharmacies/",{
           headers:{'Authorization': `Bearer ${user.token}`}
         });
+        console.log(response);
         setPharmacies(response.data.pharmacies);
         console.log(response.data.pharmacies);
       } catch (error) {
@@ -37,7 +38,7 @@ const PharmacyPage = () => {
                 <Link to={`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
                   <PharmacyCard
                     name={pharmacy.name}
-                    location={pharmacy.location}
+                    address={pharmacy.location}
                     image={pharmacy.imageURL}
                     color= {'#EB006F'}
                   />
