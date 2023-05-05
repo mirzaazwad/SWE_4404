@@ -48,6 +48,7 @@ const PhoneVerify = (props) => {
           username: props.data.username,
           phone: props.data.phone,
           address: props.data.address,
+          coordinates:props.data.coordinates
         },
         {
           headers: {

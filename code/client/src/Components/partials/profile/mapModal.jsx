@@ -6,21 +6,20 @@ import PlacesAutocomplete from "./placesAutocomplete";
 const MapModal = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMPKEY,
-    // libraries: ["places"],
+    libraries: [`${process.env.REACT_APP_LIBRARY}`],
   });
   if (!isLoaded) {
     return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)
   } 
   else{
-    return (<Map startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} setLocation={props.setLocation}></Map>)
+    return (<Map currentLocation={props.currentLocation} address={props.address} setAddress={props.setAddress}  startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} setLocation={props.setLocation}></Map>)
   }
 }
 
 const Map = (props)=>{
-  const center = useMemo(() => ({ lat: 23.747423126189574, lng: 90.37496070911327 }), []);
-  const [markerPosition, setMarkerPosition] = useState({ lat: 23.747423126189574, lng: 90.37496070911327 });
+  const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:23,lng:-90}), [props.currentLocation]);
+  const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
-  const [address,setAddress]=useState("");
   const [isValid,setIsValid]=useState(false);
 
   const handleMapClick = (event) => {
@@ -33,7 +32,7 @@ const Map = (props)=>{
 
   const getPlaceDetails = async (lat, lng) => {
     const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${'N'}`
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&key=${process.env.REACT_APP_GMPKEY}`
     );
     const data = await response.json();
     if (data.status === "OK") {
@@ -45,7 +44,7 @@ const Map = (props)=>{
   };
 
   const setNewAddress=async()=>{
-    setAddress(await getPlaceDetails(markerPosition.lat,markerPosition.lng));
+    props.setAddress(await getPlaceDetails(markerPosition.lat,markerPosition.lng));
     setIsValid(true);
   }
 
@@ -97,7 +96,7 @@ const Map = (props)=>{
       <Modal.Body>
       <div className="errorMessage" style={{color:"red"}}>{error}</div>
       <div className="places-container">
-        <PlacesAutocomplete startDropDown={props.startDropDown} dropdown={props.dropdown} currentAddress={address} setNewPosition={setMarkerPosition} isValid={isValid} setIsValid={setIsValid}/>
+        <PlacesAutocomplete startDropDown={props.startDropDown} dropdown={props.dropdown} currentAddress={props.address} setNewPosition={setMarkerPosition} isValid={isValid} setIsValid={setIsValid}/>
       </div>
         <GoogleMap zoom={16} center={markerPosition} mapContainerClassName="map-container" onClick={handleMapClick}>
         {markerPosition && (
