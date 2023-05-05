@@ -9,7 +9,7 @@ import "../../index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
-import PhoneVerify from "../partials/phone/phoneVerify";
+import PhoneVerify from "../partials/profile/phoneVerify";
 import { useSocket } from "../../Hooks/useSocket";
 import { useToken } from "../../Hooks/useToken";
 

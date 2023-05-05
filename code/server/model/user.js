@@ -37,6 +37,9 @@ const userSchema = new Schema({
     type:String
   },
   address:{
+    type:String,
+  },
+  coordinates:{
     type:{
       lat:{
         type:Number
