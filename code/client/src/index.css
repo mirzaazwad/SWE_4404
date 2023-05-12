@@ -27,14 +27,14 @@ body {
   -webkit-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
   -moz-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
   box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.5);
-  transition: transform 0.7s ease-in-out !important;
+  transition: transform 0.3s ease-in-out !important;
 }
 .order-prescription-pharmacy-card{
   width: 300px!important;
   height: 380px!important;
   background-color: var(--customMagenta) !important;
   border-color: white !important;
-  transition: transform 0.7s ease-in-out !important;
+  transition: transform 0.3s ease-in-out !important;
 }
 .order-prescription-pharmacy-card:hover{
   cursor: pointer;
@@ -59,7 +59,7 @@ body {
   width: 125% !important;
   background-color: var(--customMagenta) !important;
   height: 12rem !important;
-  transition: transform 0.7s ease-in-out !important;
+  transition: transform 0.3s ease-in-out !important;
 }
 .medicine-card:hover{
     cursor: pointer;
