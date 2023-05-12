@@ -7,16 +7,14 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import { useLogout } from '../../../Hooks/useLogout';
-import { useDispatch, useSelector } from 'react-redux';
-import '../../../index.css';
-import Modal from './Modal';
+import { useSelector } from 'react-redux';
+import Modal from '../Modal';
 import Cart from '../../cartManagementSystem/cart';
 
 const NavbarCustomer=()=>{
   const id = localStorage.getItem('user')?JSON.parse(localStorage.getItem('user'))._id:null;
   const {logout} = useLogout();
   const[cartView, setCartView] = useState(false);
-  const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState);
   const navigate=useNavigate();
   const handleLogout = () =>{

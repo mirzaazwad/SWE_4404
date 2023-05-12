@@ -2,7 +2,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import PlacesAutocomplete from "./placesAutocomplete";
-import Loader from "../loader";
+import Loader from "../../partials/loader";
 
 const MapModal = (props) => {
   const { isLoaded } = useLoadScript({

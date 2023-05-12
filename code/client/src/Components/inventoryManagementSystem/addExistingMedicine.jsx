@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { InputGroup } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-
 import Button from "react-bootstrap/esm/Button";
 import { Link } from "react-router-dom";
 
@@ -49,7 +48,6 @@ const AddExistingMedicine = (props) => {
     };
     if(user.token!==null){
       retrieveMedicines();
-      console.log(medicineMap);
     }
   }, [user.token]);
 
