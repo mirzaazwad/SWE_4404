@@ -11,14 +11,13 @@ import {
 import { Search } from "react-bootstrap-icons";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useParams } from "react-router-dom";
-import ChatTile from "../partials/chats/chatsTile";
+import ChatTile from "./chatsTile";
 import axios from "axios";
 import io from "socket.io-client";
-import { useSelector } from "react-redux";
-import ChatBox from "../partials/chats/chatBox";
-import timeElapsed from "../../LibraryFunctions/timeElapsed";
-import SendMessageChatRoom from "../partials/chats/chatSendMessage";
+import ChatBox from "./chatBox";
+import SendMessageChatRoom from "./chatSendMessage";
 import { useToken } from "../../Hooks/useToken";
+import TimeElapsed from "../../Library/CustomDateTimeLibrary/TimeElapsed";
 
 const ChatPage = () => {
   const { id } = useParams();
@@ -102,7 +101,7 @@ const ChatPage = () => {
       headers: {
         Authorization: `Bearer ${user.token}`,
       },
-    }).then((result)=>{
+    }).then(()=>{
       setToggle(toggle^true);
     });
   }
@@ -160,7 +159,7 @@ const ChatPage = () => {
                             <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>ToggleChat(sent)}>
                             <ChatTile
                             sender={sent}
-                            time={timeElapsed(messagesMap.get(sent.senderID).lastMessageTime)}
+                            time={new TimeElapsed(messagesMap.get(sent.senderID).lastMessageTime).getTimeElapsed()}
                             messageCount={newMessage}
                             id={id}
                             imageURL={sent.senderImageURL}

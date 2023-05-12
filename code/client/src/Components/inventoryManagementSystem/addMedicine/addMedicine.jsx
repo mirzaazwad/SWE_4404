@@ -1,16 +1,17 @@
 import Card from "react-bootstrap/Card";
 import Button from "react-bootstrap/Button";
-import NavbarPharmacy from "../partials/profile/navbarPharmacy";
+import NavbarPharmacy from "../../partials/profile/navbarPharmacy";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useSocket } from "../../Hooks/useSocket";
-import Category from "../partials/inventoryManagement/addCategory";
-import Type from "../partials/inventoryManagement/addType";
-import StripsForm from "../partials/inventoryManagement/stripsForm";
-import NonStripsForm from "../partials/inventoryManagement/nonStripsForm";
-import { useToken } from "../../Hooks/useToken";
+import { useSocket } from "../../../Hooks/useSocket";
+import Category from "./addCategory";
+import Type from "./addType";
+import StripsForm from "./stripsForm";
+import NonStripsForm from "./nonStripsForm";
+import { useToken } from "../../../Hooks/useToken";
+import Loader from "../../partials/loader";
 
 const AddMedicine = () => {
   const user=useToken();
@@ -24,7 +25,7 @@ const AddMedicine = () => {
   const [Strips, setHasStrips] = useState(false);
   const [showCategory, setShowCategory] = useState(false);
   const [showType, setShowType] = useState(false);
-  const [medicineType, setMedicineType] = useState("default");
+  const [medicineType, setMedicineType] = useState(null);
   const [currentValue,setCurrentValue]=useState({
     medicineName:"",
       genericName:"",
@@ -68,7 +69,7 @@ const AddMedicine = () => {
       })
       .catch((err) => console.log(err));
     await axios
-      .get("/api/profile/addMedicine/findCateogry", {
+      .get("/api/profile/addMedicine/findCategory", {
         headers: {
           Authorization: `Bearer ${user.token}`,
         },
@@ -90,11 +91,11 @@ const AddMedicine = () => {
   }, [_id,user.token]);
 
   const handleMedicineType = (e) => {
-    console.log('medicine TypeL : '+e);
     setMedicineType(e);
+    console.log(e);
     setHasStrips(false);
     types.forEach((elem) => {
-      if (elem.hasStrips && elem._id === e) {
+      if (elem.hasStrips && elem._id === e._id) {
         setHasStrips(true);
       }
     });
@@ -148,13 +149,7 @@ const AddMedicine = () => {
     );
   } else {
     return (
-      <div
-        className="spinner-border text-primary"
-        role="status"
-        style={{ marginLeft: "50%", marginTop: "10%" }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
+      <Loader/>
     );
   }
 };

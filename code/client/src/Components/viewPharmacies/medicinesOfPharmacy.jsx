@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, Link, useLocation } from "react-router-dom";
+import {Link, useLocation } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import CollapsibleChat from "../Chat/collapsableChat";
 import { useToken } from "../../Hooks/useToken";
+import CollapsibleChat from "./collapsibleChat/collapsableChat";
 
 const PharmacyMedicines = () => {
   const user=useToken();

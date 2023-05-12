@@ -4,6 +4,7 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Loader from '../partials/loader';
 
 const ProfilePicture=(props)=>{
   const user=props.user;
@@ -38,7 +39,7 @@ const ProfilePicture=(props)=>{
         );
       setImage_Location(dataRes.data.url);
       setLocked(false);
-      const result=await axios.patch('/api/profile/user/updateProfilePicture/'+props.id,{
+      await axios.patch('/api/profile/user/updateProfilePicture/'+props.id,{
         imageURL:dataRes.data.url
       },{headers: {
         'Authorization': `Bearer ${user.token}`
@@ -91,13 +92,7 @@ const ProfilePicture=(props)=>{
   }
   else{
     return (
-      <div
-        className="spinner-border text-primary"
-        role="status"
-        style={{ marginLeft: "50%", marginTop: "10%" }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
+      <Loader/>
     );
   }
 }

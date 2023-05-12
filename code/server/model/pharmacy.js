@@ -11,13 +11,35 @@ const medicineSchema = new Schema({
     type: String,
     required: true, 
   },
-  TypeID: {
-    type: String,
-    required: true,
+  Type: {
+    Name:{
+      type: String,
+      required: true,
+    },
+    Description:{
+      type: String
+    },
+    hasPcs:{
+      type:Boolean,
+      required:true
+    },
+    hasBoxes:{
+      type:Boolean,
+      required:true
+    },
+    hasStrips:{
+      type:Boolean,
+      required:true
+    }
   },
-  CateogryID: {
-    type: String,
-    required: true,
+  Category: {
+    category:{
+      type: String,
+      required: true,
+    },
+    description:{
+      type: String
+    }
   },
   Manufacturer: {
     type: String,
@@ -105,7 +127,7 @@ const pharmacySchema = new Schema({
 });
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {
-  const medicineDescription=await medicineType.findById(medicine.TypeID).select('hasPcs hasStrips hasBoxes');
+  const medicineDescription=medicine.Type;
   let stock=null;
   if(medicineDescription.hasStrips===true && medicineDescription.hasBoxes===true){
     stock={

@@ -5,27 +5,25 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const StripsForm = (props) => {
-  const navigate=useNavigate();
-  const _id=props._id;
-  const sellerId=props.sellerId;
+const NonStripsForm = (props) => {
   const user = props.user;
   const types=props.types;
   const categories=props.categories;
+  const _id=props._id;
+  const navigate=useNavigate();
+  const sellerId=props.sellerId;
   const [medicineName, setMedicineName] = useState(props.currentValue.medicineName);
   const [genericName, setGenericName] = useState(props.currentValue.genericName);
   const [description, setDescription] = useState(props.currentValue.description);
-  const [stripsPerBox, setStripsPerBox] = useState(props.currentValue.stripsPerBox);
   const [sellingPrice, setSellingPrice] = useState(props.currentValue.sellingPrice);
-  const [pcsPerStrip, setPcsPerStrip] = useState(props.currentValue.pcsPerStrip);
+  const [pcsPerBox, setPcsPerBox] = useState(props.currentValue.pcsPerBox);
   const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
   const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
   const [medicineType,setMedicineType]=useState(props.medicineType);
-  const [image,setImg]=useState(null);
+  const [image,setImage]=useState(null);
   const [imageURL,setImageURL] = useState(props.currentValue.imageURL);
-  const [prescription,setPrescription]=useState(props.currentValue.setPrescription);
-  const [locked,isLocked]=useState(false);
-  const [medicineCateogry, setMedicineCategory] = useState("defaultCategory");
+  const [prescription,setPrescription]=useState(false);
+  const [medicineCategory, setMedicineCategory] = useState(null);
 
   const setError=(error)=>{
     props.onError(error);
@@ -41,62 +39,54 @@ const StripsForm = (props) => {
       medicineName:medicineName,
       genericName:genericName,
       description:description,
-      stripsPerBox:stripsPerBox,
+      pcsPerBox:pcsPerBox,
       sellingPrice:sellingPrice,
-      pcsPerStrip:pcsPerStrip,
+      stripsPerBox:props.currentValue.stripsPerBox,
+      pcsPerStrip:props.currentValue.pcsPerStrip,
       manufacturer:manufacturer,
       purchasePrice:purchasePrice,
-      medicineCateogry:medicineCateogry,
-      pcsPerBox:props.currentValue.pcsPerBox,
+      medicineCategory:medicineCategory,
       imageURL:imageURL,
       prescription:prescription
     });
     props.onHandleType(data);
   }
 
-  const setImage=async(e)=>{
-    setImg(e);
-    if(e){
-      isLocked(true);
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    if (medicineType === null) {
+      setError("Medicine Type is required");
+      return;
+    }
+    if (medicineCategory ===null) {
+      setError("Medicine Category is required");
+      return;
+    }
+    if(image){
       const formData = new FormData();
-        formData.append("file", e);
+        formData.append("file", image);
         formData.append("upload_preset", "med_guard");
         const dataRes = await axios.post(
           "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
           formData
         );
       setImageURL(dataRes.data.url);
-      isLocked(false);
-    }
-  }
-
-  const handleSubmit = async(e) => {
-    isLocked(true);
-    e.preventDefault();
-    if (medicineType === "default" || medicineType === "Default") {
-      setError("Medicine Type is required");
-      return;
-    }
-    if (medicineCateogry === "default" || medicineCateogry === "defaultCategory") {
-      setError("Medicine Category is required");
-      return;
     }
     await axios
       .post(
         "/api/profile/addMedicine/addNewGlobalMedicine",
         {
           MedicineName: medicineName,
-            GenericName: genericName,
-            TypeID: medicineType,
-            CateogryID: medicineCateogry,
-            StripsPerBox: stripsPerBox,
-            PcsPerStrip: pcsPerStrip,
-            Manufacturer: manufacturer,
-            SellingPrice: sellingPrice,
-            PurchasePrice: purchasePrice,
-            Description: description,
-            imageURL:imageURL,
-            prescription:prescription
+          GenericName: genericName,
+          Type: medicineType,
+          Category: medicineCategory,
+          PcsPerBox: pcsPerBox,
+          Manufacturer: manufacturer,
+          SellingPrice: sellingPrice,
+          PurchasePrice: purchasePrice,
+          Description: description,
+          imageURL:imageURL,
+          prescription:prescription
         },
         {
           headers: {
@@ -105,36 +95,33 @@ const StripsForm = (props) => {
         }
       )
       .catch((err) => console.log(err));
-      await axios
-        .patch(
-          "/api/profile/addMedicine/addNewMedicine/" + sellerId,
-          {
-            MedicineName: medicineName,
-            GenericName: genericName,
-            TypeID: medicineType,
-            CateogryID: medicineCateogry,
-            StripsPerBox: stripsPerBox,
-            PcsPerStrip: pcsPerStrip,
-            Manufacturer: manufacturer,
-            SellingPrice: sellingPrice,
-            PurchasePrice: purchasePrice,
-            Description: description,
-            imageURL:imageURL,
-            prescription:prescription
+    await axios
+      .patch(
+        "/api/profile/addMedicine/addNewMedicine/" + sellerId,
+        {
+          MedicineName: medicineName,
+          GenericName: genericName,
+          Type: medicineType,
+          Category: medicineCategory,
+          PcsPerBox: pcsPerBox,
+          Manufacturer: manufacturer,
+          SellingPrice: sellingPrice,
+          PurchasePrice: purchasePrice,
+          Description: description,
+          imageURL:imageURL,
+          prescription:prescription
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
           },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-            },
-          }
-        )
-        .then((result) => {
-          return navigate("/inventoryManagementSystem/inventory/" + _id);
-        })
-        .catch((err) => console.log(err));
-        isLocked(false);
+        }
+      )
+      .then((result) => {
+        return navigate("/inventoryManagementSystem/inventory/" + _id);
+      })
+      .catch((err) => console.log(err));
   };
-
   return (
     <Form onSubmit={handleSubmit}>
       <div className="addMedicineSide d-flex justify-content-between">
@@ -149,8 +136,10 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
-              value={props.medicineType}
-              onChange={(e) => handleMedicineType(e.target.value)}
+              value={props.medicineType===null?"default":props.medicineType.Name}
+              onChange={(e) => {
+                handleMedicineType(types.find(element => element._id === e.target.value));
+              }}
             >
               <option value="default">Select an option</option>
               {types.length !== 0 &&
@@ -168,18 +157,20 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
-              onChange={(e) => setMedicineCategory(e.target.value)}
+              onChange={(e) => setMedicineCategory(categories.find(element => element._id === e.target.value))}
+              value={medicineCategory===null?"defaultCategory":medicineCategory.Name}
             >
               <option value="defaultCategory">Select an option</option>
               {categories.length !== 0 &&
                 categories.map((category) => (
-                  <option value={category._id}>{category.cateogry}</option>
+                  <option value={category._id}>{category.category}</option>
                 ))}
             </Form.Select>
           </InputGroup>
         </div>
       </div>
-      <br/>
+
+      <br />
       <div className="addMedicineSide d-flex justify-content-between">
         <div className="w-100 me-2">
           <InputGroup className="mb-1">
@@ -224,26 +215,6 @@ const StripsForm = (props) => {
 
       <br />
       <div className="addMedicineSide d-flex justify-content-between">
-          <div className="w-100 me-2">
-            <InputGroup className="mb-1">
-              <InputGroup.Text
-                className="required-field"
-                id="inputGroup-sizing-default"
-              >
-                Strips per box
-              </InputGroup.Text>
-              <Form.Control
-                aria-describedby="inputGroup-sizing-default"
-                placeholder="Enter amount"
-                type="number"
-                value={stripsPerBox}
-                onChange={(e) =>
-                  setStripsPerBox(DOMPurify.sanitize(e.target.value))
-                }
-                required
-              />
-            </InputGroup>
-          </div>
         <div className="addMedicineSide w-100 pl-2">
           <InputGroup className="mb-1">
             <InputGroup.Text
@@ -315,15 +286,15 @@ const StripsForm = (props) => {
           className="required-field"
           id="inputGroup-sizing-default"
         >
-          Pieces per Strip
+          Pieces per Box
         </InputGroup.Text>
         <Form.Control
           aria-label="Default"
           aria-describedby="inputGroup-sizing-default"
           placeholder="Enter number"
           type="number"
-          value={pcsPerStrip}
-          onChange={(e) => setPcsPerStrip(DOMPurify.sanitize(e.target.value))}
+          value={pcsPerBox}
+          onChange={(e) => setPcsPerBox(DOMPurify.sanitize(e.target.value))}
           required
         />
       </InputGroup>
@@ -364,4 +335,4 @@ const StripsForm = (props) => {
   );
 };
 
-export default StripsForm;
+export default NonStripsForm;
