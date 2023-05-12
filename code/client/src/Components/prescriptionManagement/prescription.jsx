@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Card, Button, Form} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useToken } from '../../Hooks/useToken';
 import NavbarCustomer from '../partials/profile/navbarCustomer';
 
 const Prescription = ({ currentUser }) => {
@@ -10,6 +11,7 @@ const Prescription = ({ currentUser }) => {
   const [prescriptionName, setPrescriptionName] = useState('');
   const user = localStorage.getItem('user');
   const userId = JSON.parse(user)._id;
+  const userToken=useToken();
   const handleSubmit = async(e) =>{
     e.preventDefault();
     console.log("paise");
@@ -26,18 +28,23 @@ const Prescription = ({ currentUser }) => {
         prescriptionImage:dataRes.data.url,
         prescriptionName : prescriptionName
       },{headers: {
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': `Bearer ${userToken.token}`
       }});
     }
   }
   useEffect(() => {
     const fetchPrescriptions = async () => {
-      const res = await axios.get(`http://localhost:4000/api/prescriptions/getPrescriptions/${userId}`);
+      const res = await axios.get(`http://localhost:4000/api/prescriptions/getPrescriptions/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${userToken.token}`,
+        },
+      }
+      );
       const sortedPrescriptions = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
     setPrescriptions(sortedPrescriptions);
     };
     fetchPrescriptions();
-  }, [prescriptions, userId]);
+  }, [prescriptions, userId, userToken]);
 
 
   return (
