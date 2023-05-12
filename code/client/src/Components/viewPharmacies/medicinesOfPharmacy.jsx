@@ -79,11 +79,11 @@ const PharmacyMedicines = () => {
               <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={medicine._id}>
                 <Card className="medicine-card">
                   <Link to={`/pharmacy/${id}/medicine/${medicine._id}`} style={{textDecoration: 'none', color: 'white'}}>
+                    <Card.Img variant="top" src={medicine.imageURL} className="medicine-card-image" style={{width: '25%'}}/>
                     <Card.Body>
-                      
                       <Card.Title>{medicine.MedicineName}</Card.Title>
                       <Card.Subtitle className="description-text mb-2">
-                        {medicine.Description}
+                        {medicine.GenericName}
                       </Card.Subtitle>
                     </Card.Body>
                   </Link>
