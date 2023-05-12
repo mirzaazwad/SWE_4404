@@ -6,8 +6,6 @@ import OtpInput from 'react18-input-otp';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 import 'bootstrap';
-import '../../index.css';
-import './styledVerify.css';
 import { useNavigate, useParams } from 'react-router-dom';
 import OTPValidityTimer from './OTPTimer';
 import { useDispatch } from 'react-redux';
