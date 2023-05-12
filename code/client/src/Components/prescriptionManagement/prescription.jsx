@@ -88,17 +88,26 @@ const Prescription = ({ currentUser }) => {
     const prop2 = urlParts[1];
         
     return (
-      <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none"}}>
+
         <Card className="prescription-card my-3">
           <Card.Header className='prescription-card-header'></Card.Header>
           <Card.Body>
-            <Card.Title>Prescription Name: {prescription.name}</Card.Title>
+            <div className='d-flex justify-content-between'>
+          <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none"}}>
+              <div>
+              <Card.Title>Prescription Name: {prescription.name}</Card.Title>
             <Card.Text> Uploaded on: 
               {new Date(prescription.createdAt).toLocaleString()}
             </Card.Text>
+              </div>
+      </Link>
+            <div>
+            <Button href='/orderByPrescription' className='btn btn-prescription-order'>Request Order
+            </Button>
+            </div>
+            </div>
           </Card.Body>
         </Card>
-      </Link>
     );
   })}
 </div>
