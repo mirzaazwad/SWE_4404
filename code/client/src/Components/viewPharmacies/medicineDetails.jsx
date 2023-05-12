@@ -140,38 +140,40 @@ const MedicineDetails = () => {
   };
 
   
-  const handleAddToCart = async() => {
-    let found=false;
-    for(const item of cart)
-    {
-      if(item.medicineId === medicineId && item.id === id)
-      {
-        found=true;
+  const handleAddToCart = async () => {
+    let found = false;
+    for (const item of cart) {
+      if (item.medicineId === medicineId && item.id === id) {
+        found = true;
         break;
       }
     }
-    if(found)
-    {
+    if (found) {
+      const { Stock, ...medicineWithoutStock } = medicine;
       await dispatch(updateItem({
-        ...medicine, id: id, medicineId: medicineId,
+        ...medicineWithoutStock,
+        id: id,
+        medicineId: medicineId,
         quantityPcs: quantityPcs,
         quantityStrips: quantityStrips,
         quantityBoxes: quantityBoxes,
         price: price
       }));
-    }
-    else {
+    } else {
+      const { Stock, ...medicineWithoutStock } = medicine;
       await dispatch(addItem({
-        ...medicine,
-        id: id, medicineId: medicineId,
+        ...medicineWithoutStock,
+        id: id,
+        medicineId: medicineId,
         quantityPcs: quantityPcs,
         quantityStrips: quantityStrips,
         quantityBoxes: quantityBoxes,
         price: price
       }));
     }
-    // await console.log(cart);    
-};
+    // await console.log(cart);
+  };
+  
   return (
     <div>
       <NavbarCustomer id={id} />
