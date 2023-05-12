@@ -7,7 +7,8 @@ import Navbar from 'react-bootstrap/Navbar';
 import { useNavigate} from 'react-router-dom';
 import { useState } from 'react';
 import { useLogout } from '../../../Hooks/useLogout';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import '../../../index.css';
 import Modal from '../Modal';
 import Cart from '../../cartManagementSystem/cart';
 

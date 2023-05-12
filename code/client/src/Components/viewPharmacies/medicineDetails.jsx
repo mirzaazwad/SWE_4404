@@ -1,27 +1,34 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useParams, useNavigate} from "react-router-dom";
-import { Button, Card, Form } from "react-bootstrap";
+import {useNavigate, useLocation} from "react-router-dom";
+import { Button, Card, Form, Modal } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem, removeItem, updateItem } from '../../Contexts/cartAction.js';
+import { addItem, updateItem } from '../../Contexts/cartAction.js';
 import { useToken } from "../../Hooks/useToken";
+import { cartPharmacyManager } from "../../Contexts/cartManager";
 
 const MedicineDetails = () => {
   const user=useToken();
   const dispatch = useDispatch();
+  const location=useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const id = queryParams.get('cid');
+  const pharmacyManagerId = queryParams.get('pid');
+  const medicineId=queryParams.get('mid');
   const cart = useSelector(state => state.cartState) || [];
+  const cartManager=localStorage.getItem('cartPharmacyManager') || "";
   const [medicine, setMedicine] = useState({});
   const [quantityPcs, setQuantityPcs] = useState(0);
   const [quantityStrips, setQuantityStrips] = useState(0);
   const [quantityBoxes, setQuantityBoxes] = useState(0);
-  const { id, medicineId } = useParams();
+  const [error,setError]=useState("");
   const [units, setUnits] = useState(1);
   const [price, setPrice] = useState(0);
   const fetchMedicine = async (id, medicineId) => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/pharmacy/${id}/medicine/${medicineId}`
+        `/api/pharmacy/${pharmacyManagerId}/medicine/${medicineId}`
         ,{
           headers:{'Authorization': `Bearer ${user.token}`}
         });
@@ -32,12 +39,14 @@ const MedicineDetails = () => {
   };
 
   useEffect(() => {
-    fetchMedicine(id, medicineId);
+    fetchMedicine(pharmacyManagerId, medicineId);
+    if(pharmacyManagerId!==cartManager && cartManager!==""){
+      setError("Cart contains medicine from another pharmacy, clear cart before proceeding");
+    }
   }, []);
   
   useEffect(() => {
     const calculatePrice = async () => {
-      console.log(medicine);
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
       if(medicine.Stock.Strips && medicine.Type.hasStrips){
         stripsPrice=quantityStrips*(medicine.SellingPrice/medicine.StripsPerBox);
@@ -53,9 +62,6 @@ const MedicineDetails = () => {
           pcsPrice=quantityPcs*(medicine.SellingPrice/(medicine.PcsPerBox));
         }
       }
-      console.log(pcsPrice);
-      console.log(boxesPrice);
-      console.log(stripsPrice);
       setPrice(pcsPrice+stripsPrice+boxesPrice);
     };
   
@@ -133,6 +139,7 @@ const MedicineDetails = () => {
         break;
       }
     }
+    dispatch(cartPharmacyManager(pharmacyManagerId));
     if (found) {
       const { Stock, ...medicineWithoutStock } = medicine;
       await dispatch(updateItem({
@@ -170,6 +177,15 @@ const MedicineDetails = () => {
           <Card.Body>
             <Card.Title></Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
+              
+                <Modal show={error!==""} onHide={()=>setError("")} style={{marginTop:"10vh",marginLeft:"50vh",width:"100vh",height:"100vh"}}>
+                  <Modal.Header style={{backgroundColor:"#103686",color:"white"}} closeButton>Error</Modal.Header>
+                  <Modal.Body>
+                  <div className="errorMessage" style={{color:"red"}}>
+                    {error}
+                  </div>
+                  </Modal.Body>
+                </Modal>
               <p style={{ fontSize: "20px" }}>Generic Name: {medicine.GenericName}</p><hr/>
               <p style={{ fontSize: "20px" }}>Type: {medicine.medicineType} </p><hr/>
               <p style={{ fontSize: "20px" }}>Category: {medicine.medicineCategory} </p><hr/>
@@ -256,7 +272,7 @@ const MedicineDetails = () => {
               <Button className="btn btn-buyMore me-4" onClick={goBack}>
                 <i className="bx bx-search-alt bx-sm"></i>Buy More
               </Button>
-              <Button className="btn btn-addCart ms-3" disabled={quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
+              <Button className="btn btn-addCart ms-3" disabled={(pharmacyManagerId!==cartManager && cartManager!=="") || quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
                 <i className="bx bx-cart bx-sm"></i>Add to cart
               </Button>
             </div><hr/>

@@ -9,7 +9,6 @@ export default function Cart() {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState) || [];
   const [totalPrice, setTotalPrice] = useState(0);
-
   useEffect(() => {
     let price = 0;
     cart.forEach(item => {
