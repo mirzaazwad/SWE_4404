@@ -6,14 +6,14 @@ exports.getAllPharmacies = async (req, res) => {
     const sellers = await Seller.find({}, 'email pharmacy').lean();
     const pharmacies = [];
     for (let seller of sellers) {
-      const user = await User.findOne({ email: seller.email, address: { $exists: true } }, 'address imageURL').lean();
+      const user = await User.findOne({ email: seller.email, address: { $exists: true } }).lean();
       if (user) {
         pharmacies.push({
           id: seller._id,
           pharmacyManagerID:user._id,
           name: seller.pharmacy,
           location: user.address,
-          imageURL:user.imageURL
+          imageURL: user.imageURL
         });
       }
     }
