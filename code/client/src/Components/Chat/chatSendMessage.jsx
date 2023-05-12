@@ -1,18 +1,17 @@
 import axios from "axios";
 import { useState } from "react";
-import toDateString from "../../../LibraryFunctions/toDateString";
 import { Send } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
+import CustomDateString from "../../Library/CustomDateTimeLibrary/CustomDateString";
 
 const SendMessageChatRoom = (props) => {
   const [message, setMessage] = useState("");
   const handleSubmit = async (event) => {
-    console.log('comes here');
     event.preventDefault();
     let msg = {
       senderID: props.senderID,
       receiverID: props.receiverID,
-      SentTime: toDateString(new Date()),
+      SentTime: new CustomDateString(new Date()).getDateString(),
       messageContent: message,
     };
     if (message) {

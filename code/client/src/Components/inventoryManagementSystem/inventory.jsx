@@ -2,15 +2,13 @@ import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import "../../index.css";
-import Table from "react-bootstrap/Table";
+import {Button,Form,Table} from "react-bootstrap";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSocket } from "../../Hooks/useSocket";
-import AddExistingMedicine from "../partials/inventoryManagement/addExistingMedicine";
+import AddExistingMedicine from "./addExistingMedicine";
 import { useToken } from "../../Hooks/useToken";
-import StockManagement from "../partials/inventoryManagement/addStock";
+import StockManagement from "./addStock";
+import Loader from "../partials/loader";
 
 const Inventory = () => {
   const user=useToken();
@@ -20,7 +18,6 @@ const Inventory = () => {
   useSocket(_id,[]);
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
   const [medicines, setMedicines] = useState([]);
-  const [types, setTypes] = useState([]);
   const [stockType, setStockType] = useState("");
   const [amount, setAmount] = useState(0);
   const [pharmacyID,setPharmacyID]=useState();
@@ -44,15 +41,6 @@ const Inventory = () => {
       })
       .catch((err) => console.log(err));
     await axios
-      .get("/api/profile/inventory/getTypes", {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-        },
-      })
-      .then((result) => {
-        setTypes(result.data.result);
-      });
-    await axios
       .get("/api/profile/inventory/getMedicines/" + sellerId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
@@ -64,21 +52,8 @@ const Inventory = () => {
           if(result.data._id!==null){
             setPharmacyID(result.data._id);
           }
-          let res = [];
-          for (let i = 0; i < temp.length; i++) {
-            const medicine = {
-              _id: i + 1,
-              MedicineName: temp[i].MedicineName,
-              GenericName: temp[i].GenericName,
-              Type: temp[i].TypeID,
-              Manufacturer: temp[i].Manufacturer,
-              SellingPrice: temp[i].SellingPrice,
-              PurchasePrice: temp[i].PurchasePrice,
-              Amount:{...temp[i].Stock},
-            };
-            res.push(medicine);
-          }
-          setMedicines(res);
+          setMedicines(result.data.Inventory);
+          console.log('comes here',result.data.Inventory);
           setLoading(false);
         }
       });
@@ -198,24 +173,21 @@ const Inventory = () => {
                 </thead>
                 <tbody>
                   
-                  {filteredMedicines.map((medicine) => (
+                  {filteredMedicines.map((medicine,index) => (
                     <tr
                       key={medicine._id}
                       onClick={() => editMedicine(medicine._id)}
                     >
-                      <td> {medicine._id} </td>
+                      <td> {index+1} </td>
                       <td> {medicine.MedicineName} </td>
                       <td> {medicine.GenericName} </td>
                       <td>
-                        
-                        {medicine.Type !== "Default"
-                          ? types.find((obj) => obj._id === medicine.Type).Name
-                          : "Undefined"}
+                        {medicine.Type.Name}
                       </td>
                       <td> {medicine.Manufacturer} </td>
                       <td> {medicine.SellingPrice} </td>
                       <td> {medicine.PurchasePrice} </td>
-                      <td>{(togglePcs===0 && (<span>{medicine.Amount.Pcs}</span>))||(togglePcs===1 && (<span>{medicine.Amount.Boxes}</span>))||(togglePcs===2 && (<span>{medicine.Amount.Strips}</span>))}  </td>
+                      <td>{(togglePcs===0 && (<span>{medicine.Stock.Pcs}</span>))||(togglePcs===1 && (<span>{medicine.Stock.Boxes}</span>))||(togglePcs===2 && (<span>{medicine.Stock.Strips}</span>))}  </td>
                       <td>
                         <Button
                           variant="secondary"
@@ -251,9 +223,7 @@ const Inventory = () => {
     );
   } else {
     return (
-      <div class="spinner-border text-primary" role="status" style={{marginLeft:'50%',marginTop:'10%'}}>
-        <span class="visually-hidden">Loading...</span>
-      </div>
+      <Loader/>
     )
   }
 };

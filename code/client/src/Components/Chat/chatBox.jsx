@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ChatReceiver from "./chatsReceiverMessage";
 import ChatSender from "./chatsSenderMessage";
 import axios from "axios";
+import Loader from "../partials/loader";
 
 const ChatBox = (props) => {
   const [messages,setMessages]=useState([]);
@@ -66,22 +67,7 @@ const ChatBox = (props) => {
   }
   else {
     return (
-      <div
-        className="scrollable pt-3 pe-3"
-        style={{
-          position: "relative",
-          height: "74vh",
-          overflowY: "scroll",
-        }}
-      >
-      <div
-        className="spinner-border text-primary"
-        role="status"
-        style={{ marginLeft: "50%", marginTop: "10%" }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
-      </div>
+      <Loader/>
     );
   }
 }
