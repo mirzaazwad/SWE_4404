@@ -7,18 +7,20 @@ const StockManagement = (props) => {
     e.preventDefault();
     props.handleClose();
     let currentAmount=0;
+    console.log(props.medicines);
     if(props.stockType==="Pcs"){
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Pcs;
+      console.log(props.medicines[props.current_medicine_index]);
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Pcs;
     }
     else if(props.stockType==="Boxes"){
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Boxes;
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Boxes;
     }
     else{
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Strips;
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Strips;
     }
     console.log('pharmacy ID: ',props.pharmacyID)
     axios.patch('/api/profile/inventory/addToStock/'+props.pharmacyID,{
-      index:props.current_medicine_index-1,
+      index:props.current_medicine_index,
       stock:props.stockType,
       amount:Number(props.amount)+Number(currentAmount)
     },{headers: {
@@ -32,20 +34,20 @@ const StockManagement = (props) => {
     props.handleClose();
     let currentAmount=0;
     if(props.stockType==="Pcs"){
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Pcs;
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Pcs;
     }
     else if(props.stockType==="Boxes"){
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Boxes;
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Boxes;
     }
     else{
-      currentAmount=props.medicines[props.current_medicine_index-1].Amount.Strips;
+      currentAmount=props.medicines[props.current_medicine_index].Stock.Strips;
     }
     if(Number(currentAmount)-Number(props.amount)<0){
       props.setError("Stock cannot be negative");
       return;
     }
     axios.patch('/api/profile/inventory/addToStock/'+props.pharmacyID,{
-      index:props.current_medicine_index-1,
+      index:props.current_medicine_index,
       stock:props.stockType,
       amount:Number(currentAmount)-Number(props.amount)
     },{headers: {
@@ -71,7 +73,7 @@ const StockManagement = (props) => {
         >
           <option>Select quantity type</option>
           <option value="Pcs">Pcs</option>
-          <option value="Strips">Strips</option>
+          {props.medicines && props.current_medicine_index && props.medicines[props.current_medicine_index].Type.hasStrips===true && (<option value="Strips">Strips</option>)}
           <option value="Boxes">Boxes</option>
         </Form.Select>
         <Form.Label>Quantity:</Form.Label>

@@ -37,33 +37,25 @@ const MedicineDetails = () => {
   
   useEffect(() => {
     const calculatePrice = async () => {
+      console.log(medicine);
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
-      if(medicine.Stock.Strips != null)
-      {
-        if(medicine.Stock.Boxes != null)
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
-        boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.StripsPerBox*medicine.PcsPerStrip;
+      if(medicine.Stock.Strips && medicine.Type.hasStrips){
+        stripsPrice=quantityStrips*(medicine.SellingPrice/medicine.StripsPerBox);
+      }
+      if(medicine.Stock.Boxes){
+        boxesPrice=medicine.SellingPrice*quantityBoxes;
+      }
+      if(medicine.Stock.Pcs){
+        if(medicine.Type.hasStrips){
+          pcsPrice=quantityPcs*(medicine.SellingPrice/(medicine.PcsPerStrip*medicine.StripsPerBox));
         }
-        else
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
+        else{
+          pcsPrice=quantityPcs*(medicine.SellingPrice/(medicine.PcsPerBox));
         }
       }
-      else
-      {
-        if(medicine.Stock.Boxes != null)
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerBox;
-        }
-        else
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-        }
-      }
+      console.log(pcsPrice);
+      console.log(boxesPrice);
+      console.log(stripsPrice);
       setPrice(pcsPrice+stripsPrice+boxesPrice);
     };
   
@@ -115,28 +107,21 @@ const MedicineDetails = () => {
     }
   };
   const handlePcs = () => {
-    setUnits(1);
+    if(medicine.Type.hasStrips){
+      setUnits(medicine.PcsPerStrip*medicine.StripsPerBox);
+    }
+    else{
+      setUnits(medicine.PcsPerBox);
+    }
   };
   const handleStrips = () => {
     if(medicine.Stock.Strips != null)
     {
-      setUnits(medicine.PcsPerStrip);
+      setUnits(medicine.StripsPerBox);
     }
   };
   const handleBoxes = () => {
-    if(medicine.Stock.Boxes != null)
-    {
-      if(medicine.Stock.Strips != null)
-      {
-
-        setUnits(medicine.PcsPerStrip*medicine.StripsPerBox);
-      }
-      else
-      {
-        setUnits(medicine.PcsPerBox);
-      }
-    }
-
+    setUnits(1);
   };
 
   
@@ -191,7 +176,7 @@ const MedicineDetails = () => {
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
               </p><hr/>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p><hr/>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice/units}</p><hr/>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
@@ -204,7 +189,6 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios1"
                           onClick={handlePcs}
-                          defaultChecked={true}
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center">
                         <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreasePcs}>
@@ -219,7 +203,7 @@ const MedicineDetails = () => {
                     )}
                   </div>
                   <div>
-                    {medicine.Stock.Strips != null && (
+                    {medicine.Stock.Strips!==null && medicine.Type.hasStrips && (
                       <div className="d-flex justify-content-between align-items-center mb-3">
                         <Form.Check
                           type="radio"
@@ -249,6 +233,7 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
                           onClick={handleBoxes}
+                          defaultChecked={true}
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
                           <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreaseBoxes}>
