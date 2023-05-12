@@ -34,7 +34,7 @@ const PharmacyPage = () => {
                   <PharmacyCard
                     name={pharmacy.name}
                     location={pharmacy.location}
-                    image={'https://www.mawbiz.com.bd/application/views/module/product_image/IMG_3556_1.JPG'}
+                    image={pharmacy.imageUrl}
                     color= {'#EB006F'}
                   />
                 </Link>
