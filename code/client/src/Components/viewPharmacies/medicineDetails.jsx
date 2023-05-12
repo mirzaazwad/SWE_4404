@@ -6,7 +6,6 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem } from '../../Contexts/cartAction.js';
 import { useToken } from "../../Hooks/useToken";
-import { cartPharmacyManager } from "../../Contexts/cartManager";
 
 const MedicineDetails = () => {
   const user=useToken();
@@ -139,7 +138,7 @@ const MedicineDetails = () => {
         break;
       }
     }
-    dispatch(cartPharmacyManager(pharmacyManagerId));
+    localStorage.setItem('cartPharmacyManager',pharmacyManagerId);
     if (found) {
       const { Stock, ...medicineWithoutStock } = medicine;
       await dispatch(updateItem({

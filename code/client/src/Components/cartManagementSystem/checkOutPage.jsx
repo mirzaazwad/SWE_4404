@@ -18,6 +18,7 @@ const CheckOutPage = ({}) => {
   const [country, setCountry] = useState();
   const [payment, setPayment] = useState();
   const dispatch = useDispatch();
+  const pharmacyManagerID=localStorage.getItem('cartPharmacyManager') || "";
   const cart = useSelector(state => state.cartState) || [];
   const [totalPrice, setTotalPrice] = useState(0);
 
@@ -38,12 +39,13 @@ const CheckOutPage = ({}) => {
     setTotalPrice(price);
   }, [customerEmail]);
   const handleCheckOut = async () => {
+    
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
       customer_data: {
         email:customerEmail,
         phone:customerPhoneNumber,
-        pharmacyID:"1234",
+        pharmacyManagerID:pharmacyManagerID,
         fullName: fullName,
         address: address,
         city: city,

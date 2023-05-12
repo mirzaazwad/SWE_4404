@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { cartPharmacyManager } from './cartManager';
 
 const initialState = localStorage.getItem("cartState") ? JSON.parse(localStorage.getItem("cartState")) : [];
 
@@ -15,14 +14,12 @@ const cartSlice = createSlice({
       const newState = state.filter((item, index) => index !== action.payload.index);
       localStorage.setItem("cartState", JSON.stringify(newState));
       if(newState.length==0){
-        cartPharmacyManager("");
         localStorage.removeItem("cartPharmacyManager");
       }
       return newState;
     },
     clearItems: (state) => {
       localStorage.setItem("cartState", JSON.stringify([]));
-      cartPharmacyManager("");
       localStorage.removeItem("cartPharmacyManager");
       return [];
     },
@@ -34,7 +31,7 @@ const cartSlice = createSlice({
             quantityPcs: parseInt(action.payload.quantityPcs) + parseInt(item.quantityPcs),
             quantityStrips: parseInt(action.payload.quantityStrips) + parseInt(item.quantityStrips),
             quantityBoxes: parseInt(action.payload.quantityBoxes) + parseInt(item.quantityBoxes),
-            price: parseInt(action.payload.price) + parseInt(item.price)
+            price: action.payload.price + item.price
           };
         }
         return item;
