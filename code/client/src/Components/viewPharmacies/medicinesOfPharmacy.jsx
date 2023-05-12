@@ -83,7 +83,7 @@ const PharmacyMedicines = () => {
                     <Card.Body>
                       <Card.Title>{medicine.MedicineName}</Card.Title>
                       <Card.Subtitle className="description-text mb-2">
-                        {medicine.Description}
+                        {medicine.GenericName}
                       </Card.Subtitle>
                     </Card.Body>
                   </Link>
