@@ -40,29 +40,18 @@ const MedicineDetails = () => {
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
       if(medicine.Stock.Strips != null)
       {
-        if(medicine.Stock.Boxes != null)
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
-        boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.StripsPerBox*medicine.PcsPerStrip;
-        }
-        else
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          stripsPrice = medicine.SellingPrice*quantityStrips*medicine.PcsPerStrip;
-        }
+        
+          pcsPrice = (medicine.SellingPrice*quantityPcs)/(medicine.PcsPerStrip*medicine.StripsPerBox);
+          stripsPrice = (medicine.SellingPrice*quantityStrips)/(medicine.StripsPerBox);
+          boxesPrice = medicine.SellingPrice*quantityBoxes
+        
       }
       else
       {
-        if(medicine.Stock.Boxes != null)
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-          boxesPrice = medicine.SellingPrice*quantityBoxes*medicine.PcsPerBox;
-        }
-        else
-        {
-          pcsPrice = medicine.SellingPrice*quantityPcs;
-        }
+     
+          pcsPrice = (medicine.SellingPrice*quantityPcs)/(medicine.PcsPerBox);
+          boxesPrice = medicine.SellingPrice*quantityBoxes;
+        
       }
       setPrice(pcsPrice+stripsPrice+boxesPrice);
     };
@@ -115,27 +104,24 @@ const MedicineDetails = () => {
     }
   };
   const handlePcs = () => {
-    setUnits(1);
+    if(medicine.Stock.Strips != null)
+    {
+      setUnits(1/(medicine.StripsPerBox*medicine.PcsPerStrip));
+    }
+    else
+    {
+      setUnits(1/medicine.PcsPerBox);
+    }
+    
   };
   const handleStrips = () => {
     if(medicine.Stock.Strips != null)
     {
-      setUnits(medicine.PcsPerStrip);
+      setUnits(1/medicine.StripsPerBox);
     }
   };
   const handleBoxes = () => {
-    if(medicine.Stock.Boxes != null)
-    {
-      if(medicine.Stock.Strips != null)
-      {
-
-        setUnits(medicine.PcsPerStrip*medicine.StripsPerBox);
-      }
-      else
-      {
-        setUnits(medicine.PcsPerBox);
-      }
-    }
+    setUnits(1);
 
   };
 
@@ -206,7 +192,7 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios1"
                           onClick={handlePcs}
-                          defaultChecked={true}
+                         
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center">
                         <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreasePcs}>
@@ -250,6 +236,7 @@ const MedicineDetails = () => {
                           label="Boxes"
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
+                          defaultChecked={true}
                           onClick={handleBoxes}
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
