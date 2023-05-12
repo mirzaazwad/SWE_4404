@@ -35,7 +35,7 @@ const addMedicine = async(req,res)=>{
   }
 }
 
-const addCateogry = async(req,res)=>{
+const addCategory = async(req,res)=>{
   try{
     const result=await medicineCategory.addCategory(req.body.name,req.body.description);
     res.status(200).json(result);
@@ -81,7 +81,7 @@ module.exports ={
   getAllCategories,
   getAllTypes,
   addMedicine,
-  addCateogry,
+  addCategory,
   addType,
   addGlobalMedicine,
   getAllMedicines

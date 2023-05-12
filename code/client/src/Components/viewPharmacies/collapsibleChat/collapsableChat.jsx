@@ -9,11 +9,12 @@ import {
 } from "mdb-react-ui-kit";
 import { Send, ArrowDownCircle } from "react-bootstrap-icons";
 import { Button, Form, InputGroup } from "react-bootstrap";
-import CollapsibleSender from "../partials/chats/collapsibleSenderMessage";
-import CollapsibleReceiver from "../partials/chats/collapsibleReceiverMessage";
+import CollapsibleSender from "./collapsibleSenderMessage";
+import CollapsibleReceiver from "./collapsibleReceiverMessage";
 import axios from "axios";
 import io from "socket.io-client";
-import toDateString from "../../LibraryFunctions/toDateString";
+import CustomDateString from "../../../Library/CustomDateTimeLibrary/CustomDateString";
+
 
 const CollapsibleChat = (props) => {
   const socket = io("http://localhost:4110");
@@ -129,7 +130,7 @@ const CollapsibleChat = (props) => {
     let msg={
       senderID: props.senderID,
       receiverID: props.receiverID,
-      SentTime: toDateString(new Date()),
+      SentTime: new CustomDateString(new Date()).getDateString(),
       messageContent: message,
     };
     if (message) {

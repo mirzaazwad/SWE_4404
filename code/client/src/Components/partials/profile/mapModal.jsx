@@ -2,6 +2,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import PlacesAutocomplete from "./placesAutocomplete";
+import Loader from "../loader";
 
 const MapModal = (props) => {
   const { isLoaded } = useLoadScript({
@@ -123,13 +124,7 @@ const Loading = (props) =>{
       <Modal.Header closeButton>
       </Modal.Header>
       <Modal.Body>
-      <div
-        className="spinner-border text-primary"
-        role="status"
-        style={{ marginLeft: "50%", marginTop: "10%" }}
-      >
-        <span className="visually-hidden">Loading...</span>
-      </div>
+      <Loader></Loader>
       </Modal.Body>
     </Modal>
   );

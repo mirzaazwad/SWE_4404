@@ -3,8 +3,6 @@ import OtpInput from 'react18-input-otp';
 import { useState } from "react";
 import axios from 'axios';
 import 'bootstrap';
-import '../../index.css';
-import './styledVerify.css';
 import OTPValidityTimer from './OTPTimer';
 import PasswordReset from './forgotPasswordReset';
 

@@ -6,7 +6,7 @@ import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy"
 import {BrowserRouter as Router, Navigate, Route, Routes,} from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
-import AddMedicine from "./Components/inventoryManagementSystem/addMedicine";
+import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
 import Error404 from "./Components/error404";
 import { LOGIN } from "./Contexts/action";
@@ -16,7 +16,7 @@ import Medicine from "./Components/viewPharmacies/medicineDetails";
 import {CartProvider} from './Contexts/cartAction.js';
 import MyOrders from "./Components/cartManagementSystem/myOrders";
 import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
-import ChatPage from "./Components/Chat/chatRoom";
+import ChatPage from "./Components/chat/chatRoom";
 import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import './index.css';
 import Prescription from "./Components/prescriptionManagement/prescription";

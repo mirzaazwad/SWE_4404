@@ -1,5 +1,4 @@
 const mongoose = require("mongoose");
-const medicineType = require("./medicine-type");
 const Schema = mongoose.Schema;
 
 const medicineSchema = new Schema({
@@ -11,13 +10,35 @@ const medicineSchema = new Schema({
     type: String,
     required: true,
   },
-  TypeID: {
-    type: String,
-    required: true,
+  Type: {
+    Name:{
+      type: String,
+      required: true,
+    },
+    Description:{
+      type: String
+    },
+    hasPcs:{
+      type:Boolean,
+      required:true
+    },
+    hasBoxes:{
+      type:Boolean,
+      required:true
+    },
+    hasStrips:{
+      type:Boolean,
+      required:true
+    }
   },
-  CateogryID: {
-    type: String,
-    required: true,
+  Category: {
+    category:{
+      type: String,
+      required: true,
+    },
+    description:{
+      type: String
+    }
   },
   Manufacturer: {
     type: String,

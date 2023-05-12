@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { addNotification, subNotification } from '../../../Contexts/action';
+import { addNotification, subNotification } from '../../Contexts/action';
 
 const ChatTile = (props) => {
   const dispatch=useDispatch();
