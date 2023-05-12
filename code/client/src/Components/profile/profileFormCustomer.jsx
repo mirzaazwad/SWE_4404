@@ -5,13 +5,10 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { InputGroup } from "react-bootstrap";
 import { EyeFill, EyeSlashFill } from "react-bootstrap-icons";
-import "../../index.css";
 import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
-import PhoneVerify from "../partials/profile/phoneVerify";
-import { useSocket } from "../../Hooks/useSocket";
-import { useToken } from "../../Hooks/useToken";
+import PhoneVerify from "./PhoneVerification/phoneVerify";
 
 const ProfileFormCustomer = (id) => {
   const _id = id;
@@ -73,7 +70,7 @@ const ProfileFormCustomer = (id) => {
 
   const setPhoneNumber=(phone)=>{
     setPhoneNumberChanged(true);
-    if(phone.length!=11){
+    if(phone.length!==11){
       setError("Phone Number Must be 11 digits");
     }
     else{

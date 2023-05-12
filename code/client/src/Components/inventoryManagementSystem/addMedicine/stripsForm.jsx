@@ -128,7 +128,7 @@ const StripsForm = (props) => {
             },
           }
         )
-        .then((result) => {
+        .then(() => {
           return navigate("/inventoryManagementSystem/inventory/" + _id);
         })
         .catch((err) => console.log(err));
@@ -149,15 +149,15 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
-              value={props.medicineType===null?"default":props.medicineType.Name}
+              value={medicineType===null?"default":medicineType._id}
               onChange={(e) => {
                 handleMedicineType(types.find(element => element._id === e.target.value));
               }}
             >
-              <option value="default">Select an option</option>
+              <option value="default" key="default">Select an option</option>
               {types.length !== 0 &&
                 types.map((medicines) => (
-                  <option value={medicines._id}>{medicines.Name}</option>
+                  <option value={medicines._id} key={medicines._id}>{medicines.Name}</option>
                 ))}
             </Form.Select>
           </InputGroup>
@@ -170,13 +170,13 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
+              value={medicineCategory===null?"default":medicineCategory._id}
               onChange={(e) => setMedicineCategory(categories.find(element => element._id === e.target.value))}
-              value={medicineCategory===null?"defaultCategory":medicineCategory.Name}
             >
-              <option value="defaultCategory">Select an option</option>
+              <option value="default" key="default">Select an option</option>
               {categories.length !== 0 &&
                 categories.map((category) => (
-                  <option value={category._id}>{category.category}</option>
+                  <option value={category._id} key={category._id}>{category.category}</option>
                 ))}
             </Form.Select>
           </InputGroup>
@@ -359,6 +359,7 @@ const StripsForm = (props) => {
           className="btn btn-addMedicine w-25"
           variant="primary"
           type="submit"
+          disabled={locked}
         >
           Add
         </Button>
