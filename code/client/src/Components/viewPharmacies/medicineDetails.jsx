@@ -37,6 +37,7 @@ const MedicineDetails = () => {
   
   useEffect(() => {
     const calculatePrice = async () => {
+      console.log(medicine);
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
       if(medicine.Stock.Strips != null)
       {
@@ -53,6 +54,9 @@ const MedicineDetails = () => {
           boxesPrice = medicine.SellingPrice*quantityBoxes;
         
       }
+      console.log(pcsPrice);
+      console.log(boxesPrice);
+      console.log(stripsPrice);
       setPrice(pcsPrice+stripsPrice+boxesPrice);
     };
   
@@ -122,7 +126,6 @@ const MedicineDetails = () => {
   };
   const handleBoxes = () => {
     setUnits(1);
-
   };
 
   
@@ -179,7 +182,7 @@ const MedicineDetails = () => {
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
               </p><hr/>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p><hr/>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice/units}</p><hr/>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
@@ -207,7 +210,7 @@ const MedicineDetails = () => {
                     )}
                   </div>
                   <div>
-                    {medicine.Stock.Strips != null && (
+                    {medicine.Stock.Strips!==null && medicine.Type.hasStrips && (
                       <div className="d-flex justify-content-between align-items-center mb-3">
                         <Form.Check
                           type="radio"
@@ -238,6 +241,7 @@ const MedicineDetails = () => {
                           id="formHorizontalRadios2"
                           defaultChecked={true}
                           onClick={handleBoxes}
+                         
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
                           <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreaseBoxes}>
