@@ -128,7 +128,7 @@ code {
   justify-content: center !important;
   vertical-align: middle;
   margin: auto !important;
-  height: 100% !important;
+  height: 75% !important;
   width: 100%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
