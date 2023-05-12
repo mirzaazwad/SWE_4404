@@ -9,8 +9,8 @@ import "../../index.css";
 import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
-import PhoneVerify from "../partials/profile/phoneVerify";
-import MapModal from "../partials/profile/mapModal";
+import PhoneVerify from "./PhoneVerification/phoneVerify";
+import MapModal from "./Map/mapModal";
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;

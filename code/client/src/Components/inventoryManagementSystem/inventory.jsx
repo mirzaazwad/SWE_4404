@@ -46,14 +46,10 @@ const Inventory = () => {
           Authorization: `Bearer ${user.token}`,
         },
       })
-      .then( async (result) => {
+      .then((result) => {
         if(result.data!==null){
-          let temp = result.data.Inventory;
-          if(result.data._id!==null){
-            setPharmacyID(result.data._id);
-          }
+          setPharmacyID(result.data._id);
           setMedicines(result.data.Inventory);
-          console.log('comes here',result.data.Inventory);
           setLoading(false);
         }
       });
@@ -64,6 +60,7 @@ const Inventory = () => {
   const [type, setType] = useState("");
   const handleClose = () => setShow(false);
   const handleShow = (type,id) => {
+    console.log("index:",id);
     setCurrentMedicineIndex(id);
     setShow(true);
     setType(type);
@@ -77,7 +74,7 @@ const Inventory = () => {
   const filterByToggle = async (toggleVal)=>{
     setTogglePcs(toggleVal);
     if(toggleVal===2){
-      setFilteredMedicines(filteredMedicines.filter((medicines)=>medicines.Amount.hasOwnProperty('Strips')));
+      setFilteredMedicines(filteredMedicines.filter((medicines)=>medicines.Stock.hasOwnProperty('Strips')));
     }
     else{
       console.log('Filter Change Value is: ',filterChangeValue);
@@ -111,10 +108,6 @@ const Inventory = () => {
     setFilteredMedicines(medicines);
   },[medicines]);
   const [filteredMedicines, setFilteredMedicines] = useState(medicines);
-
-  const editMedicine = (value) => {
-    console.log("editing medicines" + value);
-  };
 
   const handleClosing=(data)=>{
     setShowMedicines(data);
@@ -176,7 +169,6 @@ const Inventory = () => {
                   {filteredMedicines.map((medicine,index) => (
                     <tr
                       key={medicine._id}
-                      onClick={() => editMedicine(medicine._id)}
                     >
                       <td> {index+1} </td>
                       <td> {medicine.MedicineName} </td>
@@ -192,7 +184,7 @@ const Inventory = () => {
                         <Button
                           variant="secondary"
                           className="mx-0 plusButton"
-                          onClick={() => handleShow("add",medicine._id)}
+                          onClick={() => handleShow("add",index)}
                         >
                           
                           <i
@@ -203,7 +195,7 @@ const Inventory = () => {
                         <Button
                           variant="danger"
                           className="mx-0 minusButton"
-                          onClick={() => handleShow("remove",medicine._id)}
+                          onClick={() => handleShow("remove",index)}
                         >
                           
                           <i
