@@ -2,26 +2,26 @@ const express = require("express");
 const cors = require('cors');
 
 //middleware
-const mongoDBConnection = require('./middleware/mongoDBConnection');
-const socket= require('./middleware/socket');
+require('./middleware/mongoDBConnection');
+require('./middleware/socket');
 
 //routes
-const loginSignUpRoutes = require("./routes/login-signup-routes");
-const medicineAddRoutes = require("./routes/add-medicine-routes");
-const inventoryRoutes = require("./routes/inventory-routes");
-const profileRoutesUser = require("./routes/user-profile-route");
-const profileRoutesBuyer = require("./routes/buyer-profile-route");
-const profileRoutesSeller = require("./routes/seller-profile-route");
-const purchaseRoutes = require("./routes/product-purchase-route");
-const pharmaciesRoutes = require("./routes/viewPharmacies/viewPharmacies-route");
-const chatRoutes = require("./routes/chat-routes");
-const mobileRoutes=require("./routes/mobile-routes");
-const prescriptionsRoutes = require("./routes/prescriptions-routes");
+const loginSignUpRoutes = require("./routes/login-signup");
+const medicineAddRoutes = require("./routes/add-medicine");
+const inventoryRoutes = require("./routes/inventory");
+const profileRoutesUser = require("./routes/user");
+const profileRoutesBuyer = require("./routes/buyer-profile");
+const profileRoutesSeller = require("./routes/seller");
+const purchaseRoutes = require("./routes/purchase");
+const pharmaciesRoutes = require("./routes/view-pharmacy");
+const chatRoutes = require("./routes/chat");
+const mobileRoutes=require("./routes/mobile");
+const prescriptionsRoutes = require("./routes/prescription");
 
 
 //express app setup
-const pharmacyRoutes = require("./routes/viewPharmacies/medicinesOfPharmacy-route");
-const orderRoutes = require("./routes/order-routes");
+const pharmacyRoutes = require("./routes/medicine-pharmacy");
+const orderRoutes = require("./routes/order");
 const app=express();
 app.use(express.json());
 app.use(cors());

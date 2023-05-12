@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
 
-const medicineCateogry = new Schema({
-  cateogry:{
+const medicineCategory = new Schema({
+  category:{
     type: String,
     required: true,
   },
@@ -11,7 +11,7 @@ const medicineCateogry = new Schema({
   }
 });
 
-medicineCateogry.statics.getAll=async function(){
+medicineCategory.statics.getAll=async function(){
   const result=await this.find();
   if(result){
     return result;
@@ -21,14 +21,14 @@ medicineCateogry.statics.getAll=async function(){
   }
 }
 
-medicineCateogry.statics.addCategory=async function(name,description){
+medicineCategory.statics.addCategory=async function(name,description){
   if(!name || !description){
     throw Error('Name and description is required');
   }
-  const result=await this.create({cateogry:name,description:description});
+  const result=await this.create({category:name,description:description});
   return result;
 }
 
-module.exports=mongoose.model("medicine-category",medicineCateogry);
+module.exports=mongoose.model("medicine-category",medicineCategory);
 
 

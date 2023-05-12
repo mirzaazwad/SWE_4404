@@ -49,6 +49,6 @@ medicineTypeDescription.statics.addType=async function(name,description,strips){
   }
 }
 
-module.exports=mongoose.model("medicine-description",medicineTypeDescription);
+module.exports=mongoose.model("medicine-type",medicineTypeDescription);
 
 
