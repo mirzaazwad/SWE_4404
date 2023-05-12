@@ -6,12 +6,13 @@ const postOrder = async (req, res) => {
     const userId = req.params.userId;
     const items = req.body.items;
     const customer_data = req.body.customer_data;
+    console.log(customer_data);
 
     const order = await Order.findOne({
       userId: userId
     });
     const pharmacy = await Pharmacy.findOne({
-      pharmacyManagerID: items[0].id
+      pharmacyManagerID: req.body.customer_data.pharmacyManagerID
     });
 
     if (order) {
@@ -21,10 +22,13 @@ const postOrder = async (req, res) => {
         customer_data: customer_data
       });
       await order.save();
-      console.log("order saved");
-      
+      pharmacy.Orders.push({
+        orderId : order._id.toString(),
+        date: new Date(),
+        medicines: items,
+        customer_data: customer_data
+  });
     } else {
-      console.log("order not found");
       const newOrder = new Order({
         userId,
         order_data: [{
@@ -35,21 +39,15 @@ const postOrder = async (req, res) => {
       });
 
       await newOrder.save();
-
-      
+      pharmacy.Orders.push({
+        orderId : newOrder._id.toString(),
+        date: new Date(),
+        medicines: items,
+        customer_data: customer_data
+  });
     }
-    pharmacy.Orders.push({
-          orderId : order._id.toString(),
-          date: new Date(),
-          medicines: items,
-          customer_data: customer_data
-    });
     await pharmacy.save();
     return res.status(200);
-    
-
-
-
   } catch (err) {
     console.error(err);
     return res.status(500).json({

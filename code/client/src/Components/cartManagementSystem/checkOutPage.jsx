@@ -56,9 +56,7 @@ const CheckOutPage = ({}) => {
     },{
       headers:{'Authorization': `Bearer ${user.token}`}
     })
-    console.log(cart);
     await dispatch(clearItems());
-    console.log(cart);
   };
   return (
     <div>
