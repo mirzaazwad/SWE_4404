@@ -47,19 +47,20 @@ const MedicineDetails = () => {
   useEffect(() => {
     const calculatePrice = async () => {
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
-      if(medicine.Stock.Strips && medicine.Type.hasStrips){
-        stripsPrice=quantityStrips*(medicine.SellingPrice/medicine.StripsPerBox);
+      if(medicine.Stock.Strips != null)
+      {
+        
+          pcsPrice = (medicine.SellingPrice*quantityPcs)/(medicine.PcsPerStrip*medicine.StripsPerBox);
+          stripsPrice = (medicine.SellingPrice*quantityStrips)/(medicine.StripsPerBox);
+          boxesPrice = medicine.SellingPrice*quantityBoxes
+        
       }
-      if(medicine.Stock.Boxes){
-        boxesPrice=medicine.SellingPrice*quantityBoxes;
-      }
-      if(medicine.Stock.Pcs){
-        if(medicine.Type.hasStrips){
-          pcsPrice=quantityPcs*(medicine.SellingPrice/(medicine.PcsPerStrip*medicine.StripsPerBox));
-        }
-        else{
-          pcsPrice=quantityPcs*(medicine.SellingPrice/(medicine.PcsPerBox));
-        }
+      else
+      {
+     
+          pcsPrice = (medicine.SellingPrice*quantityPcs)/(medicine.PcsPerBox);
+          boxesPrice = medicine.SellingPrice*quantityBoxes;
+        
       }
       setPrice(pcsPrice+stripsPrice+boxesPrice);
     };
@@ -112,17 +113,20 @@ const MedicineDetails = () => {
     }
   };
   const handlePcs = () => {
-    if(medicine.Type.hasStrips){
-      setUnits(medicine.PcsPerStrip*medicine.StripsPerBox);
+    if(medicine.Stock.Strips != null)
+    {
+      setUnits(1/(medicine.StripsPerBox*medicine.PcsPerStrip));
     }
-    else{
-      setUnits(medicine.PcsPerBox);
+    else
+    {
+      setUnits(1/medicine.PcsPerBox);
     }
+    
   };
   const handleStrips = () => {
     if(medicine.Stock.Strips != null)
     {
-      setUnits(medicine.StripsPerBox);
+      setUnits(1/medicine.StripsPerBox);
     }
   };
   const handleBoxes = () => {
@@ -167,12 +171,22 @@ const MedicineDetails = () => {
   
   return (
     <div>
-      <NavbarCustomer id={id} />
-      <div className="d-flex justify-content-center">
-        <Card className="medicine-details-card w-50 mb-4">
+      <div>
+        <NavbarCustomer id={id} />
+      </div>  
+      <div>
+            <Card className="medicine-details-card w-75 mb-4 mx-auto">
           <Card.Header className="medicine-details-cardHeader">
             {medicine.MedicineName}
           </Card.Header>
+          <div className="row">
+          <div className="col-md-6">
+          <Card className="ms-2" style={{border: 'none'}}>
+                <Card.Img variant="top" src={medicine.imageURL} className="medicine-details-image"/>
+              </Card>
+            </div>
+            <div className="col-md-6">
+          
           <Card.Body>
             <Card.Title></Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
@@ -193,7 +207,7 @@ const MedicineDetails = () => {
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
               </p><hr/>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice/units}</p><hr/>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p><hr/>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
@@ -206,6 +220,7 @@ const MedicineDetails = () => {
                           name="formHorizontalRadios"
                           id="formHorizontalRadios1"
                           onClick={handlePcs}
+                         
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center">
                         <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreasePcs}>
@@ -249,8 +264,9 @@ const MedicineDetails = () => {
                           label="Boxes"
                           name="formHorizontalRadios"
                           id="formHorizontalRadios2"
-                          onClick={handleBoxes}
                           defaultChecked={true}
+                          onClick={handleBoxes}
+                         
                         />
                         <div className="addRemove-buttons d-flex justify-content-between align-items-center ">
                           <Button className="btn btn-decrease h-100 me-2" onClick={handleDecreaseBoxes}>
@@ -274,15 +290,16 @@ const MedicineDetails = () => {
               <Button className="btn btn-addCart ms-3" disabled={(pharmacyManagerId!==cartManager && cartManager!=="") || quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
                 <i className="bx bx-cart bx-sm"></i>Add to cart
               </Button>
-            </div><hr/>
+            </div>
           </Card.Body>
+            </div>
+          </div>
         </Card>
-      </div>
+        </div>
       <div className="mx-5">
       <h1 style={{color: '#EB006F'}}>Description:</h1><hr/>
             <p> {medicine.Description}</p>
-      </div>
-            
+      </div>         
     </div>
   );
 };
