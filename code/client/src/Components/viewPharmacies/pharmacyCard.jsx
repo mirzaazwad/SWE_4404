@@ -1,7 +1,7 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
 
-const PharmacyCard = ({image,name,address}) => {
+const PharmacyCard = ({image,name,location}) => {
 
   return (
     <Card
@@ -10,7 +10,7 @@ const PharmacyCard = ({image,name,address}) => {
       <Card.Img variant="top" src={image} className="pharmacy-card-image" />
       <Card.Body >
         <Card.Title>{name}</Card.Title>
-        <Card.Text>{address}</Card.Text>
+        <Card.Text>{location}</Card.Text>
       </Card.Body>
     </Card>
   );

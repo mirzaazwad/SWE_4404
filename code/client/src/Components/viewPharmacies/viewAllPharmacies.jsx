@@ -38,7 +38,7 @@ const PharmacyPage = () => {
                 <Link to={`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
                   <PharmacyCard
                     name={pharmacy.name}
-                    address={pharmacy.location}
+                    location={pharmacy.location}
                     image={pharmacy.imageURL}
                     color= {'#EB006F'}
                   />
