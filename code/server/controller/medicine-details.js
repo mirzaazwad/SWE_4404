@@ -4,7 +4,6 @@ const MedicineCategory = require('../model/medicine-category');
 
 exports.getAllCategories = async (req, res) => {
   try {
-    console.log("dhukse ekhane");
     const medicineCategories =  MedicineCategory.find() ;
     console.log(medicineCategories);
     res.status(200).json(medicineCategories);
@@ -32,11 +31,7 @@ exports.getMedicine = async (req, res, next) => {
         message: 'Medicine not found in pharmacy inventory',
       });
     }
-
-    const medicineType = await MedicineType.findOne({ _id: medicine.TypeID });
-    const medicineCategory = await MedicineCategory.findOne({ _id: medicine.CateogryID });
-    // console.log(medicineCategory);
-    res.status(200).json({ ...medicine.toObject(), medicineType: medicineType.Name, medicineCategory: medicineCategory.cateogry });
+    res.status(200).json({ ...medicine.toObject(), medicineType: medicine.Type.Name, medicineCategory: medicine.Category.category });
   } catch (err) {
     console.log(err);
     res.status(500).json({
