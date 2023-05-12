@@ -165,12 +165,22 @@ const MedicineDetails = () => {
   
   return (
     <div>
-      <NavbarCustomer id={id} />
-      <div className="d-flex justify-content-center">
-        <Card className="medicine-details-card w-50 mb-4">
+      <div>
+        <NavbarCustomer id={id} />
+      </div>  
+      <div>
+            <Card className="medicine-details-card w-75 mb-4 mx-auto">
           <Card.Header className="medicine-details-cardHeader">
             {medicine.MedicineName}
           </Card.Header>
+          <div className="row">
+          <div className="col-md-6">
+          <Card className="ms-2" style={{border: 'none'}}>
+                <Card.Img variant="top" src={medicine.imageURL} className="medicine-details-image"/>
+              </Card>
+            </div>
+            <div className="col-md-6">
+          
           <Card.Body>
             <Card.Title></Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
@@ -265,15 +275,16 @@ const MedicineDetails = () => {
               <Button className="btn btn-addCart ms-3" disabled={quantityPcs+quantityStrips+quantityBoxes===0} onClick={handleAddToCart}>
                 <i className="bx bx-cart bx-sm"></i>Add to cart
               </Button>
-            </div><hr/>
+            </div>
           </Card.Body>
+            </div>
+          </div>
         </Card>
-      </div>
+        </div>
       <div className="mx-5">
       <h1 style={{color: '#EB006F'}}>Description:</h1><hr/>
             <p> {medicine.Description}</p>
-      </div>
-            
+      </div>         
     </div>
   );
 };

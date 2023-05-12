@@ -15,24 +15,56 @@ body {
     sans-serif; */
 }
 
-
-.pharmacy-card-image {
-  transition: transform 0.2s ease-in-out;
-}
 .pharmacy-card:hover{
   cursor: pointer;
   transform: scale(1.05);
 }
 .pharmacy-card{
   width: 300px!important;
-  height: 300px!important;
+  height: 320px!important;
   background-color: var(--customMagenta) !important;
+  border-color: white !important;
+  -webkit-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
+  -moz-box-shadow :0px 10px 40px -10px rgba(0,0,0,0.7);
+  box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.5);
+  transition: transform 0.7s ease-in-out !important;
+}
+.order-prescription-pharmacy-card{
+  width: 300px!important;
+  height: 380px!important;
+  background-color: var(--customMagenta) !important;
+  border-color: white !important;
+  transition: transform 0.7s ease-in-out !important;
+}
+.order-prescription-pharmacy-card:hover{
+  cursor: pointer;
+  transform: scale(1.05);
+}
+.order-prescription-pharmacy-footer{
+  background-color: var(--customBlue) !important;
 }
 .pharmacy-card-image{
   width: 300px!important;
   height: 200px!important;
   object-fit: cover!important;
 }
+.medicine-details-image{
+  width: 400px!important;
+  height: 400px !important;
+  margin-top: 80px !important;
+  margin-left: 70px;
+}
+.medicine-card
+{
+  width: 125% !important;
+  background-color: var(--customMagenta) !important;
+  height: 12rem !important;
+  transition: transform 0.7s ease-in-out !important;
+}
+.medicine-card:hover{
+    cursor: pointer;
+  transform: scale(1.05);
+  }
 .medicine-card-image{
   width: 288px!important;
   height: 100px!important;
@@ -91,6 +123,27 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn.btn-prescription-order
+{
+  justify-content: center !important;
+  vertical-align: middle;
+  margin: auto !important;
+  height: 75% !important;
+  width: 100%;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-confirm-pharmacy
+{
+  display: flex;
+  justify-content: center !important;
+  vertical-align: middle;
+  margin: auto !important;
+  height: 100% !important;
+  width: 75%;
+  --bs-btn-hover-bg: var(--customDarkBlue)!important;
+  --bs-btn-hover-border-color : var(--customDarkBlue)!important;
+}
 .heading-checkOut{
   margin-top: 5rem;
   display: flex;
@@ -106,12 +159,7 @@ code {
 .pharmacy-container{
   margin-top:5rem!important;
 }
-.medicine-card
-{
-  width: 125% !important;
-  background-color: var(--customMagenta) !important;
-  height: 12rem !important;
-}
+
 
 .stock-P{
   color: white !important;
@@ -121,8 +169,8 @@ code {
   color: white !important;
 }
 .medicine-details-card{
-  margin-top: 7%;
-  height: 100% !important;
+  margin-top: 70px;
+  height: 90% !important;
 }
 .billing-details-card{
   margin-top: 5%;
@@ -133,6 +181,7 @@ code {
   color: white !important;
   font-size: 1.5rem;
   font-weight: bold;
+  text-align: center;
 }
 .billing-details-card-header{
   background-color: var(--customMagenta) !important;
