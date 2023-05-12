@@ -9,6 +9,8 @@ import { useToken } from '../../Hooks/useToken.js';
 const CheckOutPage = ({}) => {
   const user=useToken();
   const userId=user._id;
+  const [customerEmail,setCustomerEmail]=useState("");
+  const [customerPhoneNumber,setCustomerNumber]=useState("");
   const [fullName, setFullName] = useState();
   const [address, setAddress] = useState();
   const [city, setCity] = useState();
@@ -20,16 +22,28 @@ const CheckOutPage = ({}) => {
   const [totalPrice, setTotalPrice] = useState(0);
 
   useEffect(() => {
+    const retrieveUser=async ()=>{
+      await axios.get('/api/profile/user/getUser/'+user._id,{
+        headers:{'Authorization': `Bearer ${user.token}`}
+      }).then((result)=>{
+        setCustomerNumber(result.data.phone);
+        setCustomerEmail(result.data.email);
+      })
+    }
+    retrieveUser();
     let price = 0;
     cart.forEach(item => {
       price += item.price;
     });
     setTotalPrice(price);
-  }, []);
+  }, [customerEmail]);
   const handleCheckOut = async () => {
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
       customer_data: {
+        email:customerEmail,
+        phone:customerPhoneNumber,
+        pharmacyID:"1234",
         fullName: fullName,
         address: address,
         city: city,
