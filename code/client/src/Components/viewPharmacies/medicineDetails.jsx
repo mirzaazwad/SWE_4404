@@ -192,7 +192,7 @@ const MedicineDetails = () => {
               <p style={{ color: "#EB006F", fontSize: "20px" }}>
                 Manufacturer: {medicine.Manufacturer}
               </p><hr/>
-              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice/units}</p><hr/>
+              <p style={{ color: "red" ,fontSize: "25px" }}>Price: ৳{medicine.SellingPrice*units}</p><hr/>
               <p>Stock:</p>
               {medicine.Stock && (
                 <div>
