@@ -4,7 +4,6 @@ import NavbarPharmacy from "../../partials/profile/navbarPharmacy";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import {useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
 import { useSocket } from "../../../Hooks/useSocket";
 import Category from "./addCategory";
 import Type from "./addType";
@@ -15,8 +14,7 @@ import Loader from "../../partials/loader";
 
 const AddMedicine = () => {
   const user=useToken();
-  const id = useParams();
-  const _id = id.id;
+  const _id = useParams().id;
   useSocket(_id,[]);
   const [categories, setCategories] = useState(null);
   const [types, setTypes] = useState(null);
@@ -92,7 +90,7 @@ const AddMedicine = () => {
 
   const handleMedicineType = (e) => {
     setMedicineType(e);
-    console.log(e);
+    console.log('medicine Type is: ',e);
     setHasStrips(false);
     types.forEach((elem) => {
       if (elem.hasStrips && elem._id === e._id) {

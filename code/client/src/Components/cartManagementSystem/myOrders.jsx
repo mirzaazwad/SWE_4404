@@ -13,7 +13,7 @@ const MyOrders = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const res = await axios.get(`http://localhost:4000/api/order/getOrder/${userId}`,{
+        const res = await axios.get(`/api/order/getOrder/${userId}`,{
           headers:{'Authorization': `Bearer ${user.token}`}
         });
         const sortedOrders = res.data.order_data.sort((a, b) => new Date(b.date) - new Date(a.date));
