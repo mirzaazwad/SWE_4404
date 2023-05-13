@@ -86,6 +86,7 @@ const CheckOutPage = ({}) => {
     e.preventDefault();
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
+      prescritionBasedOrder : false,
       customer_data: {
         email:customerEmail,
         phone:customerPhoneNumber,
