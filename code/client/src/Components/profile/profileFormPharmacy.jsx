@@ -116,6 +116,7 @@ const ProfileFormPharmacy=(id)=> {
       })
       await axios.patch('/api/profile/seller/'+seller.email,{
         email:seller.email,
+        coordinates:location,
         pharmacy:pharmacy
       },{headers: {
         'Authorization': `Bearer ${user.token}`

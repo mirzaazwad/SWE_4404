@@ -13,6 +13,7 @@ exports.getAllPharmacies = async (req, res) => {
           pharmacyManagerID:user._id,
           name: seller.pharmacy,
           location: user.address,
+          coordinates:user.coordinates,
           imageURL: user.imageURL
         });
       }
