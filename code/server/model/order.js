@@ -5,8 +5,7 @@ const { Schema } = mongoose;
 const OrderSchema = new Schema({
   userId: {
     type: String,
-    required: true,
-    unique: true
+    required: true
   },
   order_data: [{
     date: {
@@ -17,16 +16,14 @@ const OrderSchema = new Schema({
       type: Array,
       required: true
     },
-    customer_data: [
-      {
+    customer_data:{
         fullName: String,
         address: String,
         city: String,
         postalCode: String,
         country: String,
         payment: String
-      }
-    ],
+    },
     status: {
       type: String,
       default: 'Pending'

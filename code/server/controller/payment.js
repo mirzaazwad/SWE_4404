@@ -1,7 +1,10 @@
 const successfulPayment=(req,res)=>{
-  console.log(req);
-  console.log('successful');
-  return res.status(200).json(req.body);
+  const value=req.params;
+  const orderId=value.oid;
+  const pharmacyId=value.pid
+  console.log('order ID: ',orderId);
+  console.log('pharmacyID ID: ',pharmacyId);
+  return res.redirect('http://localhost:3000/myOrders');
 }
 
 const failedPayment=(req,res)=>{
