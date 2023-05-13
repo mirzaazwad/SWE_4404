@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import {useNavigate, useLocation} from "react-router-dom";
-import { Button, Card, Form, Modal } from "react-bootstrap";
+import { Button, Card, Form } from "react-bootstrap";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem } from '../../Contexts/cartAction.js';
 import { useToken } from "../../Hooks/useToken";
+import ErrorModal from "../partials/errorModal";
 
 const MedicineDetails = () => {
   const user=useToken();
@@ -190,15 +191,7 @@ const MedicineDetails = () => {
           <Card.Body>
             <Card.Title></Card.Title>
             <Card.Subtitle className="mb-2 text-muted">
-              
-                <Modal show={error!==""} onHide={()=>setError("")} style={{marginTop:"10vh",marginLeft:"50vh",width:"100vh",height:"100vh"}}>
-                  <Modal.Header style={{backgroundColor:"#103686",color:"white"}} closeButton>Error</Modal.Header>
-                  <Modal.Body>
-                  <div className="errorMessage" style={{color:"red"}}>
-                    {error}
-                  </div>
-                  </Modal.Body>
-                </Modal>
+              <ErrorModal error={error} setError={setError}/>
               <p style={{ fontSize: "20px" }}>Generic Name: {medicine.GenericName}</p><hr/>
               <p style={{ fontSize: "20px" }}>Type: {medicine.medicineType} </p><hr/>
               <p style={{ fontSize: "20px" }}>Category: {medicine.medicineCategory} </p><hr/>

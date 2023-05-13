@@ -8,7 +8,6 @@ const postOrder = async (req, res) => {
     const items = req.body.items;
     const customer_data = req.body.customer_data;
     const prescriptionBasedOrder = req.body.prescriptionBasedOrder;
-    console.log(customer_data);
 
     const order = await Order.findOne({
       userId: userId
@@ -35,12 +34,11 @@ const postOrder = async (req, res) => {
   await pharmacy.save();
   if(customer_data.payment==="Digital Payment"){
     const result=await makePayment(customer_data,order._id.toString());
-    console.log(result);
     if(result){
       return res.status(200).json({paymentSuccessful:true,url:result});
     }
     else{
-      throw Error('Digital Payment Failed');
+      throw Error('Digital Payment Failed due to gateway error');
     }
   }
     } else {
@@ -65,17 +63,15 @@ const postOrder = async (req, res) => {
   await pharmacy.save();
   if(customer_data.payment==="Digital Payment"){
     const result=await makePayment(customer_data,newOrder._id.toString());
-    console.log(result);
     if(result){
       return res.status(200).json({paymentSuccessful:true,url:result});
     }
     else{
-      throw Error('Digital Payment Failed');
+      throw Error('Digital Payment Failed due to gateway error');
     }
   }
     }
-
-    return res.status(200);
+    return res.status(200).json({paymentSuccessful:false,type:'cash',url:null});
   } catch (err) {
     console.error(err);
     return res.status(500).json({

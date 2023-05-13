@@ -2,7 +2,7 @@ import { Button, Form, Modal } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
 import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import PlacesAutocomplete from "./placesAutocomplete";
-import Loader from "../../partials/loader";
+import Loader from "../loader";
 
 const MapModal = (props) => {
   const { isLoaded } = useLoadScript({
@@ -18,7 +18,9 @@ const MapModal = (props) => {
 }
 
 const Map = (props)=>{
-  const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:23,lng:-90}), [props.currentLocation]);
+  console.log('props.current location: ',props.currentLocation);
+  const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:23.7562,lng:90.3756}), [props.currentLocation]);
+  console.log('center: ',center);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
   const [isValid,setIsValid]=useState(false);
