@@ -6,29 +6,53 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToken } from "../../Hooks/useToken";
 
-const PharmacyPage = () => {
+const OrderByPrescription = () => {
   const [pharmacies, setPharmacies] = useState([]);
   const user = useToken();
+  const { id, prop1, prop2 } = useParams();
+  const [medicine, setMedicine] = useState([]);
+  const [selectedPharmacyId, setSelectedPharmacyId] = useState(null); // Added state for selected pharmacy ID
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(
-          "http://localhost:4000/api/pharmacies/",
-          {
-            headers: { Authorization: `Bearer ${user.token}` },
-          }
-        );
+        const response = await axios.get("http://localhost:4000/api/pharmacies/", {
+          headers: { Authorization: `Bearer ${user.token}` },
+        });
         console.log(response);
         setPharmacies(response.data.pharmacies);
+        setMedicine([
+          {
+            prescriptionImageURL: `http://res.cloudinary.com/dzerdaaku/image/upload/${prop1}${prop2}`,
+            pharmacyManagerId: selectedPharmacyId,
+            userId: user._id,
+          },
+        ]);
         console.log(response.data.pharmacies);
       } catch (error) {
         console.log(error);
       }
     };
     fetchData();
-  }, []);
+  }, [selectedPharmacyId, user.token, prop1, prop2]);
 
-  const { id } = useParams();
+  const handleRequestOrder = async (e, pharmacyId) => {
+    e.preventDefault();
+    setSelectedPharmacyId(pharmacyId); // Set the selected pharmacy ID
+    const user = JSON.parse(localStorage.getItem("user"));
+    const response = await axios.post(
+      `http://localhost:4000/api/order/postOrder/${user._id}`,
+      {
+        items: medicine,
+        prescritionBasedOrder: true,
+        pharmacyManagerId: selectedPharmacyId,
+      },
+      {
+        headers: { Authorization: `Bearer ${user.token}` },
+      }
+    );
+    alert("Order has been placed, you will be notified when the order is approved.");
+  };
 
   return (
     <div>
@@ -49,11 +73,14 @@ const PharmacyPage = () => {
                   />
                   <Card.Body className="order-prescription-pharmacy-card-body">
                     <Card.Title>{pharmacy.name}</Card.Title>
-                    <Card.Text style={{display: 'block'}}>location={pharmacy.location}</Card.Text>
+                    <Card.Text style={{ display: "block" }}>location={pharmacy.location}</Card.Text>
                   </Card.Body>
                   <Card.Footer className="order-prescription-pharmacy-footer">
-                  <Button className="btn btn-confirm-pharmacy">
-                    Request Order
+                    <Button
+                      className="btn btn-confirm-pharmacy"
+                      onClick={(e) => handleRequestOrder(e, pharmacy.id)} // Pass the pharmacy ID to handleRequestOrder
+                    >
+                      Request Order
                     </Button>
                   </Card.Footer>
                 </Card>
@@ -66,4 +93,4 @@ const PharmacyPage = () => {
   );
 };
 
-export default PharmacyPage;
+export default OrderByPrescription;

@@ -102,8 +102,10 @@ const Prescription = ({ currentUser }) => {
               </div>
       </Link>
             <div>
-            <Button href='/orderByPrescription' className='btn btn-prescription-order'>Request Order
+            <Link to={`/orderByPrescription/${prop1}/${prop2}`}>
+            <Button className='btn btn-prescription-order'>Request Order
             </Button>
+            </Link>
             </div>
             </div>
           </Card.Body>
