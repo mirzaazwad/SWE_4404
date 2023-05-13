@@ -66,6 +66,8 @@ const CheckOutPage = ({}) => {
       await axios.get('/api/profile/user/getUser/'+user._id,{
         headers:{'Authorization': `Bearer ${user.token}`}
       }).then((result)=>{
+        setLocation(result.data.coordinates);
+        setAddress(result.data.address);
         setFullName(result.data.username);
         setCustomerNumber(result.data.phone);
         setCustomerEmail(result.data.email);

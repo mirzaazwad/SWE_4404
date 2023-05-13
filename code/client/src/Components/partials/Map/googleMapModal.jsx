@@ -7,10 +7,13 @@ import { Button, Form, Modal } from "react-bootstrap";
 const MapModal = (props)=>{
   console.log('props.current location: ',props.currentLocation);
   const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:null,lng:null}), [props.currentLocation]);
-  console.log('center: ',center);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
   const [isValid,setIsValid]=useState(false);
+
+  useEffect(()=>{
+    setMarkerPosition(props.currentLocation);
+  },[props.currentLocation])
 
   const handleMapClick = (event) => {
     setIsValid(true);
