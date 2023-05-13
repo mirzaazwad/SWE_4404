@@ -7,7 +7,7 @@ import axios from 'axios';
 import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
 import { useLocation, useNavigate } from 'react-router-dom';
-import MapModal from '../partials/Map/mapModal.jsx';
+import MapModal from '../partials/Map/map.jsx';
 import ErrorModal from '../partials/errorModal.jsx';
 const CheckOutPage = ({}) => {
   const user=useToken();
@@ -66,6 +66,9 @@ const CheckOutPage = ({}) => {
       await axios.get('/api/profile/user/getUser/'+user._id,{
         headers:{'Authorization': `Bearer ${user.token}`}
       }).then((result)=>{
+        setLocation(result.data.coordinates);
+        setAddress(result.data.address);
+        setFullName(result.data.username);
         setCustomerNumber(result.data.phone);
         setCustomerEmail(result.data.email);
       })
@@ -77,6 +80,7 @@ const CheckOutPage = ({}) => {
     });
     setTotalPrice(price);
   }, [customerEmail]);
+
   const handleCheckOut = async (e) => {
     setDisabled(true);
     e.preventDefault();
@@ -137,12 +141,40 @@ const CheckOutPage = ({}) => {
                   />
                 </Col>
               </Form.Group>
+              <Form.Group className="mb-3" as={Row} controlId="fullName">
+                <Form.Label column sm={3}>
+                  Email
+                </Form.Label>
+                <Col sm={9}>
+                  <Form.Control
+                    type="text"
+                    value={customerEmail}
+                    onChange={(e) => setCustomerEmail(e.target.value)}
+                    disabled={true}
+                    required
+                  />
+                </Col>
+              </Form.Group>
+              <Form.Group className="mb-3" as={Row} controlId="fullName">
+                <Form.Label column sm={3}>
+                  Mobile Number:
+                </Form.Label>
+                <Col sm={9}>
+                  <Form.Control
+                    type="text"
+                    value={customerPhoneNumber}
+                    onChange={(e) => setCustomerNumber(e.target.value)}
+                    disabled={true}
+                    required
+                  />
+                </Col>
+              </Form.Group>
               <Form.Group className="mb-3" as={Row} controlId="address">
                 <Form.Label column sm={3}>
                   Address
                 </Form.Label>
                 <Col sm={9}>
-                <Form.Control type="address" placeholder="Address" value={address} onClick={()=>setShowMAP(!showMAP)} required/>
+                <Form.Control type="address" placeholder="Address" value={address==="7M59GGJQ+MR"?"":address} onClick={()=>setShowMAP(!showMAP)} required/>
                 </Col>
               </Form.Group>
               <Form.Group className="mb-3" as={Row}>
@@ -156,7 +188,7 @@ const CheckOutPage = ({}) => {
               </Form.Group>
           </Card.Body>
           <Card.Footer>
-          <Button className="btn btn-placeOrder" type="submit" disabled={payment===null || disabled}>Place Order</Button>
+          <Button className="btn btn-placeOrder" type="submit" disabled={payment===null || disabled || address==="7M59GGJQ+MR"}>Place Order</Button>
           </Card.Footer>
           </Form>
         </Card>
@@ -212,7 +244,6 @@ const CheckOutPage = ({}) => {
             <div><h5 style={{color: "red"}}>৳{totalPrice+50}</h5></div>
         </div>
           </Card.Body>
-          
         </Card>
       </div>
     </div>

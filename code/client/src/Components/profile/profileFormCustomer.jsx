@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setBuyerUser } from "../../Contexts/action";
 import CryptoJS from "crypto-js";
 import PhoneVerify from "./PhoneVerification/phoneVerify";
+import Map from "../partials/Map/map";
 
 const ProfileFormCustomer = (id) => {
   const _id = id;
@@ -28,6 +29,10 @@ const ProfileFormCustomer = (id) => {
   const [loaded,setLoaded] = useState(false);
   const [showPhoneVerify,setShowPhoneVerify]=useState(false);
   const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
+  const [address,setAddress]=useState("");
+  const [location,setLocation]=useState(null);
+  const [showMAP,setShowMAP]=useState(false);
+  const [stopDropDown,setStopDropDown]=useState(false);
   const handleClosePhoneVerify=()=>{
     setShowPhoneVerify(false);
   }
@@ -37,6 +42,7 @@ const ProfileFormCustomer = (id) => {
   useEffect(() => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
+    setAddress(buyer.address);
     setLoaded(true);
   }, [buyer]);
 
@@ -91,7 +97,9 @@ const ProfileFormCustomer = (id) => {
       .patch(
         "/api/profile/user/updateUser/" + _id.id,
         {
-          username: username
+          username: username,
+          address:address,
+          coordinates: location
         },
         {
           headers: {
@@ -146,6 +154,8 @@ const ProfileFormCustomer = (id) => {
           </button>
         </div>
         <Form>
+        <div className="error">{error}</div>
+        <Map currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control
@@ -164,6 +174,10 @@ const ProfileFormCustomer = (id) => {
           </InputGroup>
           <div className="errorMessage" style={{color:"red"}}>{error}</div>
         </Form.Group>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label>Home Address</Form.Label>
+          <Form.Control type="address" placeholder="Address" value={address} onChange={(e)=>setAddress(e.target.value)} disabled={true}/>
+        </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
             <Form.Control
@@ -173,21 +187,15 @@ const ProfileFormCustomer = (id) => {
               value={buyer.email}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            {isEditing && (
-              <a href={"changePassword/" + user._id}>Change Password</a>
-            )}
-          </Form.Group>
-  
-          {isEditing && (
-            <Button
-              className="btn btn-outline-dark btn-save"
-              disabled={isLocked}
-              onClick={handleShow}
-            >
-              Save
-            </Button>
-          )}
+          <InputGroup className="mb-3" controlId="formBasicPassword">
+        {isEditing && (<Button onClick={()=>setShowMAP(true)}>Add/Change Location Information</Button>)}
+          {isEditing &&(<a href={"changePassword/" + user._id} style={{marginLeft:"75%"}}>Change Password</a>)}
+        </InputGroup>
+        {isEditing && (
+          <Button className="btn btn-outline-dark btn-save" disabled={isLocked} onClick={handleShow}>
+            Save
+          </Button>
+        )}
         
         <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -232,7 +240,7 @@ const ProfileFormCustomer = (id) => {
           </Modal.Footer>
         </Modal>
       </Form>
-      <PhoneVerify _id={_id.id} user={user} data={{phone:phone,username:username}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+      <PhoneVerify _id={_id.id} user={user} data={{email:buyer.email,phone:phone,username:username,address:address,coordinates:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
       </div>
     );
   }
