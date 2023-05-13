@@ -6,10 +6,19 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
 import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 const CheckOutPage = ({}) => {
   const user=useToken();
   const navigate=useNavigate();
+  const location=useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const paymentStatus = queryParams.get('paymentStatus');
+  const orderId = queryParams.get('oid');
+  const pharmacyId=queryParams.get('pid');
+  console.log(paymentStatus);
+  console.log(orderId);
+  console.log(pharmacyId);
+
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
   const [customerPhoneNumber,setCustomerNumber]=useState("");
@@ -60,7 +69,9 @@ const CheckOutPage = ({}) => {
       headers:{'Authorization': `Bearer ${user.token}`}
     }).then(async (result)=>{
       await dispatch(clearItems());
-      window.location.href=result.data.url});
+      if(result.data.url)window.location.href=result.data.url;
+      else navigate('/myOrders');
+    });
     
   };
   return (

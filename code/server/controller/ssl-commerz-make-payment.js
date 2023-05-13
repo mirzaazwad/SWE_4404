@@ -1,5 +1,4 @@
 const SSLCommerzPayment = require('sslcommerz').SslCommerzPayment;
-require("dotenv").config();
 
 const makePayment = async (customer,orderID) => {
   const data = {
@@ -7,9 +6,9 @@ const makePayment = async (customer,orderID) => {
     currency: "BDT",
     tran_id: orderID,
     success_url: `http://localhost:4000/api/make-payment/success/order/${orderID}/pharmacy/${customer.pharmacyManagerID}`,
-    fail_url: "http://localhost:4000/api/make-payment/fail",
-    cancel_url: "http://localhost:4000/api/make-payment/cancel",
-    ipn_url: "http://localhost:4000/api/make-payment/ipn",
+    fail_url: `http://localhost:4000/api/make-payment/fail/order/${orderID}/pharmacy/${customer.pharmacyManagerID}`,
+    cancel_url: `http://localhost:4000/api/make-payment/cancel/order/${orderID}/pharmacy/${customer.pharmacyManagerID}`,
+    ipn_url: `http://localhost:4000/api/make-payment/ipn/order/${orderID}/pharmacy/${customer.pharmacyManagerID}`,
     shipping_method: "Courier",
     product_name: "Medical Supplies from "+customer.pharmacyManagerID,
     product_category: "Medicines",
@@ -32,7 +31,7 @@ const makePayment = async (customer,orderID) => {
   };
   const sslcommer = new SSLCommerzPayment('testbox', 'qwerty', false); //true for live default false for sandbox
   const result=await sslcommer.init(data);
-  return result.GatewayPageURL;
+  return result?.GatewayPageURL?result.GatewayPageURL:null;
 };
 
 module.exports = {makePayment};
