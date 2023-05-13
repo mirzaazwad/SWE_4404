@@ -181,12 +181,12 @@ const MedicineDetails = () => {
             {medicine.MedicineName}
           </Card.Header>
           <div className="row">
-          <div className="col-md-6">
+          <div className="col-sm-12 col-md-12 col-lg-6">
           <Card className="ms-2" style={{border: 'none'}}>
                 <Card.Img variant="top" src={medicine.imageURL} className="medicine-details-image"/>
               </Card>
             </div>
-            <div className="col-md-6">
+            <div className="col-sm-12 col-md-12 col-lg-6">
           
           <Card.Body>
             <Card.Title></Card.Title>

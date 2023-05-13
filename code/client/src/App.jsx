@@ -178,7 +178,7 @@ const App=()=> {
               <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderDetails/:userId/:orderId" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
               <Route exact path="/prescription" element={user && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
-              <Route exact path="/orderByPrescription" element={user && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>

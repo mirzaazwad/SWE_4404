@@ -77,7 +77,9 @@ const PhoneVerify = (props) => {
         "/api/profile/user/updateUser/" + _id,
         {
           username: props.data.username,
-          phone: props.data.phone
+          phone: props.data.phone,
+          address: props.data.address,
+          coordinates:props.data.coordinates
         },
         {
           headers: {
