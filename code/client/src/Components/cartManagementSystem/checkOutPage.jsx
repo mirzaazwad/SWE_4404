@@ -6,23 +6,60 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
 import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import MapModal from '../partials/Map/mapModal.jsx';
+import ErrorModal from '../partials/errorModal.jsx';
 const CheckOutPage = ({}) => {
   const user=useToken();
   const navigate=useNavigate();
+  const locator=useLocation();
+  const queryParams = new URLSearchParams(locator.search);
+  const paymentStatus = queryParams.get('paymentStatus');
+  const orderId = queryParams.get('oid');
+  const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
   const [customerPhoneNumber,setCustomerNumber]=useState("");
   const [fullName, setFullName] = useState();
   const [address, setAddress] = useState();
-  const [city, setCity] = useState();
-  const [postalCode, setPostalCode] = useState();
-  const [country, setCountry] = useState();
-  const [payment, setPayment] = useState();
+  const [payment, setPayment] = useState(null);
   const dispatch = useDispatch();
   const pharmacyManagerID=localStorage.getItem('cartPharmacyManager') || "";
   const cart = useSelector(state => state.cartState) || [];
   const [totalPrice, setTotalPrice] = useState(0);
+  const [location,setLocation]=useState(null);
+  const [showMAP,setShowMAP]=useState(false);
+  const [stopDropDown,setStopDropDown]=useState(false);
+  const [error,setError]=useState("");
+  const [disabled,setDisabled]=useState(false);
+
+  useEffect(()=>{
+    setFullName(queryParams.get('cname'));
+    setAddress(queryParams.get('address'));
+    const onSuccess=async ()=>{
+      await dispatch(clearItems());
+      navigate('/myOrders');
+    }
+    if(paymentStatus==="success"){
+      onSuccess();
+    }
+    else if(paymentStatus==="fail"){
+      setError("Digital Payment Failed");
+    }
+    else if(paymentStatus==="cancel"){
+      setError("Digital Payment was Cancelled");
+    }
+    else if(paymentStatus==="risky"){
+      setError("Digital Payment was risky");
+    }
+  },[paymentStatus,orderId,pharmacyId])
+
+  useEffect(()=>{
+    if(cart.length===0){
+      navigate('/myOrders');
+    }
+  },[cart])
+
 
   useEffect(() => {
     const retrieveUser=async ()=>{
@@ -41,6 +78,7 @@ const CheckOutPage = ({}) => {
     setTotalPrice(price);
   }, [customerEmail]);
   const handleCheckOut = async (e) => {
+    setDisabled(true);
     e.preventDefault();
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
@@ -50,23 +88,26 @@ const CheckOutPage = ({}) => {
         pharmacyManagerID:pharmacyManagerID,
         fullName: fullName,
         address: address,
-        city: city,
-        postalCode: postalCode,
-        country: country,
+        coordinates:location,
         payment: payment,
         amount: totalPrice
       },
     },{
       headers:{'Authorization': `Bearer ${user.token}`}
     }).then(async (result)=>{
-      await dispatch(clearItems());
-      window.location.href=result.data.url});
+      if(result.data.url)window.location.href=result.data.url;
+      else {
+        await dispatch(clearItems());
+        navigate('/myOrders');
+      }
+    });
     
   };
   return (
-    <div>
-
-        <div>
+    <div className="CheckOutPage">
+       <MapModal currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+       <ErrorModal error={error} setError={setError}/>
+        <div className='navbarCustomer'>
         <NavbarCustomer />
       </div>
       <div className="heading-checkOut">
@@ -100,51 +141,7 @@ const CheckOutPage = ({}) => {
                   Address
                 </Form.Label>
                 <Col sm={9}>
-                  <Form.Control
-                    type="text"
-                    value={address}
-                    onChange={(e) => setAddress(e.target.value)}
-                    required
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group className="mb-3" as={Row} controlId="city">
-                <Form.Label column sm={3}>
-                  City
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    required
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group className="mb-3" as={Row} controlId="postalCode">
-                <Form.Label column sm={3}>
-                  Postal Code
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    type="text"
-                    value={postalCode}
-                    onChange={(e) => setPostalCode(e.target.value)}
-                    required
-                  />
-                </Col>
-              </Form.Group>
-              <Form.Group className="mb-3" as={Row} controlId="country">
-                <Form.Label column sm={3}>
-                  Country
-                </Form.Label>
-                <Col sm={9}>
-                  <Form.Control
-                    type="text"
-                    value={country}
-                    onChange={(e) => setCountry(e.target.value)}
-                    required
-                  />
+                <Form.Control type="address" placeholder="Address" value={address} onClick={()=>setShowMAP(!showMAP)} required/>
                 </Col>
               </Form.Group>
               <Form.Group className="mb-3" as={Row}>
@@ -158,7 +155,7 @@ const CheckOutPage = ({}) => {
               </Form.Group>
           </Card.Body>
           <Card.Footer>
-          <Button className="btn btn-placeOrder" type="submit">Place Order</Button>
+          <Button className="btn btn-placeOrder" type="submit" disabled={payment===null || disabled}>Place Order</Button>
           </Card.Footer>
           </Form>
         </Card>
