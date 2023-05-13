@@ -35,7 +35,7 @@ const SearchMapModal = (props)=>{
   };
 
   const getPlaceDetails = async (lat, lng) => {
-    if(lat===null || lng===null){
+    if(!lat || !lng){
       return null;
     }
     const response = await fetch(
