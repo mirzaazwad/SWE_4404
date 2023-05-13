@@ -38,7 +38,7 @@ const PharmacyPage = () => {
     setFilteredPharmacy(sortedArray);
   }
 
-  const fetchData = async () => {
+  const fetchPharmacies = async () => {
     try {
       const response = await axios.get("/api/pharmacies/",{
         headers:{'Authorization': `Bearer ${user.token}`}
@@ -61,7 +61,7 @@ const PharmacyPage = () => {
   useEffect(()=>{
     const retrieve=async ()=>{
       await retrieveUser(user._id);
-      await fetchData();
+      await fetchPharmacies();
     }
     retrieve();
   },[user])
@@ -70,7 +70,7 @@ const PharmacyPage = () => {
     if(pharmacies){
       sortPharmacies(location);
     }
-  },[location])
+  },[location,pharmacies])
 
   useEffect(()=>{
     if(pharmacies){

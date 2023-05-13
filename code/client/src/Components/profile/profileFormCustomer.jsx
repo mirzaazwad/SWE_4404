@@ -43,6 +43,7 @@ const ProfileFormCustomer = (id) => {
     setUsername(buyer.username);
     setPhone(buyer.phone);
     setAddress(buyer.address);
+    setLocation(buyer.coordinates);
     setLoaded(true);
   }, [buyer]);
 
