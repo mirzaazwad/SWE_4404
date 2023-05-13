@@ -54,6 +54,15 @@ body {
   margin-top: 80px !important;
   margin-left: 70px;
 }
+@media screen and (max-width: 600px) {
+  .medicine-details-image {
+    width: 200px!important;
+    height: 200px!important;
+    margin-top: 40px!important;
+    margin-left: 35px;
+  }
+}
+
 .medicine-card
 {
   width: 125% !important;

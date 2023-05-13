@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
 import PhoneVerify from "./PhoneVerification/phoneVerify";
-import MapModal from "../partials/Map/mapModal";
+import Map from "../partials/Map/map";
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
@@ -160,7 +160,7 @@ const ProfileFormPharmacy=(id)=> {
       </div>
       <Form>
         <div className="error">{error}</div>
-      <MapModal currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+      <Map currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
       <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Pharmacy Name</Form.Label>
           <Form.Control type="pharmacyName" placeholder="Enter name of your pharmacy" disabled={isDisabled} value={pharmacy} onChange={(e)=>setPharmacy(e.target.value)}/>
