@@ -1,37 +1,7 @@
 const mongoose = require("mongoose");
 const medicineType = require("./medicine-type");
+const OrderDetailsSchema = require("./order-details");
 const Schema = mongoose.Schema;
-
-const OrderSchema = new Schema({
-    orderId: {
-      type: String,
-      required: true,
-      unique: true
-    },
-    date: {
-      type: Date,
-      default: Date.now
-    },
-    medicines: {
-      type: Array,
-      required: true
-    },
-    customer_data: [
-      {
-        fullName: String,
-        address: String,
-        city: String,
-        postalCode: String,
-        country: String,
-        payment: String
-      }
-    ],
-    status: {
-      type: String,
-      default: 'Pending'
-    }
-
-});
 
 const medicineSchema = new Schema({
   MedicineName: {
@@ -155,7 +125,7 @@ const pharmacySchema = new Schema({
     type: String,
   },
   Inventory: [medicineSchema],
-  Orders: [OrderSchema]
+  Orders: [OrderDetailsSchema]
 });
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {
