@@ -20,7 +20,6 @@ exports.getAllCategories = async (req, res) => {
 exports.getMedicine = async (req, res, next) => {
   const pharmacyId = req.params.id;
   const medicineId = req.params.medicineId;
-
   try {
     const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: pharmacyId });
 

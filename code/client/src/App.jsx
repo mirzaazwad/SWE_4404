@@ -13,7 +13,6 @@ import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 import Medicine from "./Components/viewPharmacies/medicineDetails";
-import {CartProvider} from './Contexts/cartAction.js';
 import MyOrders from "./Components/cartManagementSystem/myOrders";
 import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
 import ChatPage from "./Components/chat/chatRoom";
@@ -21,6 +20,7 @@ import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import './index.css';
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
+import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
 
 const App=()=> {
   let user = useSelector((state) => state.userState.user);
@@ -165,7 +165,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="pharmacy/:id/medicine/:medicineId"
+                path="pharmacy/medicine"
                 element={
                   user && user.verified === true ? (
                     <Medicine />
@@ -178,6 +178,7 @@ const App=()=> {
               <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderDetails/:userId/:orderId" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
               <Route exact path="/prescription" element={user && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderByPrescription" element={user && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
