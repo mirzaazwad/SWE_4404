@@ -45,6 +45,7 @@ const OrderByPrescription = () => {
       {
         items: medicine,
         prescritionBasedOrder: true,
+        pharmacyManagerId: selectedPharmacyId,
       },
       {
         headers: { Authorization: `Bearer ${user.token}` },
