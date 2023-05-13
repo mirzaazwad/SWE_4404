@@ -13,6 +13,7 @@ const PharmacyMedicines = () => {
   const [medicines, setMedicines] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
+  const [searchCriteria, setSearchCriteria] = useState("medicine");
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
@@ -51,7 +52,7 @@ const PharmacyMedicines = () => {
   
 
   const filteredMedicines = medicines.filter((medicine) =>
-    medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase())
+    searchCriteria==="medicine"?medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase()):medicine.GenericName.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -61,7 +62,13 @@ const PharmacyMedicines = () => {
       <section>
         <div className="container-fluid pharmacy-container">
           {/* <h1>Medicines Available:</h1> */}
+          <div>
           <div className="d-flex justify-content-center">
+            <p style={{fontSize:"14px",paddingRight:"5px"}}>Search By: </p>
+            <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none"}}>Medicine</Button>
+            <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("generic")} style={{backgroundColor:searchCriteria==="generic"?"#EB006F":"#3b6ce7",border:"none"}}>Generic Name</Button>
+          </div>
+          <div className="d-flex justify-content-center" style={{paddingBottom:"0px"}}>
             <Form className="search-input d-flex">
               <Form.Control
                 type="search"
@@ -73,6 +80,7 @@ const PharmacyMedicines = () => {
               />
               <Button className="btn btn-search h-100">Search</Button>
             </Form>
+          </div>
           </div>
           <div className="row">
             {filteredMedicines.map((medicine) => (
