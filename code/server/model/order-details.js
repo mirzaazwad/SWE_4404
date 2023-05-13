@@ -17,22 +17,36 @@ const OrderSchema = new Schema(
           type: String,
           required: true,
         },
+        email:{
+          type: String,
+          required:true
+        },
+        phone:{
+          type:String,
+          required:true
+        },
+        pharmacyManagerID:{
+          type:String,
+          required:true
+        },
         address: { 
           type: String, 
           required: true 
         },
-        city: { 
-          type: String, 
-          required: true 
+        coordinates:{
+          type:{
+            lat:{
+              type:Number
+            },
+            lng:{
+              type:Number
+            }
+          }
         },
-        postalCode: { 
-          type: String, 
-          required: true 
+        amount:{
+          type:Number,
+          required:true
         },
-        country: { 
-          type: String, 
-          required: true
-         },
         payment: { 
           type: String, 
           required: true 

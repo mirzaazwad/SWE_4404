@@ -14,14 +14,14 @@ const successfulPayment=async (req,res)=>{
     { 'pharmacyManagerID': pharmacyId, 'Orders._id': orderId },
     { $set: { 'Orders.$.payment_status': true }}
   );
-  return res.redirect('http://localhost:3000/myOrders');
+  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=success&oid=${orderId}&pid=${pharmacyId}&cname=${value.cname}&address=${value.address}`);
 }
 
 const failedPayment=(req,res)=>{
   const value=req.params;
   const orderId=value.oid;
   const pharmacyId=value.pid;
-  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=fail&oid=${orderId}&pid=${pharmacyId}`);
+  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=fail&oid=${orderId}&pid=${pharmacyId}&cname=${value.cname}&address=${value.address}`);
 }
 
 const instantPaymentNotification=(req,res)=>{
@@ -29,14 +29,14 @@ const instantPaymentNotification=(req,res)=>{
   const orderId=value.oid;
   const pharmacyId=value.pid;
   console.log(req.body);
-  return res.status(200).json(req.body);
+  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=ipn&oid=${orderId}&pid=${pharmacyId}&cname=${value.cname}&address=${value.address}`);
 }
 
 const cancelPayment=(req,res)=>{
   const value=req.params;
   const orderId=value.oid;
   const pharmacyId=value.pid;
-  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=cancel&oid=${orderId}&pharmacyId=${pharmacyId}`);
+  return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=cancel&oid=${orderId}&pid=${pharmacyId}&cname=${value.cname}&address=${value.address}`);
 }
 
 
