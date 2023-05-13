@@ -7,6 +7,7 @@ const postOrder = async (req, res) => {
     const userId = req.params.userId;
     const items = req.body.items;
     const customer_data = req.body.customer_data;
+    const prescriptionBasedOrder = req.body.prescriptionBasedOrder;
     console.log(customer_data);
 
     const order = await Order.findOne({
@@ -20,14 +21,16 @@ const postOrder = async (req, res) => {
       order.order_data.push({
         date: new Date(),
         medicines: items,
-        customer_data: customer_data
+        customer_data: customer_data,
+        prescriptionBasedOrder: prescriptionBasedOrder
       });
       await order.save();
       pharmacy.Orders.push({
         orderId : order._id.toString(),
         date: new Date(),
         medicines: items,
-        customer_data: customer_data
+        customer_data: customer_data,
+        prescriptionBasedOrder: prescriptionBasedOrder
   });
   await pharmacy.save();
   if(customer_data.payment==="Digital Payment"){
@@ -46,7 +49,8 @@ const postOrder = async (req, res) => {
         order_data: [{
           date: new Date(),
           medicines: items,
-          customer_data: customer_data
+          customer_data: customer_data,
+          prescriptionBasedOrder: prescriptionBasedOrder
         }]
       });
 
@@ -55,7 +59,8 @@ const postOrder = async (req, res) => {
         orderId : newOrder._id.toString(),
         date: new Date(),
         medicines: items,
-        customer_data: customer_data
+        customer_data: customer_data,
+        prescriptionBasedOrder: prescriptionBasedOrder
   });
   await pharmacy.save();
   if(customer_data.payment==="Digital Payment"){

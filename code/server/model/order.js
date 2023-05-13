@@ -8,6 +8,9 @@ const OrderSchema = new Schema({
     required: true
   },
   order_data: [{
+    prescriptionBasedOrder :{
+      type : Boolean
+    },
     date: {
       type: Date,
       default: Date.now

@@ -13,7 +13,7 @@ const cartSlice = createSlice({
     removeItem: (state, action) => {
       const newState = state.filter((item, index) => index !== action.payload.index);
       localStorage.setItem("cartState", JSON.stringify(newState));
-      if(newState.length==0){
+      if(newState.length===0){
         localStorage.removeItem("cartPharmacyManager");
       }
       return newState;
