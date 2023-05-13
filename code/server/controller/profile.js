@@ -125,12 +125,14 @@ const patchSellerByEmail = async (req, res) => {
             { pharmacyManagerID: users._id.toString() },
             {
               pharmacy: req.body.pharmacy,
+              coordinates:req.body.coordinates
             }
           );          
         } else {
           const result = await pharmacyModel.create({
             pharmacyManagerID: users._id.toString(),
             pharmacy: req.body.pharmacy,
+            coordinates:req.body.coordinates
           });
         }
     }

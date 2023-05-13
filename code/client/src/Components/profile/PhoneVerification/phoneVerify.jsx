@@ -62,7 +62,8 @@ const PhoneVerify = (props) => {
       })
         await axios.patch('/api/profile/seller/'+props.data.email,{
           email:props.data.email,
-          pharmacy:props.data.pharmacy
+          coordinates:props.data.coordinates,
+          pharmacy:props.data.pharmacy,
         },{headers: {
           'Authorization': `Bearer ${user.token}`
         }}).then((result)=>{

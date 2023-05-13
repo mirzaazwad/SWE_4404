@@ -1,5 +1,6 @@
 const User = require('../model/user');
 const Seller = require('../model/seller');
+const Pharmacy = require('../model/pharmacy');
 
 exports.getAllPharmacies = async (req, res) => {
   try {
@@ -8,12 +9,15 @@ exports.getAllPharmacies = async (req, res) => {
     for (let seller of sellers) {
       const user = await User.findOne({ email: seller.email, address: { $exists: true } }).lean();
       if (user) {
+        const pharmacy=await Pharmacy.findOne({pharmacyManagerID:seller._id},'Inventory').lean();
         pharmacies.push({
           id: seller._id,
           pharmacyManagerID:user._id,
           name: seller.pharmacy,
           location: user.address,
-          imageURL: user.imageURL
+          coordinates:user.coordinates,
+          imageURL: user.imageURL,
+          inventory: pharmacy.Inventory
         });
       }
     }
