@@ -6,9 +6,7 @@ const payment=require('../controller/payment');
 
 
 // router.use(requireAuth);
-
-router.post('/purchase',SSLCommerz.makePayment);
-router.post('/success',payment.successfulPayment);
+router.post('/success/order/:oid/pharmacy/:pid',payment.successfulPayment);
 router.post('/fail',payment.failedPayment);
 router.post('/ipn',payment.instantPaymentNotification);
 router.post('/cancel',payment.cancelPayment);

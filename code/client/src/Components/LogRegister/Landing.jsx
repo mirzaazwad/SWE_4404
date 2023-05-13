@@ -1,4 +1,4 @@
-import LandingImage from "./image";
+import LandingImage from "../partials/landing/image";
 import NavbarLanding from "../partials/landing/navbarLanding";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Login";

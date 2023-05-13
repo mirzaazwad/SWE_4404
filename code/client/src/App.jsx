@@ -13,7 +13,6 @@ import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 import Medicine from "./Components/viewPharmacies/medicineDetails";
-import {CartProvider} from './Contexts/cartAction.js';
 import MyOrders from "./Components/cartManagementSystem/myOrders";
 import CheckOutPage from "./Components/cartManagementSystem/checkOutPage";
 import ChatPage from "./Components/chat/chatRoom";
@@ -166,7 +165,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="pharmacy/:id/medicine/:medicineId"
+                path="pharmacy/medicine"
                 element={
                   user && user.verified === true ? (
                     <Medicine />

@@ -13,10 +13,14 @@ const cartSlice = createSlice({
     removeItem: (state, action) => {
       const newState = state.filter((item, index) => index !== action.payload.index);
       localStorage.setItem("cartState", JSON.stringify(newState));
+      if(newState.length==0){
+        localStorage.removeItem("cartPharmacyManager");
+      }
       return newState;
     },
     clearItems: (state) => {
       localStorage.setItem("cartState", JSON.stringify([]));
+      localStorage.removeItem("cartPharmacyManager");
       return [];
     },
     updateItem: (state, action) => {
@@ -27,7 +31,7 @@ const cartSlice = createSlice({
             quantityPcs: parseInt(action.payload.quantityPcs) + parseInt(item.quantityPcs),
             quantityStrips: parseInt(action.payload.quantityStrips) + parseInt(item.quantityStrips),
             quantityBoxes: parseInt(action.payload.quantityBoxes) + parseInt(item.quantityBoxes),
-            price: parseInt(action.payload.price) + parseInt(item.price)
+            price: action.payload.price + item.price
           };
         }
         return item;
