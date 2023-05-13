@@ -1,25 +1,12 @@
-import { Button, Form, Modal } from "react-bootstrap";
 import { useEffect, useMemo, useState } from "react";
-import { GoogleMap, useLoadScript, MarkerF } from "@react-google-maps/api";
 import PlacesAutocomplete from "./placesAutocomplete";
-import Loader from "../loader";
+import { GoogleMap, MarkerF } from "@react-google-maps/api";
+import { Button, Form, Modal } from "react-bootstrap";
 
-const MapModal = (props) => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: process.env.REACT_APP_GMPKEY,
-    libraries: [`${process.env.REACT_APP_LIBRARY}`],
-  });
-  if (!isLoaded) {
-    return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)
-  } 
-  else{
-    return (<Map currentLocation={props.currentLocation} address={props.address} setAddress={props.setAddress}  startDropDown={props.startDropDown} dropdown={props.dropdown} show={props.show} handleClose={()=>props.setShow(false)} setLocation={props.setLocation}></Map>)
-  }
-}
 
-const Map = (props)=>{
+const MapModal = (props)=>{
   console.log('props.current location: ',props.currentLocation);
-  const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:23.7562,lng:90.3756}), [props.currentLocation]);
+  const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:null,lng:null}), [props.currentLocation]);
   console.log('center: ',center);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
@@ -120,18 +107,4 @@ const Map = (props)=>{
    );
 }
 
-const Loading = (props) =>{
-  return (
-      <Modal show={props.show} onHide={props.handleClose}>
-      <Modal.Header closeButton>
-      </Modal.Header>
-      <Modal.Body>
-      <Loader></Loader>
-      </Modal.Body>
-    </Modal>
-  );
-}
-
-
- 
 export default MapModal;
