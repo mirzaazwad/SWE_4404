@@ -1,5 +1,6 @@
 const Order = require('../model/order');
 const Pharmacy = require('../model/pharmacy');
+const { makePayment } = require('./ssl-commerz-make-payment');
 
 const postOrder = async (req, res) => {
   try {
@@ -28,6 +29,17 @@ const postOrder = async (req, res) => {
         medicines: items,
         customer_data: customer_data
   });
+  await pharmacy.save();
+  if(customer_data.payment==="Digital Payment"){
+    const result=await makePayment(customer_data,order._id.toString());
+    console.log(result);
+    if(result){
+      return res.status(200).json({paymentSuccessful:true,url:result});
+    }
+    else{
+      throw Error('Digital Payment Failed');
+    }
+  }
     } else {
       const newOrder = new Order({
         userId,
@@ -45,13 +57,24 @@ const postOrder = async (req, res) => {
         medicines: items,
         customer_data: customer_data
   });
+  await pharmacy.save();
+  if(customer_data.payment==="Digital Payment"){
+    const result=await makePayment(customer_data,newOrder._id.toString());
+    console.log(result);
+    if(result){
+      return res.status(200).json({paymentSuccessful:true,url:result});
     }
-    await pharmacy.save();
+    else{
+      throw Error('Digital Payment Failed');
+    }
+  }
+    }
+
     return res.status(200);
   } catch (err) {
     console.error(err);
     return res.status(500).json({
-      error: 'Server error'
+      error: err.message
     });
   }
 };

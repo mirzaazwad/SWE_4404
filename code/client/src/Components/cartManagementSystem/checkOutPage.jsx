@@ -6,8 +6,10 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
 import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
+import { useNavigate } from 'react-router-dom';
 const CheckOutPage = ({}) => {
   const user=useToken();
+  const navigate=useNavigate();
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
   const [customerPhoneNumber,setCustomerNumber]=useState("");
@@ -38,8 +40,8 @@ const CheckOutPage = ({}) => {
     });
     setTotalPrice(price);
   }, [customerEmail]);
-  const handleCheckOut = async () => {
-    
+  const handleCheckOut = async (e) => {
+    e.preventDefault();
     const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
       items: cart,
       customer_data: {
@@ -51,11 +53,12 @@ const CheckOutPage = ({}) => {
         city: city,
         postalCode: postalCode,
         country: country,
-        payment: payment
+        payment: payment,
+        amount: totalPrice
       },
     },{
       headers:{'Authorization': `Bearer ${user.token}`}
-    })
+    }).then((result)=>window.location.href=result.data.url);
     await dispatch(clearItems());
   };
   return (
