@@ -58,8 +58,10 @@ const CheckOutPage = ({}) => {
       },
     },{
       headers:{'Authorization': `Bearer ${user.token}`}
-    }).then((result)=>window.location.href=result.data.url);
-    await dispatch(clearItems());
+    }).then(async (result)=>{
+      await dispatch(clearItems());
+      window.location.href=result.data.url});
+    
   };
   return (
     <div>
