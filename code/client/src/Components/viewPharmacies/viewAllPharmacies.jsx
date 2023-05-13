@@ -1,55 +1,130 @@
 import React from 'react';
-import PharmacyCard from './pharmacyCard';
 import NavbarCustomer from '../partials/profile/navbarCustomer';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useToken } from '../../Hooks/useToken';
+import { Button, Form } from 'react-bootstrap';
+import SearchMap from './SearchMap/searchMap';
+import PharmacyArray from './viewPharmacyArray';
+import Loader from '../partials/loader';
 
 const PharmacyPage = () => {
-  const [pharmacies, setPharmacies] = useState([]);
+  const [pharmacies, setPharmacies] = useState(null);
+  const [searchCriteria, setSearchCriteria] = useState("pharmacy");
+  const [searchTerm,setSearchTerm]=useState("");
+  const [showMAP,setShowMAP]=useState(false);
+  const [stopDropDown,setStopDropDown]=useState(false);
   const user=useToken();
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get("http://localhost:4000/api/pharmacies/",{
-          headers:{'Authorization': `Bearer ${user.token}`}
-        });
-        console.log(response);
-        setPharmacies(response.data.pharmacies);
-        console.log(response.data.pharmacies);
-      } catch (error) {
-        console.log(error);
+  const [location,setLocation]=useState(null);
+  const [filteredPharmacy,setFilteredPharmacy]=useState(null);
+
+  const sortPharmacies = (location) =>{
+    const getDistance=(lat,lng)=>{
+      const distance=Math.sqrt((lat-location.lat)*(lat-location.lat)+(lng-location.lng)*(lng-location.lng));
+      return distance;
+    }
+    const sortedArray = [...filteredPharmacy].sort((a,b)=>{
+      if(getDistance(a.coordinates.lat,a.coordinates.lng)>getDistance(b.coordinates.lat,b.coordinates.lng)){
+        return 1;
       }
-    };
-    fetchData();
-  }, []);
+      else if(getDistance(a.coordinates.lat,a.coordinates.lng)<getDistance(b.coordinates.lat,b.coordinates.lng)){
+        return -1;
+      }
+      else{
+        return 0;
+      }
+    });
+    setFilteredPharmacy(sortedArray);
+  }
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get("/api/pharmacies/",{
+        headers:{'Authorization': `Bearer ${user.token}`}
+      });
+      setPharmacies(response.data.pharmacies);
+      setFilteredPharmacy(response.data.pharmacies);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const retrieveUser=async (id)=>{
+    await axios.get('/api/profile/user/getUser/'+id,{
+      headers:{'Authorization': `Bearer ${user.token}`}
+    }).then((result)=>{
+      setLocation(result.data.coordinates);
+    })
+  }
+
+  useEffect(()=>{
+    const retrieve=async ()=>{
+      await retrieveUser(user._id);
+      await fetchData();
+    }
+    retrieve();
+  },[user])
+
+  useEffect(()=>{
+    if(pharmacies){
+      sortPharmacies(location);
+    }
+  },[location])
+
+  useEffect(()=>{
+    if(pharmacies){
+        if(searchTerm!=="" && searchCriteria!==""){
+          setFilteredPharmacy(pharmacies.filter((pharmacy) =>
+            searchCriteria==="pharmacy"?pharmacy.name.toLowerCase().includes(searchTerm.toLowerCase()):searchCriteria==="medicine"?pharmacy.inventory.some(obj => obj.MedicineName.toLowerCase().includes(searchTerm.toLocaleLowerCase())):pharmacy.inventory.some(obj => obj.GenericName.toLowerCase().includes(searchTerm.toLocaleLowerCase()))
+        ))
+        }
+        else{
+          setFilteredPharmacy(pharmacies);
+        }
+    }
+  },[searchTerm])
 
   const { id } = useParams();
 
-  return (
-    <div>
-      <NavbarCustomer id={id} />
-      <section>
-        <div className="container-fluid pharmacy-container">
-          <div className="row">
-            {pharmacies.map((pharmacy) => (
-              <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
-                <Link to={`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
-                  <PharmacyCard
-                    name={pharmacy.name}
-                    location={pharmacy.location}
-                    image={pharmacy.imageURL}
-                    color= {'#EB006F'}
-                  />
-                </Link>
-              </div>
-            ))}
+  if(pharmacies && location){
+    return (
+      <div>
+        <NavbarCustomer id={id} />
+        <section>
+        <SearchMap customerId={id} currentLocation={location} pharmacies={pharmacies} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+          <div className="container-fluid pharmacy-container">
+            <div className="d-flex">
+              <p style={{marginLeft:'25%',fontSize:"14px",paddingRight:"5px"}}>Search By: </p>
+              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("pharmacy")} style={{backgroundColor:searchCriteria==="pharmacy"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Pharmacy Name</Button>
+              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Medicine Name</Button>
+              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("generic")} style={{backgroundColor:searchCriteria==="generic"?"#EB006F":"#3b6ce7",border:"none"}}>Medicine Generic Name</Button>
+            </div>
+            <div className="d-flex justify-content-center" style={{paddingBottom:"0px"}}>
+              <Form className="search-input d-flex">
+                <Form.Control
+                  type="search"
+                  className=" me-2"
+                  aria-label="Search"
+                  placeholder="Search for a pharmacy..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <Button className="btn btn-search h-100">Search</Button>
+              </Form>
+              <Button style={{marginLeft:"5px"}} onClick={()=>setShowMAP(!showMAP)}>Search By Location</Button>
+            </div>
+            <PharmacyArray id={id} pharmacies={filteredPharmacy}/>
           </div>
-        </div>
-      </section>
-    </div>
-  );
+        </section>
+      </div>
+    );
+  }
+  else{
+    return (
+      <Loader></Loader>
+    )
+  }
 };
 
 export default PharmacyPage;

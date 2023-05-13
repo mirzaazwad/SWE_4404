@@ -65,7 +65,7 @@ const PharmacyMedicines = () => {
           <div>
           <div className="d-flex justify-content-center">
             <p style={{fontSize:"14px",paddingRight:"5px"}}>Search By: </p>
-            <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none"}}>Medicine</Button>
+            <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Medicine</Button>
             <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("generic")} style={{backgroundColor:searchCriteria==="generic"?"#EB006F":"#3b6ce7",border:"none"}}>Generic Name</Button>
           </div>
           <div className="d-flex justify-content-center" style={{paddingBottom:"0px"}}>

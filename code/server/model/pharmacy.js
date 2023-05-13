@@ -124,6 +124,16 @@ const pharmacySchema = new Schema({
   pharmacyManagerID: {
     type: String,
   },
+  coordinates:{
+    type:{
+      lat:{
+        type:Number
+      },
+      lng:{
+        type:Number
+      }
+    }
+  },
   Inventory: [medicineSchema],
   Orders: [OrderDetailsSchema]
 });
