@@ -10,7 +10,6 @@ exports.getAllMedicines = async (req, res) => {
     console.log(pharmacyId);
     
     const inventory = pharmacy.Inventory;
-    console.log(inventory);
     return res.status(200).json(inventory);
   } catch (error) {
     console.error(error);
