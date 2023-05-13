@@ -2,9 +2,10 @@ import {Card,Form,Button,InputGroup,ToggleButton,ButtonGroup} from "react-bootst
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import {emailAuth,passwordAuth,confirmPasswordAuth,userNameAuth,} from "../../Authentication/Auth";
-import {Envelope,Lock,EyeFill,EyeSlashFill,Person,} from "react-bootstrap-icons";
+import {Envelope,Lock,EyeFill,EyeSlashFill,Person, Google,} from "react-bootstrap-icons";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useSignUp } from "../../Hooks/useSignUp";
+import { useGoogleLogin } from "@react-oauth/google";
 
 const SignUp = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +19,10 @@ const SignUp = () => {
   const [confirmPasswordVisibility, setConfirmPasswordVisibility] =useState(false);
   const {signup,error,isLoading}= useSignUp();
   const [radioName,setRadioName]=useState('buyer');
+
+  const googleLogin=useGoogleLogin({
+    onSuccess: tokenResponse => console.log(tokenResponse),
+  });
 
   const emailChange = (event) => {
     const result = emailAuth(event.target.value);
@@ -196,11 +201,9 @@ const SignUp = () => {
               </div>
               <hr />
               <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-              <Button className="btn-login me-3" size="lg" >
-                <i className='bx bxl-google'></i>
-                </Button>
-                <Button className="btn-login " size="lg" disable={isLoading}>
-                <i className='bx bxl-facebook-circle'></i>
+              <Button className="btn-login me-3" size="sm" onClick={()=>googleLogin()} style={{width:"100%"}}>
+               <text style={{fontSize:"16px",marginRight:"10px"}}>Sign Up With</text>
+                <Google/>
                 </Button>
               </Form.Group>
             </Form>

@@ -3,10 +3,11 @@ import NavbarLanding from "../partials/landing/navbarLanding";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Login from "./Login";
 import SignUp from "./SignUp";
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 const Landing = (props) => {
   const card = props.data;
   return (
+    <GoogleOAuthProvider clientId={process.env.REACT_APP_GCI}>.
     <div className="Landing">
       <div>
         <NavbarLanding />
@@ -23,6 +24,7 @@ const Landing = (props) => {
         </div>
       </section>
     </div>
+    </GoogleOAuthProvider>
   );
 };
 
