@@ -30,6 +30,7 @@ const EmailVerification = () => {
       axios.get('/api/verifyEmail/'+email, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'idType':currentUser.googleId?'google':'email',
         },
       }).then((result)=>{
         console.log(result);
@@ -47,6 +48,7 @@ const EmailVerification = () => {
       }, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'idType':currentUser.googleId?'google':'email',
         },
       }).catch((error)=>{
         console.log(error);
@@ -59,6 +61,7 @@ const EmailVerification = () => {
         }, {
           headers: {
             Authorization: `Bearer ${token}`,
+            'idType':currentUser.googleId?'google':'email',
           },
         }).catch((err)=>{
           setError(err.response.data.error);
@@ -87,6 +90,7 @@ const EmailVerification = () => {
       axios.delete('/api/deleteOTP/'+email, {
         headers: {
           Authorization: `Bearer ${token}`,
+          'idType':currentUser.googleId?'google':'email',
         },
       }).then((result)=>{
         console.log('successfully deleted');

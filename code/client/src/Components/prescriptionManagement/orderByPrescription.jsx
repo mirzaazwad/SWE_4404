@@ -17,7 +17,8 @@ const OrderByPrescription = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/", {
-          headers: { Authorization: `Bearer ${user.token}` },
+          headers: { Authorization: `Bearer ${user.token}` ,
+          'idType':user.googleId?'google':'email'},
         });
         console.log(response);
         setPharmacies(response.data.pharmacies);
@@ -48,7 +49,8 @@ const OrderByPrescription = () => {
         pharmacyManagerId: selectedPharmacyId,
       },
       {
-        headers: { Authorization: `Bearer ${user.token}` },
+        headers: { Authorization: `Bearer ${user.token}` ,
+        'idType':user.googleId?'google':'email'},
       }
     );
     alert("Order has been placed, you will be notified when the order is approved.");

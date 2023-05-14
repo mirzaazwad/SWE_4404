@@ -5,7 +5,6 @@ import { Button, Form, Modal } from "react-bootstrap";
 
 
 const MapModal = (props)=>{
-  console.log('props.current location: ',props.currentLocation);
   const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:null,lng:null}), [props.currentLocation]);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");

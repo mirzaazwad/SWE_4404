@@ -28,7 +28,8 @@ const Prescription = ({ currentUser }) => {
         prescriptionImage:dataRes.data.url,
         prescriptionName : prescriptionName
       },{headers: {
-        'Authorization': `Bearer ${userToken.token}`
+        'Authorization': `Bearer ${userToken.token}`,
+        'idType':user.googleId?'google':'email'
       }});
     }
   }
@@ -37,6 +38,7 @@ const Prescription = ({ currentUser }) => {
       const res = await axios.get(`http://localhost:4000/api/prescriptions/getPrescriptions/${userId}`, {
         headers: {
           Authorization: `Bearer ${userToken.token}`,
+          'idType':user.googleId?'google':'email',
         },
       }
       );

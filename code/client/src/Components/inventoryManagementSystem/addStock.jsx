@@ -24,7 +24,8 @@ const StockManagement = (props) => {
       stock:props.stockType,
       amount:Number(props.amount)+Number(currentAmount)
     },{headers: {
-      'Authorization': `Bearer ${props.user.token}`
+      'Authorization': `Bearer ${props.user.token}`,
+      'idType':props.user.googleId?'google':'email',
     }})
     window.location.reload();
   };
@@ -51,7 +52,8 @@ const StockManagement = (props) => {
       stock:props.stockType,
       amount:Number(currentAmount)-Number(props.amount)
     },{headers: {
-      'Authorization': `Bearer ${props.user.token}`
+      'Authorization': `Bearer ${props.user.token}`,
+      'idType':props.user.googleId?'google':'email'
     }})
     window.location.reload();
   };

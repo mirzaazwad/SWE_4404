@@ -34,6 +34,7 @@ const Inventory = () => {
       .get("/api/profile/user/getUserSellerId/" + _id, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       })
       .then((response) => {
@@ -44,6 +45,7 @@ const Inventory = () => {
       .get("/api/profile/inventory/getMedicines/" + sellerId, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       })
       .then((result) => {
