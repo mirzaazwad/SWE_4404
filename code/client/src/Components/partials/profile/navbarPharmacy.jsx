@@ -5,12 +5,9 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { useLogout } from '../../../Hooks/useLogout';
 import { useNavigate} from 'react-router-dom';
-import NavDropdown from 'react-bootstrap/NavDropdown';
-import { useParams } from 'react-router';
-import {Navigate} from "react-router-dom";
 import '../../../index.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { setNotification } from '../../../Contexts/action';
 import axios from 'axios';
 
@@ -32,6 +29,7 @@ const NavbarPharmacy=(props) =>{
         {
           headers: {
             Authorization: `Bearer ${props.user.token}`,
+            'idType':props.user.googleId?'google':'email',
           },
         }
       );

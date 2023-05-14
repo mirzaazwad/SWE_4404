@@ -17,7 +17,8 @@ const OrderDetailsCard = () => {
         const response = await axios.get(
           `/api/order/getOrderDetails/${userId}/${orderId}`
         ,{
-          headers:{'Authorization': `Bearer ${user.token}`}
+          headers:{'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'}
         });
         setOrder(response.data.order);
       } catch (error) {

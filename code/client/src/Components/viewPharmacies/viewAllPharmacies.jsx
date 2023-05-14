@@ -41,7 +41,8 @@ const PharmacyPage = () => {
   const fetchPharmacies = async () => {
     try {
       const response = await axios.get("/api/pharmacies/",{
-        headers:{'Authorization': `Bearer ${user.token}`}
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
       });
       setPharmacies(response.data.pharmacies);
       setFilteredPharmacy(response.data.pharmacies);
@@ -52,7 +53,8 @@ const PharmacyPage = () => {
 
   const retrieveUser=async (id)=>{
     await axios.get('/api/profile/user/getUser/'+id,{
-      headers:{'Authorization': `Bearer ${user.token}`}
+      headers:{'Authorization': `Bearer ${user.token}`,
+      'idType':user.googleId?'google':'email'}
     }).then((result)=>{
       setLocation(result.data.coordinates);
     })

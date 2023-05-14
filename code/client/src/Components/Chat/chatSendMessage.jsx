@@ -20,6 +20,7 @@ const SendMessageChatRoom = (props) => {
       await axios.post("/api/profile/chat/send", msg, {
         headers: {
           Authorization: `Bearer ${props.user.token}`,
+          'idType':props.user.googleId?'google':'email',
         },
       });
       setMessage("");

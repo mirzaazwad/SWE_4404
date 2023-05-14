@@ -14,7 +14,8 @@ const MyOrders = () => {
     const fetchOrders = async () => {
       try {
         const res = await axios.get(`/api/order/getOrder/${userId}`,{
-          headers:{'Authorization': `Bearer ${user.token}`}
+          headers:{'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'}
         });
         const sortedOrders = res.data.order_data.sort((a, b) => new Date(b.date) - new Date(a.date));
         setOrders(sortedOrders);

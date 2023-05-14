@@ -64,7 +64,8 @@ const CheckOutPage = ({}) => {
   useEffect(() => {
     const retrieveUser=async ()=>{
       await axios.get('/api/profile/user/getUser/'+user._id,{
-        headers:{'Authorization': `Bearer ${user.token}`}
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
       }).then((result)=>{
         setLocation(result.data.coordinates);
         setAddress(result.data.address);
@@ -98,7 +99,8 @@ const CheckOutPage = ({}) => {
         amount: totalPrice
       },
     },{
-      headers:{'Authorization': `Bearer ${user.token}`}
+      headers:{'Authorization': `Bearer ${user.token}`,
+      'idType':user.googleId?'google':'email'}
     }).then(async (result)=>{
       if(result.data.url)window.location.href=result.data.url;
       else {
