@@ -20,7 +20,6 @@ const  ProfilePageForPharmacy = () => {
         'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'
       }}).then(async (result)=>{
-        console.log(result);
         dispatch(setSellerUser(result.data));
         await axios.get('/api/profile/seller/'+result.data.email,{headers: {
           'Authorization': `Bearer ${user.token}`,

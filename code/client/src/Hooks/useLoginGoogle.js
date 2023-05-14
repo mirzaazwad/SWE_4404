@@ -5,11 +5,12 @@ import { LOGIN } from "../Contexts/action";
 import { useDispatch } from "react-redux";
 
 export const useLoginGoogle = () =>{
-  const [error,setError] = useState(null);
-  const [isLoading, setisLoading] = useState(null);
+  const [errorGoogle,setError] = useState(null);
+  const [isLoadingGoogle, setisLoading] = useState(null);
   const dispatch = useDispatch();
   const googleLogin=useGoogleLogin({
     onSuccess: async ({ code }) => {
+      setisLoading(true);
       await axios.post('/api/auth/google', {
         code,
         operation:'login'
@@ -19,12 +20,13 @@ export const useLoginGoogle = () =>{
         localStorage.setItem('user',JSON.stringify({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
         setisLoading(false);
       }).catch((error)=>{
-        setError(error.message);
+        setisLoading(false);
+        setError(error.response.data.error);
       })
     },
     flow: 'auth-code',
   }
   );
 
-  return {googleLogin,error,isLoading};
+  return {googleLogin,errorGoogle,isLoadingGoogle};
 }

@@ -11,6 +11,7 @@ import CryptoJS from "crypto-js";
 import { setSellerDetails, setSellerUser } from '../../Contexts/action';
 import PhoneVerify from "./PhoneVerification/phoneVerify";
 import Map from "../partials/Map/map";
+import ConfirmPasswordModal from "./confirmPasswordModal";
 
 const ProfileFormPharmacy=(id)=> {
   const _id=id;
@@ -37,11 +38,18 @@ const ProfileFormPharmacy=(id)=> {
   const handleClosePhoneVerify=()=>{
     setShowPhoneVerify(false);
   }
-
-  const [errorPassword,setErrorPassword] = useState(false);
+  
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (e) => {
+    if(user.googleId){
+      handleSubmit(e);
+    }
+    else{
+      setShow(true);
+
+    }
+  }
 
   useEffect(()=>{
     setUsername(seller.username);
@@ -63,16 +71,17 @@ const ProfileFormPharmacy=(id)=> {
   }
 
   const verify = async (_id,password) => {
-    await axios.post("/api/profile/user/verify", {_id,password}, {
+    const result=await axios.post("/api/profile/user/verify", {_id,password}, {
       headers: {
         Authorization: `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email',
       },
     }).then((result)=>{
-      setErrorPassword(!result.data.success);
+      return result.data.success;
     }).catch((error)=>{
-      setErrorPassword(true);
+      return error.response.data.success;
     })
+    return result;
   };
 
   const setPhoneNumber=(phone)=>{
@@ -95,8 +104,8 @@ const ProfileFormPharmacy=(id)=> {
       setError("Location must be provided for pharmacy");
       return;
     }
-    await verify(_id.id,CryptoJS.SHA512(password).toString());
-    if(!errorPassword){
+    console.log('Password Verification: ',await verify(_id.id,CryptoJS.SHA512(password).toString())?"YES":"NO");
+    if(user.googleId || await verify(_id.id,CryptoJS.SHA512(password).toString())){
       if(!phoneNumberChanged){
         await axios
       .patch(
@@ -180,7 +189,6 @@ const ProfileFormPharmacy=(id)=> {
           <InputGroup.Text>+880</InputGroup.Text>
           <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled} value ={phone} onChange={(e)=>setPhoneNumber(e.target.value)} />
           </InputGroup>
-          <div className="errorMessage" style={{color:"red"}}>{error}</div>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Address</Form.Label>
@@ -193,45 +201,14 @@ const ProfileFormPharmacy=(id)=> {
        
         <InputGroup className="mb-3" controlId="formBasicPassword">
         {isEditing && (<Button onClick={()=>setShowMAP(true)}>Add/Change Location Information</Button>)}
-          {isEditing &&(<a href={"changePassword/" + user._id} style={{marginLeft:"75%"}}>Change Password</a>)}
+          {!seller.googleId && isEditing &&(<a href={"changePassword/" + user._id} style={{marginLeft:"75%"}}>Change Password</a>)}
         </InputGroup>
         {isEditing && (
           <Button className="btn btn-outline-dark btn-save" disabled={isLocked} onClick={handleShow}>
             Save
           </Button>
         )}
-        <Modal show={show} onHide={handleClose}>
-                <Modal.Header closeButton>
-                  <Modal.Title>Enter password to confirm changes</Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                <div className="errorMessageShow" style={{color:"red"}}>{error}</div>
-                  <Form.Group className="mb-3" controlId="enterPassword">
-            
-            <Form.Label>Enter Password</Form.Label>
-            <InputGroup>
-            <Form.Control  type={currentPasswordVisibility?"text":"password"} placeholder="Password" value={password}  onChange={(e)=>setPassword(e.target.value)}/>                 
-            <InputGroup.Text>
-                    {(currentPasswordVisibility && (
-                      <EyeFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(false)} />
-                    )) ||
-                      (!currentPasswordVisibility && (
-                        <EyeSlashFill color="#3354a9" onClick={()=>setCurrentPasswordVisibility(true)} />
-                      ))}
-                  </InputGroup.Text>
-                  </InputGroup>
-          </Form.Group>
-                 
-                </Modal.Body>
-                <Modal.Footer>
-                  <Button variant="secondary" onClick={handleClose}>
-                    Close
-                  </Button>
-                  <Button variant="primary" onClick={handleSubmit}>
-                    Save Changes
-                  </Button>
-                </Modal.Footer>
-              </Modal>
+              <ConfirmPasswordModal show={show} handleClose={handleClose} handleSubmit={handleSubmit} error={error} passwordVisibility={{currentPasswordVisibility,setCurrentPasswordVisibility}} password={{password,setPassword}}/>
               </Form>
               <PhoneVerify _id={_id.id} user={user} data={{email:seller.email,pharmacy:pharmacy,phone:phone,username:username,address:address,coordinates:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
     </div>

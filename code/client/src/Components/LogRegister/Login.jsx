@@ -8,7 +8,6 @@ import { useLoginGoogle } from "../../Hooks/useLoginGoogle";
 
 
 const Login = () => {
-  const [errorMessage,setError]=useState("");
   const [email,setEmail]=useState("");
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
@@ -17,8 +16,8 @@ const Login = () => {
   const handleSubmit = async(e) =>{
     e.preventDefault();
     await login(email,password);
-    setError(error);
   }
+  console.log(errorGoogle);
 
   return (
     <div className="login-container"  style={{ marginTop: '15%' }}>
@@ -29,7 +28,7 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <div className="errorMessage" style={{color:"red"}}>
-                  <span>{errorMessage}</span>
+                  <span>{error}</span>
                   <span>{errorGoogle}</span>
                 </div>
               </Form.Group>
