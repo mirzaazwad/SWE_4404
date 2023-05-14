@@ -46,6 +46,7 @@ const PharmacyPage = () => {
       });
       setPharmacies(response.data.pharmacies);
       setFilteredPharmacy(response.data.pharmacies);
+      console.log(pharmacies);
     } catch (error) {
       console.log(error);
     }
