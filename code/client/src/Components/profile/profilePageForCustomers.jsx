@@ -30,7 +30,7 @@ const  ProfilePageForCustomers = () => {
   },[])
   return (     
     <div>
-      <NavbarCustomer id={id}/>
+      <NavbarCustomer id={id} user={user}/>
   
       <section>
       <div className="container h-100">
