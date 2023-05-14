@@ -130,6 +130,7 @@ const ProfileFormCustomer = (id) => {
         },{
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }).then(()=>{
           console.log('comes here');
@@ -160,7 +161,7 @@ const ProfileFormCustomer = (id) => {
           </button>
         </div>
         <Form>
-        <div className="error">{error}</div>
+        <div className="error" style={{color:"red"}}>{error}</div>
         <Map currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
