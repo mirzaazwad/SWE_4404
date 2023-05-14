@@ -116,6 +116,7 @@ const SearchMapModal = (props)=>{
           onDragEnd={handleMarkerDragEnd}
           icon={iconStyle}
           visible={true}
+          label={"You"}
         />
       )}
       {props.pharmacies.map((pharmacy,index)=>(
@@ -124,7 +125,9 @@ const SearchMapModal = (props)=>{
         onClick={()=>navigate(`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${props.customerId}`)}
         visible={true}
         key={index}
-      />
+        label={pharmacy.name}
+      >
+      </MarkerF>
       ))}
         </GoogleMap>
       </Modal.Body>

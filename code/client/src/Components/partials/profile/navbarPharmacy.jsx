@@ -7,7 +7,7 @@ import { useLogout } from '../../../Hooks/useLogout';
 import { useNavigate} from 'react-router-dom';
 import '../../../index.css';
 import { useDispatch, useSelector } from 'react-redux';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { setNotification } from '../../../Contexts/action';
 import axios from 'axios';
 
@@ -17,6 +17,7 @@ const NavbarPharmacy=(props) =>{
   const chatMessages=useSelector((state)=>state.userState.notificationCount)
   const {logout}= useLogout();
   const navigate=useNavigate();
+  const [user,setUser]=useState({phone:null,address:null,username:null,pharmacy:null});
   let orderMessages=2;
 
   useEffect(()=>{
@@ -35,6 +36,30 @@ const NavbarPharmacy=(props) =>{
       );
       dispatch(setNotification(messages.data.count));
     }
+    const retrieveUser =async()=>{
+      const result=await axios.get('/api/profile/user/getUser/'+id,{headers: {
+        'Authorization': `Bearer ${props.user.token}`,
+        'idType':props.user.googleId?'google':'email'
+      }}).then((result)=>{
+        console.log(result);
+        return result.data;
+      }).catch((error)=>{
+        console.log(error);
+        return {phone:null,address:null,username:null};
+      });
+      const pharmacy=await axios.get('/api/profile/seller/'+result.email,{headers: {
+        'Authorization': `Bearer ${props.user.token}`,
+        'idType':props.user.googleId?'google':'email'
+      }}).then((result)=>{
+        console.log(result);
+        return result.data;
+      }).catch((error)=>{
+        console.log(error);
+        return {pharmacy:null};
+      });
+      setUser({...result,...pharmacy});
+    }
+    retrieveUser();
     retrieveMessageCount();
   },[props.id])
 
@@ -45,7 +70,7 @@ const NavbarPharmacy=(props) =>{
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
-        <Navbar.Brand className='px-2' href="#"  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
+        <Navbar.Brand className='px-2'  href={`/profileSeller/${id}`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle className='px-2' aria-controls="navbarScroll" />
         
         
@@ -55,16 +80,16 @@ const NavbarPharmacy=(props) =>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1">Home</Nav.Link>
+            <Nav.Link href="#action1" disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Home</Nav.Link>
             <Nav.Link href={`/profileSeller/${id}`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`}>Inventory</Nav.Link>
-            <Nav.Link href="#action2">Orders
+            <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
+            <Nav.Link href="#action2" disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
             </span>:""}
             </Nav.Link>
-            <Nav.Link href="">Accounts</Nav.Link>
-            <Nav.Link href={`/profileSeller/chats/${id}`}>Chats
+            <Nav.Link href=""  disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Accounts</Nav.Link>
+            <Nav.Link href={`/profileSeller/chats/${id}`}  disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}
             </span>:""}
