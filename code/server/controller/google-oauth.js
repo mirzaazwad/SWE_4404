@@ -16,7 +16,6 @@ const verifyJWT=async(token)=>{
       idToken: token,
       audience: process.env.GOOGLE_CLIENT_ID,
     });
-
     // Extract the user's email address and unique Google ID from the verified JWT
     const payload = ticket.getPayload();
   } catch (error) {
