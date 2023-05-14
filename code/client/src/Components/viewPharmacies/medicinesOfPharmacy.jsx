@@ -25,7 +25,8 @@ const PharmacyMedicines = () => {
       const response = await axios.get(
         `http://localhost:4000/api/pharmacy/${id}`
         ,{
-          headers:{'Authorization': `Bearer ${user.token}`}
+          headers:{'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'}
         });
       setMedicines(response.data);
     } catch (error) {
@@ -36,7 +37,8 @@ const PharmacyMedicines = () => {
   const fetchCategories = async () => {
     try {
       const response = await axios.get(`http://localhost:4000/api/pharmacy/getAllCategories/`,{
-        headers:{'Authorization': `Bearer ${user.token}`}
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
       });
       console.log(response.data);
       setCategories(response.data);

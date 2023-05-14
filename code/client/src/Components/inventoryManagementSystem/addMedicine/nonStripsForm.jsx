@@ -93,6 +93,7 @@ const NonStripsForm = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )
@@ -116,6 +117,7 @@ const NonStripsForm = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )

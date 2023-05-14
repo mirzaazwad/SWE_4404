@@ -19,7 +19,9 @@ const  ProfilePageForCustomers = () => {
   useEffect(()=>{
     const retrieveUser = async() =>{
       await axios.get('/api/profile/user/getUser/'+id,{
-        headers:{'Authorization': `Bearer ${user.token}`}
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'
+      }
       }).then((result)=>{
         dispatch(setBuyerUser(result.data));
       })

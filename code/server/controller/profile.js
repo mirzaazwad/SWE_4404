@@ -25,7 +25,7 @@ const verifyPassword = async (req, res) => {
     const result = await userModel.verifyPassword(_id, password);
     res.status(200).json({ result, success: true });
   } catch (err) {
-    res.status(404).json({ success: false, error: err.message });
+    res.status(400).json({ success: false, error: err.message });
   }
 };
 

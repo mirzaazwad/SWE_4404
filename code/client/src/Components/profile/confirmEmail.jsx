@@ -6,7 +6,7 @@ import axios from "axios";
 import { useDispatch } from "react-redux";
 import { setBuyerUser,setSellerDetails,setSellerUser } from "../../../Contexts/action";
 
-const PhoneVerify = (props) => {
+const ConfirmEmail = (props) => {
   const user = props.user;
   const dispatch=useDispatch();
   const [show, setShow] = useState(props.show);
@@ -158,4 +158,4 @@ const PhoneVerify = (props) => {
   );
 };
 
-export default PhoneVerify;
+export default ConfirmEmail;

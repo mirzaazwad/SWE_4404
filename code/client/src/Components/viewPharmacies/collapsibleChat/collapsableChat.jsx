@@ -33,6 +33,7 @@ const CollapsibleChat = (props) => {
     },{
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     })
   }
@@ -56,6 +57,7 @@ const CollapsibleChat = (props) => {
         .get("/api/profile/user/getUser/" + props.senderID, {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         })
         .then((result) => {
@@ -65,6 +67,7 @@ const CollapsibleChat = (props) => {
         .get("/api/profile/user/getUser/" + props.receiverID, {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         })
         .then((result) => {
@@ -79,6 +82,7 @@ const CollapsibleChat = (props) => {
       }, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       });
       value.data.sort((a,b)=>a.messageOrder-b.messageOrder);
@@ -95,6 +99,7 @@ const CollapsibleChat = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       );
@@ -140,6 +145,7 @@ const CollapsibleChat = (props) => {
       await axios.post('/api/profile/chat/send',msg, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       });
     }
