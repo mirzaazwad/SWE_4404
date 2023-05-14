@@ -55,9 +55,7 @@ const newCustomerOrder = async(pharmacy,items,customer_data,prescriptionBasedOrd
 const postOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const items = req.body.items;
-    const customer_data = req.body.customer_data;
-    const prescriptionBasedOrder = req.body.prescriptionBasedOrder;
+    const {items,customer_data,prescriptionBasedOrder}=req.body;
     const order = await Order.findOne({
       userId: userId
     });
