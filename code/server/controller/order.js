@@ -1,82 +1,82 @@
 const Order = require('../model/order');
 const Pharmacy = require('../model/pharmacy');
-const { makePayment } = require('./ssl-commerz-make-payment');
+const { MakePayment } = require('../Library/ssl-commerz-make-payment');
+
+const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
+  order.order_data.push({
+    date: new Date(),
+    medicines: items,
+    customer_data: customer_data,
+    prescriptionBasedOrder: prescriptionBasedOrder
+  });
+  pharmacy.Orders.push({
+    orderId : order._id.toString(),
+    date: new Date(),
+    medicines: items,
+    customer_data: customer_data,
+    prescriptionBasedOrder: prescriptionBasedOrder
+  });
+  await order.save();
+  await pharmacy.save();
+}
+
+const commenceDigitalPayment = async(customer_data,orderID)=>{
+  try{
+    const makePayment=new MakePayment(customer_data,orderID,'BDT');
+    const result=await makePayment.makePaymentRequest();
+    return {paymentSuccessful:true,url:result};
+  }
+  catch(error){
+    return {paymentSuccessful:false,url:result};
+  }
+}
+
+const newCustomerOrder = async(pharmacy,items,customer_data,prescriptionBasedOrder)=>{
+  const newOrder = new Order({
+    userId,
+    order_data: [{
+      date: new Date(),
+      medicines: items,
+      customer_data: customer_data,
+      prescriptionBasedOrder: prescriptionBasedOrder
+    }]
+  });
+  pharmacy.Orders.push({
+    orderId : newOrder._id.toString(),
+    date: new Date(),
+    medicines: items,
+    customer_data: customer_data,
+    prescriptionBasedOrder: prescriptionBasedOrder
+  });
+  await newOrder.save();
+  await pharmacy.save();
+}
 
 const postOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
-    const items = req.body.items;
-    const customer_data = req.body.customer_data;
-    const prescriptionBasedOrder = req.body.prescriptionBasedOrder;
-
+    const {items,customer_data,prescriptionBasedOrder}=req.body;
     const order = await Order.findOne({
       userId: userId
     });
     const pharmacy = await Pharmacy.findOne({
       pharmacyManagerID: req.body.customer_data.pharmacyManagerID
     });
-
     if (order) {
-      order.order_data.push({
-        date: new Date(),
-        medicines: items,
-        customer_data: customer_data,
-        prescriptionBasedOrder: prescriptionBasedOrder
-      });
-      await order.save();
-      pharmacy.Orders.push({
-        orderId : order._id.toString(),
-        date: new Date(),
-        medicines: items,
-        customer_data: customer_data,
-        prescriptionBasedOrder: prescriptionBasedOrder
-  });
-  await pharmacy.save();
-  if(customer_data.payment==="Digital Payment"){
-    const result=await makePayment(customer_data,order._id.toString());
-    if(result){
-      return res.status(200).json({paymentSuccessful:true,url:result});
-    }
-    else{
-      throw Error('Digital Payment Failed due to gateway error');
-    }
-  }
+      await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescriptionBasedOrder);
     } else {
-      const newOrder = new Order({
-        userId,
-        order_data: [{
-          date: new Date(),
-          medicines: items,
-          customer_data: customer_data,
-          prescriptionBasedOrder: prescriptionBasedOrder
-        }]
-      });
-
-      await newOrder.save();
-      pharmacy.Orders.push({
-        orderId : newOrder._id.toString(),
-        date: new Date(),
-        medicines: items,
-        customer_data: customer_data,
-        prescriptionBasedOrder: prescriptionBasedOrder
-  });
-  await pharmacy.save();
-  if(customer_data.payment==="Digital Payment"){
-    const result=await makePayment(customer_data,newOrder._id.toString());
-    if(result){
-      return res.status(200).json({paymentSuccessful:true,url:result});
+      await newCustomerOrder(pharmacy,items,customer_data,prescriptionBasedOrder);
+    }
+    cashResponse={paymentSuccessful:false,type:'cash',url:null}
+    if(customer_data.payment==="Digital Payment"){
+      const result=await commenceDigitalPayment(customer_data,order._id.toString());
+      return result.paymentSuccessful?res.status(200).json(result):res.status(400).json(result);
     }
     else{
-      throw Error('Digital Payment Failed due to gateway error');
+      return res.status(200).json(cashResponse);
     }
-  }
-    }
-    return res.status(200).json({paymentSuccessful:false,type:'cash',url:null});
   } catch (err) {
-    console.error(err);
-    return res.status(500).json({
-      error: err.message
-    });
+    return res.status(400).json({error: err.message});
   }
 };
 
