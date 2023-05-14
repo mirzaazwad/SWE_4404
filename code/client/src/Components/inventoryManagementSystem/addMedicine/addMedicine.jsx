@@ -60,6 +60,7 @@ const AddMedicine = () => {
       .get("/api/profile/user/getUserSellerId/" + _id, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       })
       .then((response) => {
@@ -70,6 +71,7 @@ const AddMedicine = () => {
       .get("/api/profile/addMedicine/findCategory", {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       })
       .then((result) => {
@@ -79,6 +81,7 @@ const AddMedicine = () => {
       .get("/api/profile/addMedicine/findType", {
         headers: {
           Authorization: `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email',
         },
       })
       .then((result) => {

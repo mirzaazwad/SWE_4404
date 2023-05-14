@@ -16,7 +16,8 @@ const ProfilePicture=(props)=>{
   useEffect(()=>{
     const retrieveUser=async ()=>{
       await axios.get('/api/profile/user/getUser/'+props.id,{headers: {
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'
       }}).then((result)=>{
         setImage_Location(result.data.imageURL);
       })
@@ -42,11 +43,11 @@ const ProfilePicture=(props)=>{
       await axios.patch('/api/profile/user/updateProfilePicture/'+props.id,{
         imageURL:dataRes.data.url
       },{headers: {
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'
       }});
     }
   }
-  console.log(image_Location);
   if(locked===false){
     return (
       <div className="profile-picture-container">

@@ -1,15 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { removeItem, clearItems } from '../../Contexts/cartAction.js';
+import { removeItem } from '../../Contexts/cartAction.js';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import { Navigate, useNavigate } from 'react-router-dom';
 
 export default function Cart() {
   const dispatch = useDispatch();
   const cart = useSelector(state => state.cartState) || [];
   const [totalPrice, setTotalPrice] = useState(0);
-  const navigate=useNavigate();
   useEffect(() => {
     let price = 0;
     cart.forEach(item => {
@@ -30,10 +28,6 @@ export default function Cart() {
       </div>
     );
   }
-
-  const handleCheckOut = async () => {
-    navigate(`/checkOutPage?`);
-  };
 
   return (
     <div>

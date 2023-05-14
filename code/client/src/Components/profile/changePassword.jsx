@@ -35,7 +35,8 @@ const ChangePassword = () => {
         password:CryptoJS.SHA512(newPassword).toString()
       },{
         headers: {
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'
         }})
         .then(()=>{
           navigate('./../');

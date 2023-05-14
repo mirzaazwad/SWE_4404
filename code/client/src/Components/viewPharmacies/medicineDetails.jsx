@@ -30,7 +30,8 @@ const MedicineDetails = () => {
       const response = await axios.get(
         `/api/pharmacy/${pharmacyManagerId}/medicine/${medicineId}`
         ,{
-          headers:{'Authorization': `Bearer ${user.token}`}
+          headers:{'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'}
         });
       setMedicine(response.data);
     } catch (error) {
@@ -167,7 +168,6 @@ const MedicineDetails = () => {
         price: price
       }));
     }
-    // await console.log(cart);
   };
   
   return (

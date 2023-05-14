@@ -64,7 +64,7 @@ const App=()=> {
                 exact
                 path="/profileBuyer/:id"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "buyer" && user.verified === true ? (
                     <ProfilePageForCustomers />
                   ) : (
                     <Navigate to="/" />
@@ -75,7 +75,7 @@ const App=()=> {
                 exact
                 path="/profileSeller/:id"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "seller" && user.verified === true ? (
                     <ProfilePageForPharmacy />
                   ) : (
                     <Navigate to="/" />
@@ -86,12 +86,24 @@ const App=()=> {
               <Route
                 exact
                 path="/profileBuyer/changePassword/:id"
-                element={<ChangePassword />}
+                element={
+                  user && !user.googleId && user.verified === true ? (
+                    <ChangePassword />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
               />
               <Route
                 exact
                 path="/profileSeller/changePassword/:id"
-                element={<ChangePassword />}
+                element={
+                  user && !user.googleId && user.verified === true ? (
+                    <ChangePassword />
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
               />
               <Route
                 exact
@@ -123,7 +135,7 @@ const App=()=> {
                 exact
                 path="/inventoryManagementSystem/inventory/:id"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "seller" && user.verified === true ? (
                     <Inventory />
                   ) : (
                     <Navigate to="/" />
@@ -134,7 +146,7 @@ const App=()=> {
                 exact
                 path="/inventoryManagementSystem/addMedicine/:id"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "seller"  && user.verified === true ? (
                     <AddMedicine />
                   ) : (
                     <Navigate to="/" />
@@ -145,7 +157,7 @@ const App=()=> {
                 exact
                 path="/ViewPharmacies/:id"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "buyer"  && user.verified === true ? (
                     <ViewPharmacies />
                   ) : (
                     <Navigate to="/" />
@@ -156,7 +168,7 @@ const App=()=> {
                 exact
                 path="/Pharmacy"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "buyer"  && user.verified === true ? (
                     <Pharmacy />
                   ) : (
                     <Navigate to="/" />
@@ -167,19 +179,19 @@ const App=()=> {
                 exact
                 path="pharmacy/medicine"
                 element={
-                  user && user.verified === true ? (
+                  user && user.userType === "buyer" && user.verified === true ? (
                     <Medicine />
                   ) : (
                     <Navigate to="/" />
                   )
                 }
               />
-              <Route exact path="/myOrders" element={user && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
-              <Route exact path="/checkOutPage" element={user && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
-              <Route exact path="/orderDetails/:userId/:orderId" element={user && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
-              <Route exact path="/prescription" element={user && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
-              <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
-              <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/myOrders" element={user && user.userType === "buyer"  && user.verified === true ? (<MyOrders />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/checkOutPage" element={user && user.userType === "buyer"  && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderDetails/:userId/:orderId" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/prescription" element={user && user.userType === "buyer"  && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>
