@@ -33,6 +33,7 @@ const PhoneVerify = (props) => {
     },{
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     }).then(async (result)=>{
       if(!result.data.success){
@@ -53,6 +54,7 @@ const PhoneVerify = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email'
           },
         }
       )
@@ -65,7 +67,8 @@ const PhoneVerify = (props) => {
           coordinates:props.data.coordinates,
           pharmacy:props.data.pharmacy,
         },{headers: {
-          'Authorization': `Bearer ${user.token}`
+          'Authorization': `Bearer ${user.token}`,
+          'idType':user.googleId?'google':'email'
         }}).then((result)=>{
           console.log(result);
           handleClose();
@@ -85,6 +88,7 @@ const PhoneVerify = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )

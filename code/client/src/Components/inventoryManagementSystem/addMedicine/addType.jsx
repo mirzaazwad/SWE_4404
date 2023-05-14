@@ -29,6 +29,7 @@ const Type = (props) => {
     },{
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     }).then(result=>console.log(result));
     window.location.reload();

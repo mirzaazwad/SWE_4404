@@ -66,6 +66,7 @@ const ProfileFormPharmacy=(id)=> {
     await axios.post("/api/profile/user/verify", {_id,password}, {
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     }).then((result)=>{
       setErrorPassword(!result.data.success);
@@ -108,6 +109,7 @@ const ProfileFormPharmacy=(id)=> {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )
@@ -119,7 +121,8 @@ const ProfileFormPharmacy=(id)=> {
         coordinates:location,
         pharmacy:pharmacy
       },{headers: {
-        'Authorization': `Bearer ${user.token}`
+        'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'
       }}).then((result)=>{
         handleClose();
         dispatch(setSellerDetails(result.data));
@@ -137,6 +140,7 @@ const ProfileFormPharmacy=(id)=> {
         },{
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }).then(()=>{
           setShowPhoneVerify(true);

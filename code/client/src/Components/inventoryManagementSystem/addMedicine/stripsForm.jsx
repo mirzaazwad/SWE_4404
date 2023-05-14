@@ -101,6 +101,7 @@ const StripsForm = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )
@@ -125,6 +126,7 @@ const StripsForm = (props) => {
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
+              'idType':user.googleId?'google':'email',
             },
           }
         )

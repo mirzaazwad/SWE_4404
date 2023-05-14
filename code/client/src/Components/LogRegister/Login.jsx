@@ -5,6 +5,7 @@ import {useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useGoogleLogin} from '@react-oauth/google';
+import axios from "axios";
 
 const Login = () => {
   const [errorMessage,setError]=useState("");
@@ -19,7 +20,14 @@ const Login = () => {
   }
 
   const googleLogin=useGoogleLogin({
-    onSuccess: tokenResponse => console.log(tokenResponse),
+    onSuccess: async ({ code }) => {
+      const tokens = await axios.post('/api/auth/google', {  // http://localhost:3001/auth/google backend that will exchange the code
+        code,
+      });
+  
+      console.log(tokens);
+    },
+    flow: 'auth-code',
   });
 
   return (

@@ -25,6 +25,7 @@ const AddExistingMedicine = (props) => {
       .get("/api/profile/user/getUserSellerId/" + _id, {
         headers: {
           Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
         },
       })
       .then((response) => {
@@ -40,6 +41,7 @@ const AddExistingMedicine = (props) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       );
@@ -61,6 +63,7 @@ const AddExistingMedicine = (props) => {
           {
             headers: {
               Authorization: `Bearer ${user.token}`,
+              'idType':user.googleId?'google':'email',
             },
           }
         ).then(()=>window.location.reload())

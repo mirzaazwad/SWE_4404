@@ -65,6 +65,7 @@ const ProfileFormCustomer = (id) => {
     await axios.post("/api/profile/user/verify", {_id,password}, {
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     }).then((result)=>{
       console.log(result);
@@ -105,6 +106,7 @@ const ProfileFormCustomer = (id) => {
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         }
       )

@@ -17,6 +17,7 @@ const ChatBox = (props) => {
       }, {
         headers: {
           Authorization: `Bearer ${props.user.token}`,
+          'idType':props.user.googleId?'google':'email',
         },
       });
       value.data.sort((a,b)=>a.messageOrder-b.messageOrder);

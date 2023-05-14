@@ -165,7 +165,7 @@ userSchema.statics.loginGoogle = async function(email,googleId){
     }
   }
   else{
-    throw Error("Data is incomplete");
+    throw Error("User Is Not Registered");
   }
 }
 

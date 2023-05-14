@@ -51,6 +51,7 @@ const ChatPage = () => {
     const value = await axios.get("/api/profile/chat/senders/" + id, {
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'
       },
     });
     setSenders(value.data)
@@ -80,6 +81,7 @@ const ChatPage = () => {
         .get("/api/profile/user/getUser/" + id, {
           headers: {
             Authorization: `Bearer ${user.token}`,
+            'idType':user.googleId?'google':'email',
           },
         })
         .then((result) => {
@@ -100,6 +102,7 @@ const ChatPage = () => {
     },{
       headers: {
         Authorization: `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email',
       },
     }).then(()=>{
       setToggle(toggle^true);
