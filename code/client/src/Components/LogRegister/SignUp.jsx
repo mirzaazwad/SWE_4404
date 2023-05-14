@@ -5,8 +5,6 @@ import {emailAuth,passwordAuth,confirmPasswordAuth,userNameAuth,} from "../../Au
 import {Envelope,Lock,EyeFill,EyeSlashFill,Person, Google,} from "react-bootstrap-icons";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
 import { useSignUp } from "../../Hooks/useSignUp";
-import { useGoogleLogin } from "@react-oauth/google";
-import axios from "axios";
 import { useGoogleSignUp } from "../../Hooks/useGoogleSignUp";
 
 const SignUp = () => {
@@ -193,14 +191,20 @@ const SignUp = () => {
               <Button className="btn btn-login align-content-center"
                 type="submit"
                 size="md"
-                disabled={isLoading}
+                disabled={isLoading || isLoadingGoogle}
               >
                 SignUp
               </Button>
               </div>
               <hr />
-              <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-              <Button className="btn-login me-3" size="sm" onClick={()=>googleSignUp()} style={{width:"100%"}}>
+              <Form.Group controlId="errorGoogle" className="w-100">
+                <span style={{ color: "red" }}>{errorGoogle}</span>
+              </Form.Group>
+              <Form.Group controlId="SignUpWithGoogle" className="d-flex justify-content-around">
+                <div className="errorGoogle">
+                  <span>{errorGoogle}</span>
+                </div>
+              <Button className="btn-login me-3" size="sm" onClick={()=>googleSignUp()} style={{width:"100%"}} disabled={isLoading||isLoadingGoogle}>
                <text style={{fontSize:"16px",marginRight:"10px"}}>Sign Up With</text>
                 <Google/>
                 </Button>

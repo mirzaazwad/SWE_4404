@@ -4,8 +4,8 @@ import { Link } from "react-router-dom";
 import {useState } from "react";
 import { useLogin } from "../../Hooks/useLogin";
 import '../../boxicons-2.1.4/css/boxicons.min.css';
-import { useGoogleLogin} from '@react-oauth/google';
-import axios from "axios";
+import { useLoginGoogle } from "../../Hooks/useLoginGoogle";
+
 
 const Login = () => {
   const [errorMessage,setError]=useState("");
@@ -13,22 +13,12 @@ const Login = () => {
   const [password,setPassword]=useState("");
   const {login,isLoading,error}=useLogin();
   const [passwordVisibility,setPasswordVisibility] = useState(false);
+  const {googleLogin,errorGoogle,isLoadingGoogle}=useLoginGoogle();
   const handleSubmit = async(e) =>{
     e.preventDefault();
     await login(email,password);
     setError(error);
   }
-
-  const googleLogin=useGoogleLogin({
-    onSuccess: async ({ code }) => {
-      const tokens = await axios.post('/api/auth/google', {  // http://localhost:3001/auth/google backend that will exchange the code
-        code,
-      });
-  
-      console.log(tokens);
-    },
-    flow: 'auth-code',
-  });
 
   return (
     <div className="login-container"  style={{ marginTop: '15%' }}>
@@ -39,7 +29,8 @@ const Login = () => {
             <Form onSubmit={handleSubmit}>
               <Form.Group>
                 <div className="errorMessage" style={{color:"red"}}>
-                  <span>{errorMessage!==""?errorMessage:error}</span>
+                  <span>{errorMessage}</span>
+                  <span>{errorGoogle}</span>
                 </div>
               </Form.Group>
 
@@ -78,12 +69,12 @@ const Login = () => {
               <div className="d-flex justify-content-center">
               <Button className="btn btn-login"
                 type="submit"
-                size="md">Login</Button>
+                size="md" disabled={isLoading||isLoadingGoogle}>Login</Button>
               </div>
               
                 <hr />
                 <Form.Group controlId="LoginWithGoogle" className="d-flex justify-content-around">
-                <Button className="btn-login me-3" size="sm" onClick={()=>googleLogin()} style={{width:"100%"}}>
+                <Button className="btn-login me-3" size="sm" onClick={()=>googleLogin() } style={{width:"100%"}} disabled={isLoading||isLoadingGoogle}>
                 <text style={{fontSize:"16px",marginRight:"10px"}}>Login With</text>
                 <Google/>
                 </Button>

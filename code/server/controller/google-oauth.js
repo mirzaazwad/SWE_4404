@@ -32,8 +32,14 @@ const googleAuthGetToken = async (req, res) => {
         headers: { Authorization: `Bearer ${tokens.access_token}` },
       })
       .then((res) => res.data);
-    const result=await userModel.signUpGoogle(req.body.userType,userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
-    res.status(200).json({tokens, result,userInfo});
+    if(req.body.operation==='signup'){
+      const result=await userModel.signUpGoogle(req.body.userType,userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
+      res.status(200).json({tokens, result,userInfo});
+    }
+    else{
+      const result=await userModel.loginGoogle(userInfo.email,userInfo.sub);
+      res.status(200).json({tokens, result,userInfo});
+    }
   } catch (err) {
     res.status(400).json({ success: false, error: err.message });
   }
