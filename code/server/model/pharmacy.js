@@ -135,7 +135,16 @@ const pharmacySchema = new Schema({
     }
   },
   Inventory: [medicineSchema],
-  Orders: [OrderDetailsSchema]
+  Orders: [
+    {
+      _id:{
+        type:String,
+        required:true,
+        unique:true
+      },
+      ...OrderDetailsSchema.obj
+    },
+  ]
 });
 
 pharmacySchema.statics.addMedicine = async function (_id, medicine) {

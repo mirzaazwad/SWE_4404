@@ -5,7 +5,6 @@ const successfulPayment=async (req,res)=>{
   const value=req.params;
   const orderId=value.oid;
   const pharmacyId=value.pid;
-  console.log(value);
   const orders=await OrderModel.findOneAndUpdate(
     { 'order_data._id': orderId },
     { $set: { 'order_data.$.payment_status': true }}
