@@ -9,15 +9,16 @@ const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,pre
     customer_data: customer_data,
     prescriptionBasedOrder: prescriptionBasedOrder
   });
+  await order.save();
   pharmacy.Orders.push({
-    orderId : order._id.toString(),
+    _id : order.order_data[order.order_data.length-1]._id,
     date: new Date(),
     medicines: items,
     customer_data: customer_data,
     prescriptionBasedOrder: prescriptionBasedOrder
   });
-  await order.save();
   await pharmacy.save();
+  return order;
 }
 
 const commenceDigitalPayment = async(customer_data,orderID)=>{
@@ -31,8 +32,8 @@ const commenceDigitalPayment = async(customer_data,orderID)=>{
   }
 }
 
-const newCustomerOrder = async(pharmacy,items,customer_data,prescriptionBasedOrder)=>{
-  const newOrder = new Order({
+const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
+  const newOrder = await new Order({
     userId,
     order_data: [{
       date: new Date(),
@@ -41,35 +42,39 @@ const newCustomerOrder = async(pharmacy,items,customer_data,prescriptionBasedOrd
       prescriptionBasedOrder: prescriptionBasedOrder
     }]
   });
+  await newOrder.save();
+  const order = await Order.findOne({
+    userId: userId
+  });
   pharmacy.Orders.push({
-    orderId : newOrder._id.toString(),
+    _id : order.order_data[0]._id,
     date: new Date(),
     medicines: items,
     customer_data: customer_data,
     prescriptionBasedOrder: prescriptionBasedOrder
   });
-  await newOrder.save();
   await pharmacy.save();
+  return order;
 }
 
 const postOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
     const {items,customer_data,prescriptionBasedOrder}=req.body;
-    const order = await Order.findOne({
+    let order = await Order.findOne({
       userId: userId
     });
     const pharmacy = await Pharmacy.findOne({
       pharmacyManagerID: req.body.customer_data.pharmacyManagerID
     });
     if (order) {
-      await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescriptionBasedOrder);
+      order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescriptionBasedOrder);
     } else {
-      await newCustomerOrder(pharmacy,items,customer_data,prescriptionBasedOrder);
+      order=await newCustomerOrder(userId,pharmacy,items,customer_data,prescriptionBasedOrder);
     }
     cashResponse={paymentSuccessful:false,type:'cash',url:null}
     if(customer_data.payment==="Digital Payment"){
-      const result=await commenceDigitalPayment(customer_data,order._id.toString());
+      const result=await commenceDigitalPayment(customer_data,order.order_data[order.order_data.length-1]._id.toString());
       return result.paymentSuccessful?res.status(200).json(result):res.status(400).json(result);
     }
     else{
