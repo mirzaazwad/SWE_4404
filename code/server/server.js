@@ -40,3 +40,5 @@ app.use("/api/pharmacies",pharmaciesRoutes);
 app.use("/api/profile/chat",chatRoutes);
 app.use("/api/mobile",mobileRoutes);
 app.use("/api/pharmacy",pharmacyRoutes);
+
+module.exports = {app};
