@@ -6,16 +6,17 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import axios from 'axios';
 import {CreditCard2Back, Wallet} from 'react-bootstrap-icons';
 import { useToken } from '../../Hooks/useToken.js';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MapModal from '../partials/Map/map.jsx';
 import ErrorModal from '../partials/errorModal.jsx';
+
 const CheckOutPage = ({}) => {
   const user=useToken();
   const navigate=useNavigate();
   const locator=useLocation();
   const queryParams = new URLSearchParams(locator.search);
   const paymentStatus = queryParams.get('paymentStatus');
-  const orderId = queryParams.get('oid');
+  const {orderId} = useParams();
   const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
@@ -24,8 +25,8 @@ const CheckOutPage = ({}) => {
   const [address, setAddress] = useState();
   const [payment, setPayment] = useState(null);
   const dispatch = useDispatch();
-  const pharmacyManagerID=localStorage.getItem('cartPharmacyManager') || "";
-  const cart = useSelector(state => state.cartState) || [];
+  const [pharmacyManagerID,setPharmacyManagerID]=useState("");
+  const [items,setItems]= useState([]);
   const [totalPrice, setTotalPrice] = useState(0);
   const [location,setLocation]=useState(null);
   const [showMAP,setShowMAP]=useState(false);
@@ -54,11 +55,7 @@ const CheckOutPage = ({}) => {
     }
   },[paymentStatus,orderId,pharmacyId])
 
-  useEffect(()=>{
-    if(cart.length===0){
-      navigate('/myOrders');
-    }
-  },[cart])
+  
 
 
   useEffect(() => {
@@ -75,19 +72,34 @@ const CheckOutPage = ({}) => {
       })
     }
     retrieveUser();
+    const retreieveOrder = async ()=>{
+      await axios.get(`/api/order/getOrderDetails/${userId}/${orderId}`,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then((result)=>{
+        const { order } = result.data;
+      setItems(order.medicines);
+      setPharmacyManagerID(order.customer_data.pharmacyManagerID);
+      })
+    }
+    retreieveOrder();
     let price = 0;
-    cart.forEach(item => {
+    items.forEach(item => {
       price += item.price;
     });
     setTotalPrice(price);
+
   }, [customerEmail]);
+
+  // useEffect(()=>{
+  //   if(items.length===0){
+  //     navigate('/myOrders');
+  //   }
+  // },[items])
 
   const handleCheckOut = async (e) => {
     setDisabled(true);
-    e.preventDefault();
-    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
-      items: cart,
-      prescritionBasedOrder : false,
+    const response =  axios.patch(`http://localhost:4000/api/order/billingOrder/${userId}/${orderId}`, {
       customer_data: {
         email:customerEmail,
         phone:customerPhoneNumber,
@@ -96,20 +108,19 @@ const CheckOutPage = ({}) => {
         address: address,
         coordinates:location,
         payment: payment,
-        amount: totalPrice
+        amount: totalPrice+50
       },
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
     }).then(async (result)=>{
-      if(result.data.url)window.location.href=result.data.url;
-      else {
-        await dispatch(clearItems());
-        navigate('/myOrders');
-      }
     });
+    navigate('/myOrders');
     
   };
+
+
+      
   return (
     <div className="CheckOutPage">
        <MapModal currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
@@ -214,7 +225,7 @@ const CheckOutPage = ({}) => {
             </tr>
           </thead>
           <tbody>
-            {cart.map((medicine, index) => (
+            {items.map((medicine, index) => (
               <tr key={index}>
                 <td>{index + 1}</td>
                 <td>{medicine.MedicineName}</td>
