@@ -28,44 +28,66 @@ const OrderDetailsCard = () => {
     fetchOrderDetails();
   }, []);
 
-  return (
-    <div>
-      <div className="mb-5">
+  if(order.prescription_image===""){
+    return (
+      <div>
+        <div className="mb-5">
+          <NavbarCustomer />
+        </div>
+        <div>
+          <Card className='order-details-card'>
+            <Card.Header className='order-details-card-header'>Order Details</Card.Header>
+            <Card.Body>
+              <Table striped bordered hover responsive>
+                <thead>
+                  <tr style={{textAlign: "center"}}>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Pcs</th>
+                    <th>Strips</th>
+                    <th>Boxes</th>
+                    <th>Price</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {order.medicines && order.medicines.map((medicine, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{medicine.MedicineName}</td>
+                      <td>{medicine.quantityPcs}</td>
+                      <td>{medicine.quantityStrips}</td>
+                      <td>{medicine.quantityBoxes}</td>
+                      <td>{medicine.price}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </Table>
+            </Card.Body>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+  else{
+    return (
+      <div>
+        <div className="mb-5">
         <NavbarCustomer />
       </div>
-      <div>
-        <Card className='order-details-card'>
-          <Card.Header className='order-details-card-header'>Order Details</Card.Header>
-          <Card.Body>
-            <Table striped bordered hover responsive>
-              <thead>
-                <tr style={{textAlign: "center"}}>
-                  <th>#</th>
-                  <th>Name</th>
-                  <th>Pcs</th>
-                  <th>Strips</th>
-                  <th>Boxes</th>
-                  <th>Price</th>
-                </tr>
-              </thead>
-              <tbody>
-                {order.medicines && order.medicines.map((medicine, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{medicine.MedicineName}</td>
-                    <td>{medicine.quantityPcs}</td>
-                    <td>{medicine.quantityStrips}</td>
-                    <td>{medicine.quantityBoxes}</td>
-                    <td>{medicine.price}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </Table>
-          </Card.Body>
-        </Card>
-      </div>
+        <div>
+    <Card className='view-prescription-card'>
+      <Card.Header style={{backgroundColor: "#EB006F", textAlign: "center", color: "white", fontSize:"1.5rem"}}>
+       Prescription
+      </Card.Header>
+      <Card.Body>
+      <Card.Img variant="top" src={order.prescription_image}/>
+      </Card.Body>
+    </Card>
+        </div>
     </div>
-  );
+    );
+  }
+  
 };
 
 export default OrderDetailsCard;
