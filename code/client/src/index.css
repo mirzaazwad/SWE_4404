@@ -132,6 +132,12 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn.btn-viewDetails{
+  height: 100% !important;
+  vertical-align: middle;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
 .btn.btn-prescription-order
 {
   justify-content: center !important;
