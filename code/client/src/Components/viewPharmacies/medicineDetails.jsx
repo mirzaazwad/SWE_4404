@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { addItem, updateItem } from '../../Contexts/cartAction.js';
 import { useToken } from "../../Hooks/useToken";
 import ErrorModal from "../partials/errorModal";
+import Loader from "../partials/loader";
 
 const MedicineDetails = () => {
   const user=useToken();
@@ -25,6 +26,7 @@ const MedicineDetails = () => {
   const [error,setError]=useState("");
   const [units, setUnits] = useState(1);
   const [price, setPrice] = useState(0);
+  const [loaded,setLoaded] = useState(false);
   const fetchMedicine = async (id, medicineId) => {
     try {
       const response = await axios.get(
@@ -40,6 +42,7 @@ const MedicineDetails = () => {
   };
 
   useEffect(() => {
+    
     fetchMedicine(pharmacyManagerId, medicineId);
     if(pharmacyManagerId!==cartManager && cartManager!==""){
       setError("Cart contains medicine from another pharmacy, clear cart before proceeding");
@@ -47,6 +50,7 @@ const MedicineDetails = () => {
   }, []);
   
   useEffect(() => {
+    
     const calculatePrice = async () => {
       let pcsPrice=0, stripsPrice=0, boxesPrice=0;
       if(medicine.Stock.Strips != null)
@@ -65,9 +69,11 @@ const MedicineDetails = () => {
         
       }
       setPrice(pcsPrice+stripsPrice+boxesPrice);
+      setLoaded(true);
     };
   
     calculatePrice();
+    
   }, [medicine, quantityPcs, quantityStrips, quantityBoxes]);
   
   const navigate = useNavigate();
@@ -169,7 +175,9 @@ const MedicineDetails = () => {
       }));
     }
   };
-  
+  if(!loaded){
+    return <Loader/>
+  }
   return (
     <div>
       <div>
