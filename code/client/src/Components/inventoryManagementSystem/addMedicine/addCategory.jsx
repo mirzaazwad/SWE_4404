@@ -66,7 +66,7 @@ const Category = (props) => {
           <Button variant="secondary" onClick={handleCloseCategory}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={handleCategory}>
+          <Button className="btn btn-add" type="submit" onClick={handleCategory}>
             Update
           </Button>
         </Modal.Footer>

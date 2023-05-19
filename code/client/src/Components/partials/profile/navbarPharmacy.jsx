@@ -97,7 +97,7 @@ const NavbarPharmacy=(props) =>{
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
           </Nav>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
+            <Button className='btn customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

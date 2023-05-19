@@ -83,8 +83,8 @@ const AddExistingMedicine = (props) => {
         </Modal.Header>
         <Modal.Body>
         <div className="d-flex justify-content-between mb-2">
-            <Link to={"/inventoryManagementSystem/addMedicine/" + props.id}>
-              <Button className="btn btn-add" variant="primary">
+            <Link to={"/inventoryManagementSystem/addMedicine/" + props.id} style={{textDecoration: "none"}}>
+              <Button className="btn btn-add">
                 Add New Brand <i className="bx bx-plus-circle bx-sm"></i>
               </Button>
             </Link>
@@ -119,7 +119,7 @@ const AddExistingMedicine = (props) => {
           <Button variant="secondary" onClick={handleCloseMedicines}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={handleMedicines}>
+          <Button className="btn btn-add" type="submit" onClick={handleMedicines}>
             Add
           </Button>
         </Modal.Footer>
