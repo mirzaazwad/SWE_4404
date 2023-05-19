@@ -7,7 +7,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { useToken } from "../../Hooks/useToken";
 import CollapsibleChat from "./collapsibleChat/collapsableChat";
-import { Accordion } from "react-bootstrap";
+import { Accordion, Pagination } from "react-bootstrap";
 
 const PharmacyMedicines = () => {
   const user=useToken();
@@ -18,7 +18,8 @@ const PharmacyMedicines = () => {
   const [searchCriteria, setSearchCriteria] = useState("medicine");
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const cardsPerPage = 1;
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
@@ -86,7 +87,44 @@ const PharmacyMedicines = () => {
   
     return includesCategory && includesSearchTerm && includesType;
   });
-  
+  const indexOfLastCard = currentPage * cardsPerPage;
+  const indexOfFirstCard = indexOfLastCard - cardsPerPage;
+  const currentCards = filteredMedicines.slice(indexOfFirstCard, indexOfLastCard);
+
+  // Handle page number click
+  const handlePageClick = (pageNumber) => {
+    setCurrentPage(pageNumber);
+  };
+
+  // Handle "First" page click
+  const handleFirstPageClick = () => {
+    setCurrentPage(1);
+  };
+
+  // Handle "Previous" page click
+  const handlePrevPageClick = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Handle "Next" page click
+  const handleNextPageClick = () => {
+    if (currentPage < Math.ceil(filteredMedicines.length / cardsPerPage)) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  // Handle "Last" page click
+  const handleLastPageClick = () => {
+    setCurrentPage(Math.ceil(filteredMedicines.length / cardsPerPage));
+  };
+
+  // Generate the page numbers
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(filteredMedicines.length / cardsPerPage); i++) {
+    pageNumbers.push(i);
+  }
   
   
   
@@ -206,8 +244,8 @@ const PharmacyMedicines = () => {
           </div>
           
           <div className="row">
-            {filteredMedicines.map((medicine) => (
-              <div className="col-xs-6 col-sm-6 col-md-4 col-lg-2 mx-5 my-4" key={medicine._id}>
+            {currentCards.map((medicine) => (
+              <div className="col-xs-6 col-sm-6 col-md-4 col-lg-2 mx-5" key={medicine._id}>
                 <Card className="medicine-card">
                   <Link to={`/pharmacy/medicine?pid=${id}&mid=${medicine._id}&cid=${cid}`} style={{ textDecoration: 'none', color: 'white' }}>
                     <Card.Img variant="top" src={medicine.imageURL} className="medicine-card-image" />
@@ -222,6 +260,24 @@ const PharmacyMedicines = () => {
               </div>
             ))}
           </div>
+          <div className="d-flex justify-content-center mt-0">
+        <Pagination>
+        <Pagination.First onClick={handleFirstPageClick} />
+          <Pagination.Prev onClick={handlePrevPageClick} />
+          <Pagination.Ellipsis/>
+          {pageNumbers.map((pageNumber) => (
+            <Pagination.Item
+            key={pageNumber}
+            active={pageNumber === currentPage}
+            onClick={() => handlePageClick(pageNumber)}
+            >
+              {pageNumber}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next onClick={handleNextPageClick} />
+      <Pagination.Last onClick={handleLastPageClick} />
+        </Pagination>
+      </div>
         </div>
     
           <CollapsibleChat senderID={pid} receiverID={cid} JWT={user} />
