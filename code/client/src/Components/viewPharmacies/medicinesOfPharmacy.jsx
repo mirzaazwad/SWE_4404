@@ -261,22 +261,40 @@ const PharmacyMedicines = () => {
             ))}
           </div>
           <div className="d-flex justify-content-center mt-0">
-        <Pagination>
-        <Pagination.First onClick={handleFirstPageClick} />
-          <Pagination.Prev onClick={handlePrevPageClick} />
-          <Pagination.Ellipsis/>
-          {pageNumbers.map((pageNumber) => (
-            <Pagination.Item
-            key={pageNumber}
-            active={pageNumber === currentPage}
-            onClick={() => handlePageClick(pageNumber)}
-            >
-              {pageNumber}
-            </Pagination.Item>
-          ))}
-          <Pagination.Next onClick={handleNextPageClick} />
-      <Pagination.Last onClick={handleLastPageClick} />
-        </Pagination>
+          <Pagination>
+  <Pagination.First onClick={handleFirstPageClick} />
+  <Pagination.Prev onClick={handlePrevPageClick}/>
+  {currentPage >= 3 && (
+    <>
+      <Pagination.Ellipsis />
+      <Pagination.Item onClick={() => handlePageClick(currentPage-2)}>
+        {currentPage - 2}
+      </Pagination.Item>
+    </>
+  )}
+  {currentPage >= 2 && (
+    <Pagination.Item onClick={() => handlePageClick(currentPage-1)}>
+      {currentPage - 1}
+    </Pagination.Item>
+  )}
+  <Pagination.Item active>{currentPage}</Pagination.Item>
+  {currentPage < pageNumbers.length - 1 && (
+    <Pagination.Item onClick={() => handlePageClick(currentPage+1)}>
+      {currentPage + 1}
+    </Pagination.Item>
+  )}
+  {currentPage < pageNumbers.length - 2 && (
+    <>
+      <Pagination.Item onClick={() => handlePageClick(currentPage+2)}>
+        {currentPage + 2}
+      </Pagination.Item>
+      <Pagination.Ellipsis />
+    </>
+  )}
+  <Pagination.Next onClick={handleNextPageClick}/>
+  <Pagination.Last onClick={handleLastPageClick}/>
+</Pagination>
+
       </div>
         </div>
     
