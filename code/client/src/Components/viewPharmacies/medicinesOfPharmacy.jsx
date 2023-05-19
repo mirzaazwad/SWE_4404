@@ -16,7 +16,9 @@ const PharmacyMedicines = () => {
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState("medicine");
-  const [selectedCategory, setSelectedCategory] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [selectedType, setSelectedType] = useState([]);
+  
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
@@ -44,7 +46,6 @@ const PharmacyMedicines = () => {
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       });
-      console.log(response.data);
       setCategories(response.data);
     } catch (error) {
       console.log("fetch categories kaaj kore na");
@@ -58,7 +59,6 @@ const PharmacyMedicines = () => {
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       });
-      console.log(response.data);
       setTypes(response.data);
     } catch (error) {
       console.log("fetch categories kaaj kore na");
@@ -69,20 +69,52 @@ const PharmacyMedicines = () => {
     fetchMedicines();
     fetchCategories();
     fetchTypes();
-    console.log(categories);
   }, []);
   
-  const handleFilterChange = (e) => {
-    setSelectedCategory(e.target.value);
+  const filteredMedicines = medicines.filter((medicine) => {
+    // Apply search term filtering
+    const includesSearchTerm = searchCriteria === "medicine"
+      ? medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase())
+      : medicine.GenericName.toLowerCase().includes(searchTerm.toLowerCase());
+  
+    // Apply category filtering
+    const includesCategory = selectedCategory.length === 0
+      || selectedCategory.includes(medicine.Category.category);
+
+      const includesType = selectedType.length === 0
+      || selectedType.includes(medicine.Type.Name);
+  
+    return includesCategory && includesSearchTerm && includesType;
+  });
+  
+  
+  
+  
+  const handleCategoryChange = (event) => {
+    const categoryName = event.target.nextSibling.textContent;
+  
+    setSelectedCategory((prevSelected) => {
+      if (prevSelected.includes(categoryName)) {
+        return prevSelected.filter((category) => category !== categoryName);
+      } else {
+        return [...prevSelected, categoryName];
+      }
+    
+    });
   };
-  const filteredMedicines = medicines.filter((medicine) =>
-    searchCriteria==="medicine"?medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase()):medicine.GenericName.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  if (selectedCategory) {
-    filteredMedicines = filteredMedicines.filter(
-      (medicine) => medicine.category === selectedCategory
-    );
-  }
+  const handleTypeChange = (event) => {
+    const typeName = event.target.nextSibling.textContent;
+  
+    setSelectedType((prevSelected) => {
+      if (prevSelected.includes(typeName)) {
+        return prevSelected.filter((type) => type !== typeName);
+      } else {
+        return [...prevSelected, typeName];
+      }
+    
+    });
+  };
+  
 
   return (
     <div>
@@ -94,15 +126,17 @@ const PharmacyMedicines = () => {
         <div className="col-2">
           <div className="filter-options">
             <h4>Filter Options:</h4>
-              <Accordion>
+              <Accordion alwaysOpen>
               <Accordion.Item eventKey="0">
   <Accordion.Header>Category</Accordion.Header>
   <Accordion.Body>
     {categories.map((category) => (
-      <div key={category._id}>
+      <div key={category.category}>
         <Form.Check
           type="checkbox"
           label={category.category}
+          key={category.category}
+          onChange={handleCategoryChange}
         />
       </div>
     ))}
@@ -117,6 +151,7 @@ const PharmacyMedicines = () => {
         <Form.Check
           type="checkbox"
           label={type.Name}
+          onChange={handleTypeChange}
         />
       </div>
     ))}
@@ -198,5 +233,4 @@ const PharmacyMedicines = () => {
 
   );
 };
-
 export default PharmacyMedicines;
