@@ -39,9 +39,22 @@ const cartSlice = createSlice({
       localStorage.setItem("cartState", JSON.stringify(newState));
       return newState;
     },
+    updatePrescriptionImage: (state, action) => {
+      const newState = state.map((item) => {
+        if (item.id === action.payload.id && item.medicineId === action.payload.medicineId) {
+          return {
+            ...item,
+            prescriptionImage: action.payload.prescriptionImage
+          };
+        }
+        return item;
+      });
+      localStorage.setItem("cartState", JSON.stringify(newState));
+      return newState;
+    }
   },
 });
 
-export const { addItem, removeItem, updateItem, clearItems } = cartSlice.actions;
+export const { addItem, removeItem, updateItem, clearItems, updatePrescriptionImage } = cartSlice.actions;
 
 export default cartSlice.reducer;
