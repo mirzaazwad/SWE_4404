@@ -19,7 +19,7 @@ const PharmacyMedicines = () => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 1;
+  const cardsPerPage = 8;
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
   const id = queryParams.get('id');
