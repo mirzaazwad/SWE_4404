@@ -1,7 +1,7 @@
 const medicineCategory = require("../model/medicine-category");
 const medicineModel = require("../model/medicine");
 const medicineType = require("../model/medicine-type");
-const pharmacyModel = require("../model/pharmacy");
+const pharmacyModel = require("../model/seller");
 
 const getAllCategories = async(req,res)=>{
   try{

@@ -1,4 +1,4 @@
-const Pharmacy = require('../model/pharmacy');
+const Pharmacy = require('../model/seller');
 
 exports.getAllMedicines = async (req, res) => {
   try {

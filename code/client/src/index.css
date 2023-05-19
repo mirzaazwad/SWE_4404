@@ -353,7 +353,7 @@ width: 75%;
 .profile-picture-container img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 50%; /* set the border radius to 50% to match the parent container */
 }
 

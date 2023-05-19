@@ -1,6 +1,8 @@
 const jwt = require('jsonwebtoken');
 const User = require('../model/user');
 const {verifyJWT}=require('../controller/google-oauth');
+const userByEmail=require('../Library/userByEmail');
+const userById=require('../Library/userById');
 
 const requireAuth = async (req, res, next) => {
   const { authorization,idtype } = req.headers;
@@ -10,12 +12,14 @@ const requireAuth = async (req, res, next) => {
   const token = authorization.split(' ')[1]
   try {
     if(idtype==="google"){
-      const { email } = verifyJWT(token);
-      req.user = await User.findOne({ email }).select('email')
+      const {email} = await verifyJWT(token);
+      const userObject=new userByEmail(email);
+      req.user=(await userObject.findByEmail()).email;
     }
     else{
-      const { _id } = jwt.verify(token, process.env.SECRET)
-      req.user = await User.findOne({ _id }).select('_id')
+      const { _id } = jwt.verify(token, process.env.SECRET);
+      const userObject=new userById(_id);
+      req.user=(await userObject.findById())._id;
     }
 
     next()

@@ -1,6 +1,5 @@
 const User = require('../model/user');
 const Seller = require('../model/seller');
-const Pharmacy = require('../model/pharmacy');
 
 exports.getAllPharmacies = async (req, res) => {
   try {

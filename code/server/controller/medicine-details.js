@@ -1,4 +1,4 @@
-const Pharmacy = require('../model/pharmacy');
+const Pharmacy = require('../model/seller');
 const MedicineType = require('../model/medicine-type');
 const MedicineCategory = require('../model/medicine-category');
 

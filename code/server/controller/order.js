@@ -1,5 +1,5 @@
 const Order = require('../model/order');
-const Pharmacy = require('../model/pharmacy');
+const Pharmacy = require('../model/seller');
 const { MakePayment } = require('../Library/ssl-commerz-make-payment');
 
 const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescriptionBasedOrder)=>{

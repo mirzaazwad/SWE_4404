@@ -92,6 +92,17 @@ const SignUp = () => {
                     >
                       seller
                     </ToggleButton>
+                    <ToggleButton
+                      id={'radio'}
+                      type="radio"
+                      variant={radioName === 'delivery'?"primary":"outline-primary"}
+                      name="delivery"
+                      value={'delivery'}
+                      checked={radioName === 'delivery'}
+                      onChange={radioChange}
+                    >
+                      delivery
+                    </ToggleButton>
                 </ButtonGroup>
                 </div>
                 

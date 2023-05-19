@@ -1,57 +1,55 @@
-import '../../index.css'; // import the CSS file for styling
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useEffect,useState } from 'react';
 import Loader from '../partials/loader';
+import buyerUser from '../../Library/User/buyer';
+import pharmacyManager from '../../Library/User/pharmacy-manager';
+import deliveryUser from '../../Library/User/delivery-man';
 
-const ProfilePicture=(props)=>{
-  const user=props.user;
+const ProfilePicture=({user})=>{
   const [modalShow, setModalShow] = useState(false);
   const [image,setImage]=useState();
-  const [image_Location,setImage_Location]=useState('/demoProilePicture.jpg');
+  const [userObj,setUser]=useState(null);
   const [locked,setLocked]=useState(false);
+  const [imageURL,setImageURL]=useState('/demoProfilePicture.jpg');
 
   useEffect(()=>{
-    const retrieveUser=async ()=>{
-      await axios.get('/api/profile/user/getUser/'+props.id,{headers: {
-        'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'
-      }}).then((result)=>{
-        setImage_Location(result.data.imageURL);
-      })
-    };
-    retrieveUser();
-  },[modalShow,props,user]);
+    if((user instanceof buyerUser)){
+      setUser(user);
+      console.log(user);
+      setImageURL(user.imageURL);
+    }
+    else if((user instanceof pharmacyManager)){
+      setUser(user);
+      console.log(user);
+      setImageURL(user.imageURL);
+    }
+    else if(user instanceof deliveryUser){
+      setUser(user);
+      console.log(user);
+      setImageURL(user.imageURL);
+    }
+  },[user])
 
   const handleSubmit = async(e) =>{
-    setLocked(true);
     e.preventDefault();
     setModalShow(false);
     if (image) {
-      console.log(image);
-      const formData = new FormData();
-        formData.append("file", image);
-        formData.append("upload_preset", "med_guard");
-        const dataRes = await axios.post(
-          "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
-          formData
-        );
-      setImage_Location(dataRes.data.url);
+      setLocked(true);
+      let obj = Object.create(Object.getPrototypeOf(userObj), Object.getOwnPropertyDescriptors(userObj));
+      obj.image=image;
+      await obj.updateProfilePicture();
+      setUser(obj);
+      setImageURL(obj.imageURL);
       setLocked(false);
-      await axios.patch('/api/profile/user/updateProfilePicture/'+props.id,{
-        imageURL:dataRes.data.url
-      },{headers: {
-        'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'
-      }});
     }
   }
+
   if(locked===false){
     return (
       <div className="profile-picture-container">
-        <img src={image_Location} alt="Profile Picture" />
+        <img src={imageURL} alt="Profile Picture" />
         
   
         <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>

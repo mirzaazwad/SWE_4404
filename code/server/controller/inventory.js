@@ -1,4 +1,4 @@
-const pharmacyModel = require("../model/pharmacy");
+const pharmacyModel = require("../model/seller");
 const medicineType = require("../model/medicine-type");
 const getMedicine=async (req,res)=>{
   const id=req.params.id;
