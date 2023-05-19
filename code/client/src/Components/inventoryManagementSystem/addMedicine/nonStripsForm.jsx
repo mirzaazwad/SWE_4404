@@ -329,8 +329,7 @@ const NonStripsForm = (props) => {
         </Form.Group>
       <div className="d-flex justify-content-center">
         <Button
-          className="btn btn-addMedicine w-25"
-          variant="primary"
+          className="btn btn-add w-25"
           type="submit"
           disabled={locked}
         >

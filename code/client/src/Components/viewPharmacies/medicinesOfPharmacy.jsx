@@ -205,8 +205,7 @@ const PharmacyMedicines = () => {
                 Search By:{" "}
               </p>
               <Button
-                size="sm"
-                variant="primary"
+                className="btn btn-search btn-sm"
                 onClick={() => setSearchCriteria("medicine")}
                 style={{
                   backgroundColor: searchCriteria === "medicine" ? "#EB006F" : "#3b6ce7",
@@ -217,8 +216,7 @@ const PharmacyMedicines = () => {
                 Medicine
               </Button>
               <Button
-                size="sm"
-                variant="primary"
+                className="btn btn-search btn-sm"
                 onClick={() => setSearchCriteria("generic")}
                 style={{
                   backgroundColor: searchCriteria === "generic" ? "#EB006F" : "#3b6ce7",

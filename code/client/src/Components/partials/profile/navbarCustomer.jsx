@@ -70,7 +70,7 @@ const NavbarCustomer=(props)=>{
           </div>
           {cartView? <Modal onClose={()=>{setCartView(false)}}><Cart></Cart></Modal>:null}
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
+            <Button className='btn customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>
