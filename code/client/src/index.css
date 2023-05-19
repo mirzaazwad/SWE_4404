@@ -65,17 +65,17 @@ body {
 
 .medicine-card
 {
-  width: 125% !important;
+  width: 150% !important;
   background-color: var(--customMagenta) !important;
   height: 12rem !important;
   transition: transform 0.3s ease-in-out !important;
+  border-color: whitesmoke !important;
 }
 .medicine-card:hover{
     cursor: pointer;
   transform: scale(1.05);
   }
 .medicine-card-image{
-  width: 288px!important;
   height: 100px!important;
   object-fit: cover!important;
 }
@@ -96,6 +96,12 @@ code {
   background-color: var(--customDarkBlue);
   height: 65px !important;
 
+}
+
+.collapsible-chat-wrapper{
+  position: fixed !important;
+  margin-bottom: 20px !important ;
+  margin-right: 20px !important;
 }
 
 .customButton{
