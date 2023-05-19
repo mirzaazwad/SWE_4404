@@ -8,9 +8,12 @@ const OrderSchema = new Schema(
         type: Date,
         default: Date.now,
       },
+      prescription_image:{
+        type:String,
+        default:"",
+      },
       medicines: {
         type: Array,
-        required: true,
       },
       customer_data: {
         fullName: {
@@ -49,7 +52,6 @@ const OrderSchema = new Schema(
         },
         payment: { 
           type: String, 
-          required: true 
         },
       },
       status: {
