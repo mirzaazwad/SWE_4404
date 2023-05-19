@@ -14,9 +14,6 @@ const Landing = (props) => {
       </div>
       <section className="h-100">
         <div className="container fluid d-flex justify-content-around">
-          <div className="landing-image-container my-auto">
-            <LandingImage />
-          </div>
           <div className="login">
             {(card === "login" && <Login />) ||
               (card === "signup" && <SignUp />)}

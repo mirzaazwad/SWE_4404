@@ -76,7 +76,7 @@ const Type = (props) => {
           <Button variant="secondary" onClick={handleCloseType}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={handleType}>
+          <Button className="btn btn-add" type="submit" onClick={handleType}>
             Update
           </Button>
         </Modal.Footer>

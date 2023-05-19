@@ -359,7 +359,6 @@ const StripsForm = (props) => {
       <div className="d-flex justify-content-center">
         <Button
           className="btn btn-addMedicine w-25"
-          variant="primary"
           type="submit"
           disabled={locked}
         >

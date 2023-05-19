@@ -94,7 +94,7 @@ const StockManagement = (props) => {
       <Button variant="secondary" onClick={props.handleClose}>
         Close
       </Button>
-      <Button variant="primary" onClick={props.type === "add" ? addToStock : subToStock}>
+      <Button className="btn btn-add" onClick={props.type === "add" ? addToStock : subToStock}>
         Update
       </Button>
     </Modal.Footer>

@@ -117,8 +117,7 @@ const AddMedicine = () => {
             <Card.Title className="addMedicineCardTitle">
               New Medicine Information:
               <Button
-                className="btn float-end"
-                variant="primary"
+                className="btn btn-add float-end"
                 size="sm"
                 style={{ height: "100%", marginRight: "0.8%" }}
                 onClick={() => setShowCategory(true)}
@@ -126,8 +125,7 @@ const AddMedicine = () => {
                 Add Category
               </Button>
               <Button
-                className="btn float-end"
-                variant="primary"
+                className="btn btn-add float-end"
                 size="sm"
                 style={{ height: "100%", marginRight: "0.8%" }}
                 onClick={() => setShowType(true)}
