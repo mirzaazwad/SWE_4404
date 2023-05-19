@@ -123,7 +123,7 @@ export default function Cart() {
                 <td>{medicine.price}</td>
                 <td>
                   <Button
-                    className='btn btn-danger'
+                    className="btn btn-delete-cart" style={{color: "white"}}
                     onClick={() => {
                       dispatch(removeItem({ index: index }));
                     }}

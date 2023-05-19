@@ -149,6 +149,8 @@ code {
   margin: auto !important;
   height: 100% !important;
   width: 50%;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -156,12 +158,16 @@ code {
   height: 100% !important;
   width: 100%;
   vertical-align: middle;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn.btn-viewDetails{
   height: 100% !important;
   vertical-align: middle;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -322,6 +328,16 @@ width: 75%;
   align-items: center;
   height: 20%;
   width: 100%;
+  --bs-btn-hover-bg: var(--customBlue)!important;
+  --bs-btn-hover-border-color : var(--customBlue)!important;
+}
+.btn.btn-delete-cart
+{
+  --bs-btn-bg: var(--customMagenta) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 50%;
   --bs-btn-hover-bg: var(--customBlue)!important;
   --bs-btn-hover-border-color : var(--customBlue)!important;
 }
