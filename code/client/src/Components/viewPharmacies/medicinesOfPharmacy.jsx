@@ -8,10 +8,11 @@ import Button from "react-bootstrap/Button";
 import { useToken } from "../../Hooks/useToken";
 import CollapsibleChat from "./collapsibleChat/collapsableChat";
 import { Accordion, Pagination } from "react-bootstrap";
+import Loader from "../partials/loader";
 
 const PharmacyMedicines = () => {
   const user=useToken();
-  const [medicines, setMedicines] = useState([]);
+  const [medicines, setMedicines] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
@@ -69,10 +70,9 @@ const PharmacyMedicines = () => {
     fetchMedicines();
     fetchCategories();
     fetchTypes();
-    fetchTypes();
   }, []);
   
-  const filteredMedicines = medicines.filter((medicine) => {
+  const filteredMedicines = medicines?medicines.filter((medicine) => {
     // Apply search term filtering
     const includesSearchTerm = searchCriteria === "medicine"
       ? medicine.MedicineName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -86,10 +86,10 @@ const PharmacyMedicines = () => {
       || selectedType.includes(medicine.Type.Name);
   
     return includesCategory && includesSearchTerm && includesType;
-  });
+  }):null;
   const indexOfLastCard = currentPage * cardsPerPage;
   const indexOfFirstCard = indexOfLastCard - cardsPerPage;
-  const currentCards = filteredMedicines.slice(indexOfFirstCard, indexOfLastCard);
+  const currentCards = medicines?filteredMedicines.slice(indexOfFirstCard, indexOfLastCard):null;
 
   // Handle page number click
   const handlePageClick = (pageNumber) => {
@@ -110,19 +110,19 @@ const PharmacyMedicines = () => {
 
   // Handle "Next" page click
   const handleNextPageClick = () => {
-    if (currentPage < Math.ceil(filteredMedicines.length / cardsPerPage)) {
+    if (currentPage < Math.ceil((filteredMedicines?filteredMedicines.length:0) / cardsPerPage)) {
       setCurrentPage(currentPage + 1);
     }
   };
 
   // Handle "Last" page click
   const handleLastPageClick = () => {
-    setCurrentPage(Math.ceil(filteredMedicines.length / cardsPerPage));
+    setCurrentPage(Math.ceil((filteredMedicines?filteredMedicines.length:0) / cardsPerPage));
   };
 
   // Generate the page numbers
   const pageNumbers = [];
-  for (let i = 1; i <= Math.ceil(filteredMedicines.length / cardsPerPage); i++) {
+  for (let i = 1; i <= Math.ceil((filteredMedicines?filteredMedicines.length:0) / cardsPerPage); i++) {
     pageNumbers.push(i);
   }
   
@@ -241,7 +241,7 @@ const PharmacyMedicines = () => {
           </div>
           
           <div className="row">
-            {currentCards.map((medicine) => (
+            {medicines && currentCards.map((medicine) => (
               <div className="col-xs-6 col-sm-6 col-md-4 col-lg-2 mx-5" key={medicine._id}>
                 <Card className="medicine-card">
                 <Link to={`/pharmacy/medicine?pid=${pid}&mid=${medicine._id}&cid=${user._id}`} style={{ textDecoration: 'none', color: 'white' }}>
@@ -256,6 +256,7 @@ const PharmacyMedicines = () => {
                 </Card>
               </div>
             ))}
+            {!medicines && (<Loader/>)}
           </div>
           <div className="d-flex justify-content-center mt-0">
           <Pagination>
