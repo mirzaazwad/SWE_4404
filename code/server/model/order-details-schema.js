@@ -15,6 +15,9 @@ const OrderSchema = new Schema(
       medicines: {
         type: Array,
       },
+      userID: {
+        type: String,
+      },
       customer_data: {
         fullName: {
           type: String,
