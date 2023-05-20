@@ -85,9 +85,11 @@ body {
 .medicine-card
 {
   width: 150% !important;
+  width: 150% !important;
   background-color: var(--customMagenta) !important;
   height: 12rem !important;
   transition: transform 0.3s ease-in-out !important;
+  border-color: whitesmoke !important;
   border-color: whitesmoke !important;
 }
 .medicine-card:hover{
@@ -172,6 +174,28 @@ code {
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+.btn.btn-viewDetails{
+  height: 100% !important;
+  vertical-align: middle;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-viewDetails{
+  height: 100% !important;
+  vertical-align: middle;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-viewDetails{
+  height: 100% !important;
+  vertical-align: middle;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
 .btn.btn-prescription-order
 {
   justify-content: center !important;
@@ -230,6 +254,7 @@ code {
 .medicine-details-card{
   margin-top: 70px;
   height: 90% !important;
+  width: 70% !important;
   width: 70% !important;
 }
 .billing-details-card{
