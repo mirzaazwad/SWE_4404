@@ -46,7 +46,7 @@ const NavbarPharmacy=() =>{
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
-        <Navbar.Brand className='px-2'  href={`/profileSeller/${user._id}`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
+        <Navbar.Brand className='px-2'  href={`/profileSeller`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle className='px-2' aria-controls="navbarScroll" />
         
         

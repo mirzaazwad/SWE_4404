@@ -20,6 +20,18 @@ export const useLogin = () =>{
       if(result.data.verified===true){
         dispatch(LOGIN({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
         localStorage.setItem('user',JSON.stringify({_id:result.data._id,userType:result.data.userType,token:result.data.token,verified:true}));
+        if(result.data.userType==="seller"){
+          navigate('/profileSeller');
+        }
+        else if(result.data.userType==="buyer"){
+          navigate('/profileBuyer');
+        }
+        else if(result.data.userType==="delivery"){
+          navigate('/profileDelivery');
+        }
+        else{
+          navigate('/');
+        }
       }
       else{
         navigate('/emailVerify/'+email);
