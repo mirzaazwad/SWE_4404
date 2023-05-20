@@ -15,22 +15,6 @@ const IncomingOrders = () => {
   const userId = user._id;
 
     useEffect(() => {
-        const retrieveData = async () => {
-          try {
-            const response = await axios.get("/api/profile/user/getUserSellerId/" + userId, {
-              headers: {
-                Authorization: `Bearer ${user.token}`,
-                'idType': user.googleId ? 'google' : 'email',
-              },
-            });
-            const sellerId = response.data._id;
-            setSId(sellerId);
-            fetchOrders(sellerId);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-      
         const fetchOrders = async (sellerId) => {
           try{
             console.log(userId);
@@ -51,8 +35,7 @@ const IncomingOrders = () => {
             }
           }
         };
-      
-        retrieveData();
+        fetchOrders(user._id);
       
       }, []);
   // Calculate the indexes of orders to be displayed on the current page
