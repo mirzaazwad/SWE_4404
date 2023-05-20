@@ -3,10 +3,12 @@ import axios from "axios";
 import { useState } from "react";
 import { LOGIN } from "../Contexts/action";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const useLoginGoogle = () =>{
   const [errorGoogle,setError] = useState(null);
   const [isLoadingGoogle, setisLoading] = useState(null);
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const googleLogin=useGoogleLogin({
     onSuccess: async ({ code }) => {
@@ -19,6 +21,18 @@ export const useLoginGoogle = () =>{
         console.log(user);
         dispatch(LOGIN({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
         localStorage.setItem('user',JSON.stringify({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
+        if(user.userType==="seller"){
+          navigate('/profileSeller');
+        }
+        else if(user.userType==="buyer"){
+          navigate('/profileBuyer');
+        }
+        else if(user.userType==="delivery"){
+          navigate('/profileDelivery');
+        }
+        else{
+          navigate('/');
+        }
         setisLoading(false);
       }).catch((error)=>{
         setisLoading(false);

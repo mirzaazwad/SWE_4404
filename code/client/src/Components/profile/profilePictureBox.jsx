@@ -17,17 +17,14 @@ const ProfilePicture=({user})=>{
   useEffect(()=>{
     if((user instanceof buyerUser)){
       setUser(user);
-      console.log(user);
       setImageURL(user.imageURL);
     }
     else if((user instanceof pharmacyManager)){
       setUser(user);
-      console.log(user);
       setImageURL(user.imageURL);
     }
     else if(user instanceof deliveryUser){
       setUser(user);
-      console.log(user);
       setImageURL(user.imageURL);
     }
   },[user])
