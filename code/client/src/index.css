@@ -148,11 +148,21 @@ code {
   justify-content: center !important;
   margin: auto !important;
   height: 100% !important;
-  width: 50%;
+  width: 25%;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-approve-order{
+  display: flex;
+  justify-content: center !important;
+  margin: auto !important;
+  height: 70% !important;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customDarkBlue)!important;
 }
 .btn.btn-checkOut{
   height: 100% !important;
