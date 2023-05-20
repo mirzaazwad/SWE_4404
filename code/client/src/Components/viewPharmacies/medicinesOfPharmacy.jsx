@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import {Link, useLocation } from "react-router-dom";
+import {Link, useLocation, useParams } from "react-router-dom";
 import Card from "react-bootstrap/Card";
 import NavbarCustomer from "../partials/profile/navbarCustomer";
 import Form from "react-bootstrap/Form";
@@ -21,15 +21,12 @@ const PharmacyMedicines = () => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
   const [searchCriteria, setSearchCriteria] = useState("medicine");
-  const location=useLocation();
-  const queryParams = new URLSearchParams(location.search);
-  const cid = queryParams.get('cid');
-  const pid=queryParams.get('pid');
+  const {id}=useParams();
 
   const fetchMedicines = async () => {
     try {
       const response = await axios.get(
-        `/api/pharmacy/${pid}`
+        `/api/pharmacy/${id}`
         ,{
           headers:{'Authorization': `Bearer ${user.token}`,
           'idType':user.googleId?'google':'email'}
@@ -244,7 +241,7 @@ const PharmacyMedicines = () => {
             {medicines && currentCards.map((medicine) => (
               <div className="col-xs-6 col-sm-6 col-md-4 col-lg-2 mx-5" key={medicine._id}>
                 <Card className="medicine-card">
-                <Link to={`/pharmacy/medicine?pid=${pid}&mid=${medicine._id}&cid=${user._id}`} style={{ textDecoration: 'none', color: 'white' }}>
+                <Link to={`/pharmacy/medicine?pid=${id}&mid=${medicine._id}`} style={{ textDecoration: 'none', color: 'white' }}>
                     <Card.Img variant="top" src={medicine.imageURL} className="medicine-card-image" />
                     <Card.Body>
                       <Card.Title>{medicine.MedicineName}</Card.Title>
@@ -296,7 +293,7 @@ const PharmacyMedicines = () => {
       </div>
         </div>
     
-          <CollapsibleChat senderID={pid} receiverID={cid} JWT={user} />
+          <CollapsibleChat senderID={id} receiverID={user._id} JWT={user} />
 
       </div>
     </div>
