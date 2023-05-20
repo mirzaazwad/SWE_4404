@@ -29,7 +29,6 @@ class pharmacyManager {
 
   async retrieveUserInformation() {
       const result = await this.fetchUserInformation();
-      console.log(result);
       this.username=result.username?result.username:this.username;
       this.email=result.email;
       this.coordinates=(result.hasOwnProperty('coordinates'))?result.coordinates:this.coordinates;

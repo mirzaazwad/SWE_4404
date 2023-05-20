@@ -63,7 +63,7 @@ const NavbarPharmacy=({user}) =>{
             </span>:""}
             </Nav.Link>
             <Nav.Link href=""  >Accounts</Nav.Link>
-            <Nav.Link href={`/profileSeller/chats/${user._id}`}  >Chats
+            <Nav.Link href={`/profileSeller/chats`}  >Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}
             </span>:""}
