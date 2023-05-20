@@ -1,47 +1,9 @@
-import { useEffect, useState } from "react";
 import ChatReceiver from "./chatsReceiverMessage";
 import ChatSender from "./chatsSenderMessage";
-import axios from "axios";
 import Loader from "../partials/loader";
 
-const ChatBox = (props) => {
-  const [messages,setMessages]=useState([]);
-  const [isLoading,setIsLoading]=useState(true);
-  useEffect(()=>{
-    setIsLoading(true);
-    async function retrieveMessages(){
-      console.log(props.senderID);
-      console.log(props.id);
-      setIsLoading(true);
-      const value=await axios.post("/api/profile/chat/messages",{
-        senderID:props.senderID,
-        receiverID:props.id
-      }, {
-        headers: {
-          Authorization: `Bearer ${props.user.token}`,
-          'idType':props.user.googleId?'google':'email',
-        },
-      });
-      value.data.sort((a,b)=>a.messageOrder-b.messageOrder);
-      setMessages(value.data);
-      setIsLoading(false);
-    }
-    if(props.senderID){
-      retrieveMessages();
-    }
-  },[props.senderID]);
-
-  useEffect(()=>{
-    const message=props.message;
-    if(message!==null){
-      if(props.noSubscriber===true){
-        props.handleReload(false);
-      }
-      setMessages((messages) => [...messages, message]);
-    }
-  },[props.message])
-
-  if(props.noSubscriber===true || !isLoading){
+const ChatBox = ({user}) => {
+  if(user.messages){
     return ( 
       <div
         className="scrollable pt-3 pe-3"
@@ -51,16 +13,16 @@ const ChatBox = (props) => {
           overflowY: "scroll",
         }}
       >
-        {messages.map((msg, index) =>
-          msg.receiverID === props.id ? (
+        {user.messages.map((msg, index) =>
+          msg.receiverID === user._id ? (
             <ChatReceiver
-              imageURL={props.receiverImageURL}
+              imageURL={user.imageURL}
               message={msg.messageContent}
               datetime={msg.SentTime}
             />
           ) : (
             <ChatSender
-              imageURL={props.senderImageURL}
+              imageURL={user.currentSender.senderImageURL}
               message={msg.messageContent}
               datetime={msg.SentTime}
             />

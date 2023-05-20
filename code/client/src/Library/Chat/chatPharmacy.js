@@ -20,9 +20,12 @@ class chatPharmacy extends pharmacyManager{
         this.messagesMap.set(message.receiverID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
       }
     })
+    this.notificationMap=new Map();
   }
 
  async ToggleChat(sent){
+    await this.countMessages(sent);
+    await this.retrieveMessages(sent);
     await axios.post('/api/profile/chat/toggleRead',{
       senderID:this._id,
       receiverID:sent.senderID
@@ -31,13 +34,13 @@ class chatPharmacy extends pharmacyManager{
         Authorization: `Bearer ${this.token}`,
         'idType':this.googleId?'google':'email',
       },
-    }).then(()=>{
-      this.toggle=this.toggle^true;
+    }).catch(() => {
+      window.location.href = "/error500";
     });
     this.currentSender=sent;
   }
 
-  async retrieveMessages(){
+  async retrieveChatInformation(){
     await this.retrieveUserInformation();
     this.senders = await axios.get("/api/profile/chat/senders/" + this._id, {
       headers: {
@@ -49,12 +52,12 @@ class chatPharmacy extends pharmacyManager{
     }).catch(() => {
       window.location.href = "/error500";
     });
-
     this.senders.forEach((sent)=>this.messagesMap.set(sent.senderID,{lastMessage:sent.lastMessage,lastMessageTime:sent.lastMessageTime}));
     if(this.senders.length===0){
       this.noSubscriber=true;
     }
     else{
+      console.log('senders are',this.senders[0]);
       this.ToggleChat(this.senders[0]);
       this.noSubscriber=false;
     }
@@ -67,6 +70,40 @@ class chatPharmacy extends pharmacyManager{
 
   getLastMessage(senderID){
     return this.messagesMap.get(senderID).lastMessage;
+  }
+
+  async retrieveMessages(sent){
+    this.messages=await axios.post("/api/profile/chat/messages",{
+      senderID:sent.senderID,
+      receiverID:this._id
+    }, {
+      headers: {
+        Authorization: `Bearer ${this.token}`,
+        'idType':this.googleId?'google':'email',
+      },
+    }).then(result=>result.data).catch(() => {
+      window.location.href = "/error500";
+    });
+
+    this.messages.sort((a,b)=>a.messageOrder-b.messageOrder);
+  }
+
+  async countMessages(sent){
+    this.messageCount = await axios.post(
+      "/api/profile/chat/countMessages/",
+      { 
+        senderID: this.id,
+        receiverID: sent.senderID
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'idType':this.googleId?'google':'email',
+        },
+      }).then(result=>result.data.count).catch(() => {
+        window.location.href = "/error500";
+      });
+      this.notificationMap.set(sent,this.messageCount);
   }
 
 
