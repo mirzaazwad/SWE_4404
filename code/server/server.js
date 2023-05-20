@@ -15,6 +15,7 @@ const profileRoutesDelivery = require("./routes/delivery");
 const profileRoutesSeller = require("./routes/seller");
 const purchaseRoutes = require("./routes/purchase");
 const pharmaciesRoutes = require("./routes/view-pharmacy");
+const pharmacyOrdersRoutes = require("./routes/pharmacy-orders");
 const chatRoutes = require("./routes/chat");
 const mobileRoutes=require("./routes/mobile");
 const prescriptionsRoutes = require("./routes/prescription");
@@ -41,6 +42,7 @@ app.use("/api/pharmacies",pharmaciesRoutes);
 app.use("/api/profile/chat",chatRoutes);
 app.use("/api/mobile",mobileRoutes);
 app.use("/api/pharmacy",pharmacyRoutes);
+app.use("/api/pharmacyOrders",pharmacyOrdersRoutes);
 app.use("/api/profile/delivery",profileRoutesDelivery);
 
 module.exports = {app};
