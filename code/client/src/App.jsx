@@ -21,6 +21,8 @@ import './index.css';
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
 import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
+import IncomingOrdersCard from "./Components/inventoryManagementSystem/pharmacyOrders/incomingOrders";
+import PharmacyOrderDetails from "./Components/inventoryManagementSystem/pharmacyOrders/pharmacyOrderDetails";
 
 const App=()=> {
   let user = useSelector((state) => state.userState.user);
@@ -192,6 +194,8 @@ const App=()=> {
               <Route exact path="/prescription" element={user && user.userType === "buyer"  && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path="/incomingOrders" element={user && user.userType === "seller"  && user.verified === true ? (<IncomingOrdersCard />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/getOrderDetails/:userId/:orderId" element={user && user.userType === "seller"  && user.verified === true ? (<PharmacyOrderDetails />): (<Navigate to = "/"/>) }/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>
