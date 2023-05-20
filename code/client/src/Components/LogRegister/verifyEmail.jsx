@@ -32,10 +32,11 @@ const EmailVerification = () => {
           Authorization: `Bearer ${token}`,
           'idType':currentUser.googleId?'google':'email',
         },
-      }).then((result)=>{
-        console.log(result);
       })
-      .catch(err=>setError(err.error));
+      .catch((err)=>{
+        console.log(err);
+        setError(err.error)
+      });
     },[email,token]);
 
 
@@ -69,9 +70,8 @@ const EmailVerification = () => {
         });
         if(user){
           const unverified=JSON.parse(localStorage.getItem('user'));
-          localStorage.removeItem('user');
-          localStorage.setItem('user',JSON.stringify({_id:unverified._id,userType:unverified.userType,token:unverified.token,verified:true}));
-          dispatch(LOGIN({_id:user.data.result._id,userType:unverified.userType,token:unverified.token,verified:true}));
+          localStorage.setItem('user',JSON.stringify({_id:unverified._id,userType:unverified.userType,token:unverified.token,verified:user.data.verified}));
+          dispatch(LOGIN({_id:user.data._id,userType:unverified.userType,token:unverified.token,verified:user.data.verified}));
           setisLocked(false);
         }
         else{

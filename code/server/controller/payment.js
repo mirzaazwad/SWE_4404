@@ -1,4 +1,4 @@
-const Pharmacy = require('../model/pharmacy');
+const Pharmacy = require('../model/seller');
 const OrderModel = require('../model/order');
 
 const successfulPayment=async (req,res)=>{

@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
 
-const tokenSchema = new Schema({
+const emailVerificationSchema = new Schema({
   email:{
     type: String
   },
@@ -10,7 +10,7 @@ const tokenSchema = new Schema({
   }
 },{timestamps:true});
 
-tokenSchema.statics.addRecord = async function(email,OTP){
+emailVerificationSchema.statics.addRecord = async function(email,OTP){
   if(!email || !OTP){
     throw Error('An error occurred in email or OTP generation');
   }
@@ -18,7 +18,7 @@ tokenSchema.statics.addRecord = async function(email,OTP){
   return result;
 }
 
-tokenSchema.statics.verifyOTP=async function(email,OTP){
+emailVerificationSchema.statics.verifyOTP=async function(email,OTP){
   if(!email || !OTP){
     throw Error('An error occurred in email or OTP transmission');
   }
@@ -33,6 +33,6 @@ tokenSchema.statics.verifyOTP=async function(email,OTP){
   }
 }
 
-module.exports=mongoose.model("token",tokenSchema);
+module.exports=mongoose.model("email-verification",emailVerificationSchema);
 
 

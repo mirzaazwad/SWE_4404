@@ -1,63 +1,40 @@
-import axios from "axios";
 import React from "react";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import {Button,Form,Table} from "react-bootstrap";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
 import { useSocket } from "../../Hooks/useSocket";
 import AddExistingMedicine from "./addExistingMedicine";
 import { useToken } from "../../Hooks/useToken";
-import StockManagement from "./addStock";
+import StockManagement from "./stockControl";
 import Loader from "../partials/loader";
+import pharmacyInventory from "../../Library/Pharmacy/pharmacy";
 
 const Inventory = () => {
   const user=useToken();
-  const [sellerId, setSellerId] = useState();
-  const id = useParams();
-  const _id = id.id;
-  useSocket(_id,[]);
+  useSocket(user._id,[]);
+  const [inventory,setInventory]=useState(null);
   const [current_medicine_index,setCurrentMedicineIndex]=useState();
   const [medicines, setMedicines] = useState([]);
   const [stockType, setStockType] = useState("");
   const [amount, setAmount] = useState(0);
-  const [pharmacyID,setPharmacyID]=useState();
   const [error,setError]=useState(null);
   const [showMedicines,setShowMedicines]=useState(false);
-  const [loading,setLoading]=useState(false);
+  const [loading,setLoading]=useState(true);
   const [togglePcs,setTogglePcs]=useState(0);
   const [filterChangeValue,setFilterChangeValue]=useState("");
 
   useEffect(() => {
-    const retrieveData=async()=>{
-      setLoading(true);
-      await axios
-      .get("/api/profile/user/getUserSellerId/" + _id, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          'idType':user.googleId?'google':'email',
-        },
-      })
-      .then((response) => {
-        setSellerId(response.data._id);
-      })
-      .catch((err) => console.log(err));
-    await axios
-      .get("/api/profile/inventory/getMedicines/" + sellerId, {
-        headers: {
-          Authorization: `Bearer ${user.token}`,
-          'idType':user.googleId?'google':'email',
-        },
-      })
-      .then((result) => {
-        if(result.data!==null){
-          setPharmacyID(result.data._id);
-          setMedicines(result.data.Inventory);
-          setLoading(false);
-        }
-      });
+    const retrieveInventory=async()=>{
+      const pharmacy=new pharmacyInventory(user._id,user.token,user.googleId);
+      await pharmacy.retrieveInformation();
+      console.log(pharmacy.Inventory);
+      setMedicines(pharmacy.Inventory);
+      setInventory(pharmacy);
+      setLoading(false);
     }
-    retrieveData();
-  }, [sellerId,_id,user.token]);
+    retrieveInventory();
+  }, [user]);
+
   const [show, setShow] = useState(false);
   const [type, setType] = useState("");
   const handleClose = () => setShow(false);
@@ -121,7 +98,7 @@ const Inventory = () => {
     return (
       <div>
         <div>
-          <NavbarPharmacy id={_id} user={user}/>
+          <NavbarPharmacy user={user}/>
         </div>
         <section className="inventory-section">
           <div className="d-flex w-75 m-auto  flex-column">
@@ -129,7 +106,7 @@ const Inventory = () => {
                 <Button className="btn btn-add" variant="primary" onClick={()=>setShowMedicines(true)}>
                   Add new medicine <i className="bx bx-plus-circle bx-sm"></i>
                 </Button>
-              <AddExistingMedicine id={_id} user={user} show={showMedicines} onClosing={handleClosing}/>
+              <AddExistingMedicine user={{inventory:inventory,setInventory:setInventory}} show={{show:showMedicines,onClosing:handleClosing}}/>
               <div className="errorMessage" style={{color:"red"}}>
                 {error}
               </div>
@@ -154,7 +131,7 @@ const Inventory = () => {
                 />
               </div>
             </div>
-            <StockManagement handleClose={handleClose} show={show} amount={amount} setAmount={setAmount}  medicines={medicines} current_medicine_index={current_medicine_index} setStockType={setStockType} setError={setError} pharmacyID={pharmacyID}  user={user} stockType={stockType} type={type}  />
+            <StockManagement show={{show:show,handleClose:handleClose}} amount={{amount:amount,setAmount:setAmount}}  medicines={{medicineArray:medicines,current_ix:current_medicine_index}} setError={setError}  inventory={{inventory:inventory,setInventory:setInventory}} stock={{stockType:stockType,setStockType:setStockType,option:type}}/>
             <div className="d-flex justify-content-center">
               <Table striped bordered hover>
                 <thead>

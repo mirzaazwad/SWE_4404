@@ -1,7 +1,9 @@
 const { OAuth2Client } = require("google-auth-library");
 const axios = require('axios');
-const userModel = require("../model/user");
-const tokenModel = require("../model/token");
+const buyerModel = require("../model/buyer");
+const sellerModel = require("../model/seller");
+const deliveryModel = require("../model/delivery");
+const userByEmail=require("../Library/userByEmail");
 
 const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
@@ -18,6 +20,7 @@ const verifyJWT=async(token)=>{
     });
     // Extract the user's email address and unique Google ID from the verified JWT
     const payload = ticket.getPayload();
+    return payload;
   } catch (error) {
     console.error('Error verifying JWT:', error);
   }
@@ -30,16 +33,33 @@ const googleAuthGetToken = async (req, res) => {
       .get("https://www.googleapis.com/oauth2/v3/userinfo", {
         headers: { Authorization: `Bearer ${tokens.access_token}` },
       })
-      .then((res) => res.data);
+      .then((res) => res.data).catch((error)=>console.log(error));
     if(req.body.operation==='signup'){
-      const result=await userModel.signUpGoogle(req.body.userType,userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
-      res.status(200).json({tokens, result,userInfo});
+      let result={};
+      if(req.body.userType==='buyer'){
+        result=await buyerModel.signUpGoogle(userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
+        result={...result,userType:'buyer'};
+      }
+      else if(req.body.userType==='seller'){
+        result=await sellerModel.signUpGoogle(userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
+        result={...result,userType:'seller'};
+      }
+      else if(req.body.userType==='delivery'){
+        result=await deliveryModel.signUpGoogle(userInfo.name,userInfo.email,userInfo.sub,userInfo.picture,userInfo.email_verified);
+        result={...result,userType:'delivery'};
+      }
+      else{
+        result=null;
+      }
+      return result!==null?res.status(200).json({tokens, result,userInfo}):res.status(400).json({error:'sign up unsuccessful'});
     }
     else{
-      const result=await userModel.loginGoogle(userInfo.email,userInfo.sub);
+      const userObject=new userByEmail(userInfo.email);
+      const result=await userObject.login(userInfo.sub);
       res.status(200).json({tokens, result,userInfo});
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ success: false, error: err.message });
   }
 };

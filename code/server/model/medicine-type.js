@@ -9,14 +9,6 @@ const medicineTypeDescription = new Schema({
   Description:{
     type: String
   },
-  hasPcs:{
-    type:Boolean,
-    required:true
-  },
-  hasBoxes:{
-    type:Boolean,
-    required:true
-  },
   hasStrips:{
     type:Boolean,
     required:true
@@ -39,11 +31,11 @@ medicineTypeDescription.statics.addType=async function(name,description,strips){
   }
   else{
     if(strips===true){
-      const result=await this.create({Name:name,Description:description,hasBoxes:true,hasPcs:true,hasStrips:true});
+      const result=await this.create({Name:name,Description:description,hasStrips:true});
       return result;
     }
     else{
-      const result=await this.create({Name:name,Description:description,hasBoxes:true,hasPcs:true,hasStrips:false});
+      const result=await this.create({Name:name,Description:description,hasStrips:false});
       return result;
     }
   }

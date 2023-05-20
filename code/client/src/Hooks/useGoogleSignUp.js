@@ -14,16 +14,14 @@ export const useGoogleSignUp = (userType) =>{
         code,
         userType:userType,
         operation:'signup'
-      }).then(async(result)=>{
-        console.log(result.data);
-        const user={_id:result.data.result.user._id,email:result.data.userInfo.email,userType:result.data.result.hasOwnProperty('buyer')?'buyer':'seller',token:result.data.tokens.id_token,verified:result.data.userInfo.email_verified,googleId:result.data.userInfo.sub};
+      }).then((result)=>{
+        const user={_id:result.data.result._id,email:result.data.userInfo.email,userType:result.data.result.userType,token:result.data.tokens.id_token,verified:result.data.userInfo.email_verified,googleId:result.data.userInfo.sub};
+        console.log(user);
         dispatch(LOGIN({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
         localStorage.setItem('user',JSON.stringify({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
-        console.log(user);
-        console.log(user);
         setisLoading(false);
-      }).catch((error)=>{
-        setError(error.message);
+      }).catch(()=>{
+        setError("Google Sign Up Failed");
       })
     },
     flow: 'auth-code',
