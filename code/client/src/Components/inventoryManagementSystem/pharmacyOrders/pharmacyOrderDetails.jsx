@@ -9,7 +9,6 @@ import { useToken } from "../../../Hooks/useToken";
 
 const OrderDetailsCard = () => {
   const user=useToken();
-  const uId = user._id;
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
   const [disabled, setDisabled] = useState(false);
@@ -31,7 +30,7 @@ const OrderDetailsCard = () => {
       }
     };
     fetchOrderDetails();
-  }, []);
+  }, [user]);
   const handleOrderApproval = async () => {
     try {
       await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, null, {
@@ -51,7 +50,7 @@ const OrderDetailsCard = () => {
     return (
       <div>
         <div className="mb-5">
-          <NavbarPharmacy id={uId} user={user} />
+        <NavbarPharmacy id={user._id} user={user}/>
         </div>
         <div>
           <Card className='order-details-card'>

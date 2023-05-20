@@ -49,12 +49,12 @@ const IncomingOrders = () => {
   return (
     <div>
       <div className="mb-5">
-        <NavbarPharmacy id={userId} user={user}/>
+        <NavbarPharmacy user={user}/>
       </div>
       <div className="my-orders d-flex justify-content-center">
         <div className="d-flex flex-column w-50">
           {currentOrders.map((order) => (
-            <OrderCard key={order.index} order={order} sId={sId} />
+            <OrderCard key={order.index} order={order} user={user} />
           ))}
           {orders.length > ordersPerPage && (
             <Pagination className="m-auto py-3">

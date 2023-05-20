@@ -9,13 +9,15 @@ import '../../../index.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setNotification } from '../../../Contexts/action';
+import { useToken } from '../../../Hooks/useToken';
 import axios from 'axios';
 
-const NavbarPharmacy=({user}) =>{
+const NavbarPharmacy=() =>{
   const dispatch=useDispatch();
   const chatMessages=useSelector((state)=>state.userState.notificationCount)
   const {logout}= useLogout();
   const navigate=useNavigate();
+  const user=useToken();
   let orderMessages=2;
 
   useEffect(()=>{
@@ -54,16 +56,16 @@ const NavbarPharmacy=({user}) =>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1" disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Home</Nav.Link>
-            <Nav.Link href={`/profileSeller/${user._id}`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory/${user._id}`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
+            <Nav.Link href="#action1" >Home</Nav.Link>
+            <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
+            <Nav.Link href={`/inventoryManagementSystem/inventory`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
             <Nav.Link href={`/incomingOrders`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
             </span>:""}
             </Nav.Link>
             <Nav.Link href=""  >Accounts</Nav.Link>
-            <Nav.Link href={`/profileSeller/chats`}  >Chats
+            <Nav.Link href={`/profileSeller/chats/${user._id}`}  >Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}
             </span>:""}
