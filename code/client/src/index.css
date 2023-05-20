@@ -148,7 +148,7 @@ code {
   margin-right: 20px !important;
 }
 
-.btn.customButton{
+
 .btn.customButton{
   background-color: var(--customMagenta) !important;
   color: white !important;
@@ -344,7 +344,7 @@ width: 75%;
   width: 50%;
   margin-bottom: 3%;
 }
-.btn.btn-save{
+
 .btn.btn-save{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
@@ -438,13 +438,7 @@ width: 75%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
-.btn.btn-prescription-upload{
-.btn.btn-search{
-  --bs-btn-bg: var(--customBlue) !important;
-  color: white !important;
-  --bs-btn-hover-bg: var(--customMagenta)!important;
-  --bs-btn-hover-border-color : var(--customMagenta)!important;
-}
+
 .btn.btn-prescription-upload{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
@@ -454,7 +448,7 @@ width: 75%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
-.btn.btn-add i {
+
 .btn.btn-add i {
   margin-left: 5px;
   vertical-align: middle;
@@ -463,10 +457,7 @@ width: 75%;
 .btn.btn-add:hover{
   text-decoration: none !important;
 }
-.btn.btn-buyMore{
-.btn.btn-add:hover{
-  text-decoration: none !important;
-}
+
 .btn.btn-buyMore{
   width: 60%;
   --bs-btn-bg: var(--customBlue) !important;
@@ -479,7 +470,6 @@ width: 75%;
   margin-left: 5px;
   vertical-align: middle;
 }
-.btn.btn-addCart{
 .btn.btn-addCart{
   width: 60%;
   --bs-btn-bg: var(--customBlue) !important;
