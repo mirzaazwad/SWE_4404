@@ -8,7 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import ChangePassword from "./Components/profile/changePassword";
 import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
-import Error404 from "./Components/error404";
+import Error404 from "./Components/errors/error404";
+import Error500 from "./Components/errors/error500";
 import { LOGIN } from "./Contexts/action";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
@@ -21,6 +22,7 @@ import './index.css';
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
 import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
+import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
 
 const App=()=> {
   let user = useSelector((state) => state.userState.user);
@@ -41,9 +43,9 @@ const App=()=> {
                   !user ? (
                     <Landing data={"login"} />
                   ) : user.userType === "buyer" ? (
-                    <Navigate to={"/profileBuyer/" + user._id} />
+                    <Navigate to={"/profileBuyer/"} />
                   ) : (
-                    <Navigate to={"/profileSeller/" + user._id} />
+                    <Navigate to={"/profileSeller/"} />
                   )
                 }
               />
@@ -54,15 +56,15 @@ const App=()=> {
                   !user ? (
                     <Landing data={"signup"} />
                   ) : user.userType === "buyer" ? (
-                    <Navigate to={"/profileBuyer/" + user._id} />
+                    <Navigate to={"/profileBuyer"} />
                   ) : (
-                    <Navigate to={"/profileSeller/" + user._id} />
+                    <Navigate to={"/profileSeller"} />
                   )
                 }
               />
               <Route
                 exact
-                path="/profileBuyer/:id"
+                path="/profileBuyer"
                 element={
                   user && user.userType === "buyer" && user.verified === true ? (
                     <ProfilePageForCustomers />
@@ -73,7 +75,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/profileSeller/:id"
+                path="/profileSeller"
                 element={
                   user && user.userType === "seller" && user.verified === true ? (
                     <ProfilePageForPharmacy />
@@ -82,10 +84,21 @@ const App=()=> {
                   )
                 }
               />
-          <Route exact path='/profileSeller/chats/:id' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
               <Route
                 exact
-                path="/profileBuyer/changePassword/:id"
+                path="/profileDelivery"
+                element={
+                  user && user.userType === "delivery" && user.verified === true ? (
+                    <ProfilePageForDelivery/>
+                  ) : (
+                    <Navigate to="/" />
+                  )
+                }
+              />
+          <Route exact path='/profileSeller/chats' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
+              <Route
+                exact
+                path="/profileBuyer/changePassword"
                 element={
                   user && !user.googleId && user.verified === true ? (
                     <ChangePassword />
@@ -96,7 +109,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/profileSeller/changePassword/:id"
+                path="/profileSeller/changePassword"
                 element={
                   user && !user.googleId && user.verified === true ? (
                     <ChangePassword />
@@ -112,9 +125,9 @@ const App=()=> {
                   !user ? (
                     <ForgotPassword />
                   ) : user.userType === "buyer" ? (
-                    <Navigate to={"/profileBuyer/" + user._id} />
+                    <Navigate to={"/profileBuyer"} />
                   ) : (
-                    <Navigate to={"/profileSeller/" + user._id} />
+                    <Navigate to={"/profileSeller"} />
                   )
                 }
               />
@@ -125,15 +138,15 @@ const App=()=> {
                   !user || user.verified === false ? (
                     <EmailVerification />
                   ) : user.userType === "buyer" ? (
-                    <Navigate to={"/profileBuyer/" + user._id} />
+                    <Navigate to={"/profileBuyer"} />
                   ) : (
-                    <Navigate to={"/profileSeller/" + user._id} />
+                    <Navigate to={"/profileSeller/"} />
                   )
                 }
               />
               <Route
                 exact
-                path="/inventoryManagementSystem/inventory/:id"
+                path="/inventoryManagementSystem/inventory"
                 element={
                   user && user.userType === "seller" && user.verified === true ? (
                     <Inventory />
@@ -144,7 +157,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/inventoryManagementSystem/addMedicine/:id"
+                path="/inventoryManagementSystem/addMedicine"
                 element={
                   user && user.userType === "seller"  && user.verified === true ? (
                     <AddMedicine />
@@ -155,7 +168,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/ViewPharmacies/:id"
+                path="/ViewPharmacies"
                 element={
                   user && user.userType === "buyer"  && user.verified === true ? (
                     <ViewPharmacies />
@@ -177,7 +190,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="pharmacy/medicine"
+                path="/pharmacy/medicine"
                 element={
                   user && user.userType === "buyer" && user.verified === true ? (
                     <Medicine />
@@ -192,6 +205,7 @@ const App=()=> {
               <Route exact path="/prescription" element={user && user.userType === "buyer"  && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
+              <Route path='/error500' element={<Error500/>}/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>

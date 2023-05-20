@@ -59,17 +59,24 @@ const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescriptionB
 
 const postOrder = async (req, res) => {
   try {
-    const userId = req.params.userId;
-    const {items,customer_data,prescriptionBasedOrder}=req.body;
-    let order = await Order.findOne({
-      userId: userId
-    });
-    const pharmacy = await Pharmacy.findById(req.body.customer_data.pharmacyManagerID);
-    if (order) {
-      order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescriptionBasedOrder);
-    } else {
-      order=await newCustomerOrder(userId,pharmacy,items,customer_data,prescriptionBasedOrder);
-    }
+    const order = await Order.findOneAndUpdate(
+      { userId, "order_data._id": orderId },
+      {
+        $set: {
+          "order_data.$.customer_data": customer_data ,
+        },
+      },
+      { new: true }
+    );
+    const pharmacy = await Pharmacy.findOneAndUpdate(
+      { pharmacyManagerID: customer_data.pharmacyManagerID, "Orders._id": orderId },
+      {
+        $set: {
+          "Orders.$.customer_data": customer_data ,
+        },
+      },
+      { new: true }
+    );
     cashResponse={paymentSuccessful:false,type:'cash',url:null}
     if(customer_data.payment==="Digital Payment"){
       const result=await commenceDigitalPayment(customer_data,order.order_data[order.order_data.length-1]._id.toString());

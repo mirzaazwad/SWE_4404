@@ -29,6 +29,7 @@ export const useLogin = () =>{
       setisLoading(false);
     })
     .catch((error)=>{
+      console.log(error);
       setError("Incorrect email or password");
       setisLoading(false);
     })

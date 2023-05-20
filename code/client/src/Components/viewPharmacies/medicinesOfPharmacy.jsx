@@ -15,21 +15,20 @@ const PharmacyMedicines = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [types, setTypes] = useState([]);
-  const [searchCriteria, setSearchCriteria] = useState("medicine");
+  const cardsPerPage = 8;
+  const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [selectedType, setSelectedType] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const cardsPerPage = 8;
+  const [searchCriteria, setSearchCriteria] = useState("medicine");
   const location=useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const id = queryParams.get('id');
   const cid = queryParams.get('cid');
   const pid=queryParams.get('pid');
 
   const fetchMedicines = async () => {
     try {
       const response = await axios.get(
-        `http://localhost:4000/api/pharmacy/${id}`
+        `/api/pharmacy/${pid}`
         ,{
           headers:{'Authorization': `Bearer ${user.token}`,
           'idType':user.googleId?'google':'email'}
@@ -43,20 +42,20 @@ const PharmacyMedicines = () => {
   const fetchCategories = async () => {
     
     try {
-      const response = await axios.get('http://localhost:4000/api/pharmacy/getAllCategories',{
+      const response = await axios.get(`/api/pharmacy/getAllCategories/`,{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       });
       setCategories(response.data);
     } catch (error) {
-      console.log("fetch categories kaaj kore na");
+      console.log(error);
     }
   };
-  
+
   const fetchTypes = async () => {
     
     try {
-      const response = await axios.get('http://localhost:4000/api/pharmacy/getAllTypes',{
+      const response = await axios.get('/api/pharmacy/getAllTypes',{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       });
@@ -69,6 +68,7 @@ const PharmacyMedicines = () => {
   useEffect(() => {
     fetchMedicines();
     fetchCategories();
+    fetchTypes();
     fetchTypes();
   }, []);
   
@@ -152,11 +152,10 @@ const PharmacyMedicines = () => {
     
     });
   };
-  
 
   return (
     <div>
-  <NavbarCustomer id={id} />
+  <NavbarCustomer user={user} />
   
   <section>
     <div className="container-fluid pharmacy-container">
@@ -245,7 +244,7 @@ const PharmacyMedicines = () => {
             {currentCards.map((medicine) => (
               <div className="col-xs-6 col-sm-6 col-md-4 col-lg-2 mx-5" key={medicine._id}>
                 <Card className="medicine-card">
-                  <Link to={`/pharmacy/medicine?pid=${id}&mid=${medicine._id}&cid=${cid}`} style={{ textDecoration: 'none', color: 'white' }}>
+                <Link to={`/pharmacy/medicine?pid=${pid}&mid=${medicine._id}&cid=${user._id}`} style={{ textDecoration: 'none', color: 'white' }}>
                     <Card.Img variant="top" src={medicine.imageURL} className="medicine-card-image" />
                     <Card.Body>
                       <Card.Title>{medicine.MedicineName}</Card.Title>
