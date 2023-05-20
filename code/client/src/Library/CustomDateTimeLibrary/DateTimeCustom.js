@@ -63,17 +63,21 @@ class CustomDateTime {
   convertTimeTo24(timeString,timeMeridian){
     const timeSplit = timeString.split(":");
     if ((timeSplit[0] !== "12" && timeMeridian === "AM") ||(timeSplit[0] === "12" && timeMeridian === "PM")) {
-      return this[leadingZero](timeString);
+      
+      return this[leadingZero](timeSplit[0])+':'+this[leadingZero](timeSplit[1]);
     } else if (timeSplit[0] === "12" && timeMeridian === "AM") {
       return "00:" + timeSplit[1];
     } else {
-      return (parseInt(timeSplit[0]) + 12) % 24 + ":" + timeSplit[1];
+      return this[leadingZero](((parseInt(timeSplit[0]) + 12) % 24).toString()) + ":" + timeSplit[1];
     }
   }
 
   getDate() {
     const dateComponents = this[dateString].split(" ");
-    return new Date(dateComponents[2] +"-" +this[monthMap].get(dateComponents[1]) +"-" +this[leadingZero](dateComponents[0]) +"T"+this.convertTimeTo24(dateComponents[3],dateComponents[4]));
+    const date = dateComponents[2] + "-" + this[monthMap].get(dateComponents[1]) + "-" + this[leadingZero](dateComponents[0]) + "T" + this.convertTimeTo24(dateComponents[3], dateComponents[4]);
+    console.log(date);
+    console.log(new Date(date));
+    return new Date(date);
   }
 }
 

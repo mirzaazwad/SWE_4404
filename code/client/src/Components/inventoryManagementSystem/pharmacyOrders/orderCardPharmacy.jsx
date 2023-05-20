@@ -2,16 +2,14 @@ import React from 'react';
 import Card from 'react-bootstrap/Card';
 import Badge from 'react-bootstrap/Badge';
 import { useState, useEffect } from 'react';
-import { useToken } from '../../Hooks/useToken';
+import { Link } from 'react-router-dom';
+import { useToken } from '../../../Hooks/useToken';
 import Button from 'react-bootstrap/Button';
 
-const OrderCard = ({ order }) => {
-  const user=useToken();
-  const userId = user._id;
-  const [status,setStatus] = useState(order.status);
+const OrderCard = ({ order, user }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [statusColor, setStatusColor] = useState('warning');
-  
+  const [status,setStatus] = useState(order.status);
   useEffect(() => {
     if (order.status === 'Pending') {
       setStatusColor('warning');
@@ -72,15 +70,9 @@ const OrderCard = ({ order }) => {
               Status: <Badge bg={statusColor}>{status}</Badge>
             </small>
             
-            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/orderDetails/${userId}/${order._id}`}  style={{ float: 'right' }}>
+            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/getOrderDetails/${user._id}/${order._id}`}  style={{ float: 'right' }}>
               View details
             </Button>
-           
-            {status === 'Approved' && (
-            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/checkOutPage?oid=${order._id}`} style={{ float: 'right' }}>
-              Go to billing page
-            </Button>
-          )}
           </Card.Footer>
         </Card>
       

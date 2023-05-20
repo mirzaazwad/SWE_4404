@@ -70,7 +70,10 @@ const MedicineDetails = () => {
         pcsPrice = (medicine.SellingPrice * quantityPcs) / medicine.PcsPerBox;
         boxesPrice = medicine.SellingPrice * quantityBoxes;
       }
-      setPrice(pcsPrice + stripsPrice + boxesPrice);
+      var totalPrice = pcsPrice + stripsPrice + boxesPrice;
+      var truncatedPrice = Math.round(totalPrice);
+      setPrice(truncatedPrice);
+
       setLoaded(true);
     };
 
@@ -272,7 +275,7 @@ const MedicineDetails = () => {
                   </p>
                   <hr />
                   <p style={{ color: "red", fontSize: "20px" }}>
-                    Price: ৳{medicine.SellingPrice * units}
+                    Price: ৳{Math.round(medicine.SellingPrice * units)}
                   </p>
                   <hr />
                   <p>Stock:</p>

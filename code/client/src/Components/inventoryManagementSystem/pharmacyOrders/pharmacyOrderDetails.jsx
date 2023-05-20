@@ -1,22 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Card from 'react-bootstrap/Card';
+import Button from "react-bootstrap/Button";
 import axios from "axios";
 import { useParams} from "react-router-dom";
-import NavbarCustomer from "../partials/profile/navbarCustomer";
-import {Table} from 'react-bootstrap';
-import { useToken } from "../../Hooks/useToken";
-import Loader from "../partials/loader";
+import NavbarPharmacy from "../../partials/profile/navbarPharmacy";
+import {Badge, Table} from 'react-bootstrap';
+import { useToken } from "../../../Hooks/useToken";
+import Loader from "../../partials/loader";
+
 const OrderDetailsCard = () => {
   const user=useToken();
+  const [loader,setLoader]=useState(false);
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
-  const [loader,setLoader]=useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
       try {
+        
         const response = await axios.get(
-          `/api/order/getOrderDetails/${userId}/${orderId}`
+          `/api/pharmacyOrders/getOrderDetails/${userId}/${orderId}`
         ,{
           headers:{'Authorization': `Bearer ${user.token}`,
           'idType':user.googleId?'google':'email'}
@@ -26,22 +30,50 @@ const OrderDetailsCard = () => {
         {
           setLoader(true);
         }
+        console.log(response.data.order);
       } catch (error) {
         console.log(error);
       }
     };
     fetchOrderDetails();
-  }, []);
-if(!loader){
-  return(
-    <Loader/>
-  )
-}
+  }, [user]);
+  const handleOrderApproval = async () => {
+    try {
+      await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, {status:"Approved"}, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          idType: user.googleId ? 'google' : 'email',
+        },
+      });
+      // Handle any additional logic or UI updates after order approval
+    } catch (error) {
+      console.error(error);
+      // Handle error response or display error message to the user
+    }
+  };
+  const handleOrderCancellation = async () => {
+    try {
+      await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, {status:"Cancelled"}, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          idType: user.googleId ? 'google' : 'email',
+        },
+      });
+      // Handle any additional logic or UI updates after order approval
+    } catch (error) {
+      console.error(error);
+      // Handle error response or display error message to the user
+    }
+  };
+  if (!loader) {
+    return <Loader />;
+  }
+  
   if(order.prescription_image===""){
     return (
       <div>
         <div className="mb-5">
-          <NavbarCustomer />
+        <NavbarPharmacy id={user._id} user={user}/>
         </div>
         <div>
         <Card className="billing-details-card w-50 m-auto py-4">
@@ -65,7 +97,9 @@ if(!loader){
             </Card.Body>
         </Card>
           <Card className='order-details-card'>
-            <Card.Header className='order-details-card-header'>Order Details</Card.Header>
+            <Card.Header className='order-details-card-header'>Order Details
+            </Card.Header>
+            
             <Card.Body>
               <Table striped bordered hover responsive>
                 <thead>
@@ -82,7 +116,10 @@ if(!loader){
                   {order.medicines && order.medicines.map((medicine, index) => (
                     <tr key={index}>
                       <td>{index + 1}</td>
-                      <td>{medicine.MedicineName}</td>
+                      <td>{medicine.MedicineName}
+                     
+                     <Badge bg="warning" className="ms-2"><a href={medicine.prescriptionImage}>Prescription</a></Badge>
+                      </td>
                       <td>{medicine.quantityPcs}</td>
                       <td>{medicine.quantityStrips}</td>
                       <td>{medicine.quantityBoxes}</td>
@@ -95,15 +132,15 @@ if(!loader){
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.customer_data.amount}</td>
+                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount+50}</td>
                   </tr>
-                  <Card>
-
-
-                  </Card>
                 </tbody>
               </Table>
             </Card.Body>
+            <Card.Footer>
+            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
+            </Card.Footer>
           </Card>
         </div>
       </div>
@@ -113,7 +150,7 @@ if(!loader){
     return (
       <div>
         <div className="mb-5">
-        <NavbarCustomer />
+        <NavbarPharmacy />
       </div>
         <div>
         <Card className="billing-details-card w-50 m-auto py-4">
@@ -143,6 +180,10 @@ if(!loader){
       <Card.Body>
       <Card.Img variant="top" src={order.prescription_image}/>
       </Card.Body>
+      <Card.Footer>
+            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
+            </Card.Footer>
     </Card>
         </div>
     </div>

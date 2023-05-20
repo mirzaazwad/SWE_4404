@@ -9,13 +9,15 @@ import '../../../index.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 import { setNotification } from '../../../Contexts/action';
+import { useToken } from '../../../Hooks/useToken';
 import axios from 'axios';
 
-const NavbarPharmacy=({user}) =>{
+const NavbarPharmacy=() =>{
   const dispatch=useDispatch();
   const chatMessages=useSelector((state)=>state.userState.notificationCount)
   const {logout}= useLogout();
   const navigate=useNavigate();
+  const user=useToken();
   let orderMessages=2;
 
   useEffect(()=>{
@@ -44,7 +46,7 @@ const NavbarPharmacy=({user}) =>{
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
-        <Navbar.Brand className='px-2'  href={`/profileSeller/${user._id}`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
+        <Navbar.Brand className='px-2'  href={`/profileSeller`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle className='px-2' aria-controls="navbarScroll" />
         
         
@@ -54,16 +56,15 @@ const NavbarPharmacy=({user}) =>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1" >Home</Nav.Link>
             <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory`} >Inventory</Nav.Link>
-            <Nav.Link href="#action2" >Orders
+            <Nav.Link href={`/inventoryManagementSystem/inventory`}>Inventory</Nav.Link>
+            <Nav.Link href={`/incomingOrders`}>Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
             </span>:""}
             </Nav.Link>
-            <Nav.Link href=""  >Accounts</Nav.Link>
-            <Nav.Link href={`/profileSeller/chats/${user._id}`}  >Chats
+            <Nav.Link href="/account"  >Accounts</Nav.Link>
+            <Nav.Link href={`/profileSeller/chats`}  >Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}
             </span>:""}

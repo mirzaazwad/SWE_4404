@@ -13,8 +13,7 @@ const prescriptionSchema = new mongoose.Schema({
       },
       image_id:{
         type:String
-      },
-    createdAt: { type: Date, default: Date.now },
+      }
 });
 
 module.exports = mongoose.model('prescription', prescriptionSchema);

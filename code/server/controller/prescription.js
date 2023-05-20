@@ -1,4 +1,6 @@
 const prescription = require('../model/prescription');
+
+
 const uploadPrescription = async (req, res) => {
     try {
         const id = req.params.id;

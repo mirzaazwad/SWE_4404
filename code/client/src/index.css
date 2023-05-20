@@ -71,10 +71,20 @@ body {
   box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.5);
   transition: transform 0.3s ease-in-out !important;
 }
+.pharmacy-medicine-card{
+  width: 75%;
+  height: 20%; 
+  background-color: white   !important;
+  box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.3);
+}
+.pharmacy-medicine-card-header{
+  background-color: var(--customMagenta) !important;
+}
 .order-prescription-pharmacy-card{
   width: 300px!important;
   height: 380px!important;
   background-color: var(--customMagenta) !important;
+  color: white !important;
   border-color: white !important;
   transition: transform 0.3s ease-in-out !important;
 }
@@ -175,13 +185,23 @@ code {
   justify-content: center !important;
   margin: auto !important;
   height: 100% !important;
-  width: 50%;
+  width: 25%;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-approve-order{
+  display: flex;
+  justify-content: center !important;
+  margin: auto !important;
+  height: 70% !important;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customDarkBlue)!important;
 }
 .btn.btn-checkOut{
   height: 100% !important;

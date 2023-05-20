@@ -13,9 +13,30 @@ const OrderByPrescription = () => {
   const navigate=useNavigate();
   const { id, prop1, prop2 } = useParams();
   const [medicine, setMedicine] = useState([]);
+  const [location,setLocation]=useState(null);
+  const [customerEmail,setCustomerEmail]=useState("");
+  const [customerPhoneNumber,setCustomerNumber]=useState("");
+  const [fullName, setFullName] = useState();
+  const [address, setAddress] = useState();
+  const [payment, setPayment] = useState(null);
   const [selectedPharmacyId, setSelectedPharmacyId] = useState(null); // Added state for selected pharmacy ID
 
   useEffect(() => {
+    const retrieveUser = async () => {
+      await axios.get('/api/profile/buyer/' + user._id, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
+        setLocation(result.data.coordinates);
+        setAddress(result.data.address);
+        setFullName(result.data.username);
+        setCustomerNumber(result.data.phone);
+        setCustomerEmail(result.data.email);
+      });
+    };
+    retrieveUser();
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/", {
@@ -34,7 +55,7 @@ const OrderByPrescription = () => {
 
   const handleRequestOrder = async (e, pharmacyId) => {
    
-  
+    console.log(pharmacyId,'is pharmacy ID');
     setSelectedPharmacyId(pharmacyId);
     const user = JSON.parse(localStorage.getItem("user"));
   
@@ -44,12 +65,11 @@ const OrderByPrescription = () => {
         {
           items: medicine,
           customer_data: {
-            email: "customerEmail",
-            phone: "customerPhoneNumber",
+            email: customerEmail,
+            phone: customerPhoneNumber,
             pharmacyManagerID: pharmacyId,
-            fullName: "fullName",
-            address: "address",
-            payment: "Cash On Delivery",
+            fullName: fullName,
+            address: address,
             amount: 0,
           },
           prescription_image: `http://res.cloudinary.com/dzerdaaku/image/upload/${prop1}/${prop2}`,
@@ -91,13 +111,13 @@ const OrderByPrescription = () => {
                     className="pharmacy-card-image"
                   />
                   <Card.Body className="order-prescription-pharmacy-card-body">
-                    <Card.Title>{pharmacy.name}</Card.Title>
-                    <Card.Text style={{ display: "block" }}>{pharmacy.location}</Card.Text>
+                    <Card.Title>{pharmacy.pharmacy}</Card.Title>
+                    <Card.Text style={{ display: "block" }}>{pharmacy.address}</Card.Text>
                   </Card.Body>
                   <Card.Footer className="order-prescription-pharmacy-footer">
                     <Button
                       className="btn btn-confirm-pharmacy"
-                      onClick={(e) => handleRequestOrder(e, pharmacy.id)} 
+                      onClick={(e) => handleRequestOrder(e, pharmacy._id)} 
                     >
                       Request Order
                     </Button>

@@ -11,8 +11,7 @@ const getYearsDifference=Symbol('getYearsDifference');
 class TimeElapsed{
   constructor(date){
     this.today = new Date();
-    this.date=(new CustomDateTime(date)).getDate();
-    console.log(this.date);
+    this.date=(new CustomDateTime(date).getDate());
     if (this.date.getTime() === this.today.getTime()) {
       this.timeElapsed="Now";
     } else {

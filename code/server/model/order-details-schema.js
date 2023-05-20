@@ -15,6 +15,9 @@ const OrderSchema = new Schema(
       medicines: {
         type: Array,
       },
+      userID: {
+        type: String,
+      },
       customer_data: {
         fullName: {
           type: String,
@@ -51,8 +54,7 @@ const OrderSchema = new Schema(
           required:true
         },
         payment: { 
-          type: String, 
-          required: true 
+          type: String,
         },
       },
       status: {
