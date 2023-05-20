@@ -40,7 +40,7 @@ const PharmacyMedicines = () => {
   const fetchCategories = async () => {
     
     try {
-      const response = await axios.get(`/api/pharmacy/getAllCategories/`,{
+      const response = await axios.get(`/api/profile/addMedicine/findCategory`,{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       });
@@ -51,16 +51,12 @@ const PharmacyMedicines = () => {
   };
 
   const fetchTypes = async () => {
-    
-    try {
-      const response = await axios.get('/api/pharmacy/getAllTypes',{
+      const response = await axios.get('/api/profile/inventory/getTypes',{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
-      });
-      setTypes(response.data);
-    } catch (error) {
-      console.log("fetch categories kaaj kore na");
-    }
+      }).then(response=>response.data.result).catch((error)=>console.log(error));
+      console.log(response);
+      setTypes(response);
   };
   
   useEffect(() => {
