@@ -25,6 +25,7 @@ import OrderByPrescription from "./Components/prescriptionManagement/orderByPres
 import IncomingOrdersCard from "./Components/inventoryManagementSystem/pharmacyOrders/incomingOrders";
 import PharmacyOrderDetails from "./Components/inventoryManagementSystem/pharmacyOrders/pharmacyOrderDetails";
 import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
+import CreateOrder from "./Components/inventoryManagementSystem/pharmacyOrders/createOrder";
 
 const App=()=> {
   let user = useSelector((state) => state.userState.user);
@@ -209,6 +210,7 @@ const App=()=> {
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/incomingOrders" element={user && user.userType === "seller"  && user.verified === true ? (<IncomingOrdersCard />): (<Navigate to = "/"/>) }/>
               <Route exact path="/getOrderDetails/:userId/:orderId" element={user && user.userType === "seller"  && user.verified === true ? (<PharmacyOrderDetails />): (<Navigate to = "/"/>) }/>
+              <Route exact path="/createOrder" element={user && user.userType === "seller" && user.verified === true ? (<CreateOrder/>): (<Navigate to = "/"/>) }/>
               <Route path='/error500' element={<Error500/>}/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
