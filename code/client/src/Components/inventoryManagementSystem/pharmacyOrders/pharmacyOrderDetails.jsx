@@ -33,7 +33,7 @@ const OrderDetailsCard = () => {
   }, [user]);
   const handleOrderApproval = async () => {
     try {
-      await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, null, {
+      await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, {status:"Approved"}, {
         headers: {
           Authorization: `Bearer ${user.token}`,
           idType: user.googleId ? 'google' : 'email',
@@ -45,6 +45,21 @@ const OrderDetailsCard = () => {
       // Handle error response or display error message to the user
     }
   };
+  const handleOrderCancellation = async () => {
+    try {
+      await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, {status:"Cancelled"}, {
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          idType: user.googleId ? 'google' : 'email',
+        },
+      });
+      // Handle any additional logic or UI updates after order approval
+    } catch (error) {
+      console.error(error);
+      // Handle error response or display error message to the user
+    }
+  };
+  
   
   if(order.prescription_image===""){
     return (
@@ -84,7 +99,8 @@ const OrderDetailsCard = () => {
               </Table>
             </Card.Body>
             <Card.Footer>
-            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
             </Card.Footer>
           </Card>
         </div>
@@ -106,7 +122,8 @@ const OrderDetailsCard = () => {
       <Card.Img variant="top" src={order.prescription_image}/>
       </Card.Body>
       <Card.Footer>
-            <Button className="btn btn-approve-order float-end" onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
             </Card.Footer>
     </Card>
         </div>
