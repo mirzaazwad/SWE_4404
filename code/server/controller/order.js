@@ -102,11 +102,11 @@ const postOrder = async (req, res) => {
     const userId = req.params.userId;
     const {items,customer_data,prescription_image}=req.body;
     
-    const order = await Order.findOne({
+    let order = await Order.findOne({
       userId: userId
     });
     const pharmacy = await Pharmacy.findOne({
-      pharmacyManagerID: req.body.customer_data.pharmacyManagerID
+      _id: req.body.customer_data.pharmacyManagerID
     });
     
     if (order) {
@@ -119,7 +119,7 @@ const postOrder = async (req, res) => {
     }
     return res.status(200).json(order);
   } catch (err) {
-    
+    console.log(err);
     return res.status(400).json({error: err.message});
   }
 };

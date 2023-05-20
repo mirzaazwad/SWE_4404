@@ -66,8 +66,9 @@ export default function Cart() {
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
-    }).then(async (result)=>{  
-    });
+    }).then((result)=>{  
+      console.log(result);
+    }).catch(error=>console.log(error));
     
     await dispatch(clearItems());
     navigate('/myOrders');
