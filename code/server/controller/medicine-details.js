@@ -3,11 +3,11 @@ const MedicineCategory = require('../model/medicine-category');
 
 const getAllCategories = async (req, res) => {
   try {
-    const medicineCategories = await MedicineCategory.find();
+    const medicineCategories =  MedicineCategory.find() ;
     console.log(medicineCategories);
     res.status(200).json(medicineCategories);
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({
       message: 'Failed to get medicine categories',
       error: error.message,

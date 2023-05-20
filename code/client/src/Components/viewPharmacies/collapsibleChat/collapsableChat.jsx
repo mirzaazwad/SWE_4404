@@ -176,6 +176,7 @@ const CollapsibleChat = (props) => {
           width: "5%",
           borderRadius: "50%",
           backgroundColor: "#3F51B5",
+          color: "#FFFFFF",
           boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.5)",
         }} block>
           <div class="d-flex">

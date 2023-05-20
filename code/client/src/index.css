@@ -11,6 +11,10 @@ body {
   margin: 0;
   font-family: 'Poppins', sans-serif !important;
   background-color: whitesmoke !important;
+  /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif; */
+  background-color: whitesmoke !important;
 }
 
 .Landing{
@@ -33,7 +37,26 @@ body {
   background-color: var(--customDarkBlue) !important;
   color: white !important;
 }
-
+.Landing{
+  background-image: url("../public/LandingImage.jpg") !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
+  height: 100vh !important;
+  width: 100% !important;
+}
+.login-card{
+  opacity: 0.9 !important;
+  box-shadow: 0px 10px 40px -10px rgba(255, 255, 255, 1) !important;
+  background-color: var(--customDarkBlue) !important;
+  color: white !important;
+}
+.signup-card{
+  opacity: 0.9 !important;
+  box-shadow: 0px 10px 40px -10px rgba(255, 255, 255, 1) !important;
+  background-color: var(--customDarkBlue) !important;
+  color: white !important;
+}
 .pharmacy-card:hover{
   cursor: pointer;
   transform: scale(1.05);
@@ -126,6 +149,7 @@ code {
 }
 
 .btn.customButton{
+.btn.customButton{
   background-color: var(--customMagenta) !important;
   color: white !important;
   height: 40px;
@@ -154,6 +178,8 @@ code {
   width: 50%;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -163,28 +189,6 @@ code {
   vertical-align: middle;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
-  --bs-btn-hover-bg: var(--customMagenta)!important;
-  --bs-btn-hover-border-color : var(--customMagenta)!important;
-}
-.btn.btn-viewDetails{
-  height: 100% !important;
-  vertical-align: middle;
-  --bs-btn-bg: var(--customBlue)!important;
-  color: white !important;
-  --bs-btn-hover-bg: var(--customMagenta)!important;
-  --bs-btn-hover-border-color : var(--customMagenta)!important;
-}
-.btn.btn-viewDetails{
-  height: 100% !important;
-  vertical-align: middle;
-  --bs-btn-bg: var(--customBlue)!important;
-  color: white !important;
-  --bs-btn-hover-bg: var(--customMagenta)!important;
-  --bs-btn-hover-border-color : var(--customMagenta)!important;
-}
-.btn.btn-viewDetails{
-  height: 100% !important;
-  vertical-align: middle;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
@@ -341,6 +345,7 @@ width: 75%;
   margin-bottom: 3%;
 }
 .btn.btn-save{
+.btn.btn-save{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
   align-items: center;
@@ -368,8 +373,29 @@ width: 75%;
   --bs-btn-hover-bg: var(--customBlue)!important;
   --bs-btn-hover-border-color : var(--customBlue)!important;
 }
+.btn.btn-delete-cart
+{
+  --bs-btn-bg: var(--customMagenta) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 50%;
+  --bs-btn-hover-bg: var(--customBlue)!important;
+  --bs-btn-hover-border-color : var(--customBlue)!important;
+}
 .btn.btn-increase{
   --bs-btn-bg: var(--customDarkBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
+}
+.btn.btn-decrease{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
@@ -413,6 +439,13 @@ width: 75%;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn.btn-prescription-upload{
+.btn.btn-search{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+}
+.btn.btn-prescription-upload{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
   align-items: center;
@@ -422,10 +455,15 @@ width: 75%;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn.btn-add i {
+.btn.btn-add i {
   margin-left: 5px;
   vertical-align: middle;
   text-decoration: none !important;
 }
+.btn.btn-add:hover{
+  text-decoration: none !important;
+}
+.btn.btn-buyMore{
 .btn.btn-add:hover{
   text-decoration: none !important;
 }
@@ -442,7 +480,13 @@ width: 75%;
   vertical-align: middle;
 }
 .btn.btn-addCart{
+.btn.btn-addCart{
   width: 60%;
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
@@ -488,6 +532,10 @@ width: 75%;
   color: white !important;
 }
 .btn-primary{
+  --bs-btn-bg: white !important;
+  --bs-btn-active-bg: var(--customBlue) !important;
+  color: rgb(0, 0, 0) !important;
+  --bs-btn-active-color: white !important;
   --bs-btn-bg: white !important;
   --bs-btn-active-bg: var(--customBlue) !important;
   color: rgb(0, 0, 0) !important;
@@ -705,6 +753,7 @@ width: 75%;
 .login{
   width: 50%;
   vertical-align: baseline;
+  
 }
 .login-container
 {
@@ -720,7 +769,6 @@ width: 75%;
 }
 .singUp-button{
   height: 25%;
-
 }
 
 
