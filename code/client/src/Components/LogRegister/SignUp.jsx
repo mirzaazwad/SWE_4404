@@ -57,7 +57,7 @@ const SignUp = () => {
 
   return (
     <div className="signup-container" style={{ marginTop: "10%" }}>
-      <Card className="w-75" style={{ maxWidth: "100%" }}>
+      <Card className="signup-card w-75 m-auto" style={{ maxWidth: "100%" }}>
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>SignUp</Card.Title>
           <Card.Text>
@@ -69,11 +69,11 @@ const SignUp = () => {
                 controlId="UserType"
               >
                 <div className="d-flex justify-content-center w-100" >
-                <ButtonGroup className="singUp-button ">
+                <ButtonGroup className="singUp-button">
                     <ToggleButton
                       id={'buyer'}
                       type="radio"
-                      variant={radioName === 'buyer'?"primary":"outline-primary"}
+                      variant={radioName === 'buyer'?"primary":"primary"}
                       name="buyer"
                       value={'buyer'}
                       checked={radioName === 'buyer'}
@@ -84,7 +84,7 @@ const SignUp = () => {
                     <ToggleButton
                       id={'seller'}
                       type="radio"
-                      variant={radioName === 'seller'?"primary":"outline-primary"}
+                      variant={radioName === 'seller'?"primary":"primary"}
                       name="seller"
                       value={'seller'}
                       checked={radioName === 'seller'}
@@ -95,7 +95,7 @@ const SignUp = () => {
                     <ToggleButton
                       id={'radio'}
                       type="radio"
-                      variant={radioName === 'delivery'?"primary":"outline-primary"}
+                      variant={radioName === 'delivery'?"primary":"primary"}
                       name="delivery"
                       value={'delivery'}
                       checked={radioName === 'delivery'}
@@ -225,7 +225,7 @@ const SignUp = () => {
               Already have an account?
               <Link
                 to="/"
-                style={{ color: "#3354a9", textAlign: "center"  }}
+                style={{ color: "white", textAlign: "center"  }}
               >
                 LOG IN!
               </Link>

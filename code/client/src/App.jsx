@@ -95,10 +95,10 @@ const App=()=> {
                   )
                 }
               />
-          <Route exact path='/profileSeller/chats/:id' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
+          <Route exact path='/profileSeller/chats' element={user  && user.verified===true?<ChatPage/>:<Navigate to='/'/>}/>
               <Route
                 exact
-                path="/profileBuyer/changePassword/:id"
+                path="/profileBuyer/changePassword"
                 element={
                   user && !user.googleId && user.verified === true ? (
                     <ChangePassword />
@@ -109,7 +109,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/profileSeller/changePassword/:id"
+                path="/profileSeller/changePassword"
                 element={
                   user && !user.googleId && user.verified === true ? (
                     <ChangePassword />
@@ -146,7 +146,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/inventoryManagementSystem/inventory/:id"
+                path="/inventoryManagementSystem/inventory"
                 element={
                   user && user.userType === "seller" && user.verified === true ? (
                     <Inventory />
@@ -157,7 +157,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/inventoryManagementSystem/addMedicine/:id"
+                path="/inventoryManagementSystem/addMedicine"
                 element={
                   user && user.userType === "seller"  && user.verified === true ? (
                     <AddMedicine />
@@ -168,7 +168,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/ViewPharmacies/:id"
+                path="/ViewPharmacies"
                 element={
                   user && user.userType === "buyer"  && user.verified === true ? (
                     <ViewPharmacies />
@@ -205,7 +205,7 @@ const App=()=> {
               <Route exact path="/prescription" element={user && user.userType === "buyer"  && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
-              <Route path='/error500' element={Error500}/>
+              <Route path='/error500' element={<Error500/>}/>
               <Route path="*" element={<Error404 />}></Route>
             </Routes>
           </div>

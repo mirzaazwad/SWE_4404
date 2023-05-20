@@ -56,7 +56,7 @@ const NavbarPharmacy=({user}) =>{
           >
             <Nav.Link href="#action1" >Home</Nav.Link>
             <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory/${user._id}`} >Inventory</Nav.Link>
+            <Nav.Link href={`/inventoryManagementSystem/inventory`} >Inventory</Nav.Link>
             <Nav.Link href="#action2" >Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
@@ -71,7 +71,7 @@ const NavbarPharmacy=({user}) =>{
             <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
           </Nav>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
+          <Button className='btn customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

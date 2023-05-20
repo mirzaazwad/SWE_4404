@@ -1,44 +1,22 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 
 
-const Category = (props) => {
-  const [showCategory, setShowCategory] = useState(false);
-  const handleCloseCategory = () => {
-    setShowCategory(false);
-    props.onClosing(false);
-  }
+const Category = ({showCategory,user}) => {
   const [categoryName,setCategoryName]=useState("");
   const [categoryDescription,setCategoryDescription]=useState("");
-  const user=props.user;
 
-  useEffect(()=>{
-    setShowCategory(props.showCategory);
-  },[props.showCategory])
-
-  const handleCategory = (e) =>{
-    handleCloseCategory();
+  const handleCategory = async(e) =>{
     e.preventDefault();
-    axios.post('/api/profile/addMedicine/addCategory',{
-      name:categoryName,
-      description:categoryDescription
-    },{
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'
-      },
-    }).then((result)=>{
-      console.log(result)
-    });
-    window.location.reload();
+    let obj = Object.create(Object.getPrototypeOf(user.medicines), Object.getOwnPropertyDescriptors(user.medicines));
+    await obj.addCategory(categoryName,categoryDescription);
+    user.setMedicines(obj);
+    showCategory.onClosing(false);
   }
-
-
 
   return (
     <Form onSubmit={handleCategory}>
-      <Modal show={showCategory} onHide={handleCloseCategory}>
+      <Modal show={showCategory.show} onHide={showCategory.onClosing}>
         <Modal.Header closeButton>
           <Modal.Title>Add Medicine Category</Modal.Title>
         </Modal.Header>
@@ -63,10 +41,10 @@ const Category = (props) => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseCategory}>
+          <Button variant="secondary" onClick={()=>showCategory.onClosing(false)}>
             Close
           </Button>
-          <Button variant="primary" type="submit" onClick={handleCategory}>
+          <Button className="btn btn-add" type="submit" onClick={handleCategory}>
             Update
           </Button>
         </Modal.Footer>

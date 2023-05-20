@@ -49,7 +49,7 @@ const ProfilePicture=({user})=>{
   if(locked===false){
     return (
       <div className="profile-picture-container">
-        <img src={imageURL} alt="Profile Picture" />
+        <img src={imageURL} alt="Profile" />
         
   
         <p className="edit-profile-picture" onClick={() => setModalShow(true)}>Edit</p>

@@ -5,10 +5,12 @@ import { useParams, Link } from "react-router-dom";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useToken } from "../../Hooks/useToken";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const OrderByPrescription = () => {
   const [pharmacies, setPharmacies] = useState([]);
   const user = useToken();
+  const navigate=useNavigate();
   const { id, prop1, prop2 } = useParams();
   const [medicine, setMedicine] = useState([]);
   const [selectedPharmacyId, setSelectedPharmacyId] = useState(null); // Added state for selected pharmacy ID
@@ -22,13 +24,6 @@ const OrderByPrescription = () => {
         });
         console.log(response);
         setPharmacies(response.data.pharmacies);
-        setMedicine([
-          {
-            prescriptionImageURL: `http://res.cloudinary.com/dzerdaaku/image/upload/${prop1}${prop2}`,
-            pharmacyManagerId: selectedPharmacyId,
-            userId: user._id,
-          },
-        ]);
         console.log(response.data.pharmacies);
       } catch (error) {
         console.log(error);
@@ -38,23 +33,45 @@ const OrderByPrescription = () => {
   }, [selectedPharmacyId, user.token, prop1, prop2]);
 
   const handleRequestOrder = async (e, pharmacyId) => {
-    e.preventDefault();
-    setSelectedPharmacyId(pharmacyId); // Set the selected pharmacy ID
+   
+  
+    setSelectedPharmacyId(pharmacyId);
     const user = JSON.parse(localStorage.getItem("user"));
-    const response = await axios.post(
-      `http://localhost:4000/api/order/postOrder/${user._id}`,
-      {
-        items: medicine,
-        prescritionBasedOrder: true,
-        pharmacyManagerId: selectedPharmacyId,
-      },
-      {
-        headers: { Authorization: `Bearer ${user.token}` ,
-        'idType':user.googleId?'google':'email'},
-      }
-    );
-    alert("Order has been placed, you will be notified when the order is approved.");
+  
+    const response = await axios
+      .post(
+        `http://localhost:4000/api/order/postOrder/${user._id}`,
+        {
+          items: medicine,
+          customer_data: {
+            email: "customerEmail",
+            phone: "customerPhoneNumber",
+            pharmacyManagerID: pharmacyId,
+            fullName: "fullName",
+            address: "address",
+            payment: "Cash On Delivery",
+            amount: 0,
+          },
+          prescription_image: `http://res.cloudinary.com/dzerdaaku/image/upload/${prop1}/${prop2}`,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            'idType': user.googleId ? 'google' : 'email'
+          },
+        }
+      )
+      .then((response) => {
+        // Handle the response and navigate to the myOrders page
+        console.log("Order placed successfully:", response);
+      })
+      .catch((error) => {
+        console.error('Failed to request order:', error);
+        // Handle the error
+      });
+      navigate('/myOrders');
   };
+  
 
   return (
     <div>
@@ -75,12 +92,12 @@ const OrderByPrescription = () => {
                   />
                   <Card.Body className="order-prescription-pharmacy-card-body">
                     <Card.Title>{pharmacy.name}</Card.Title>
-                    <Card.Text style={{ display: "block" }}>location={pharmacy.location}</Card.Text>
+                    <Card.Text style={{ display: "block" }}>{pharmacy.location}</Card.Text>
                   </Card.Body>
                   <Card.Footer className="order-prescription-pharmacy-footer">
                     <Button
                       className="btn btn-confirm-pharmacy"
-                      onClick={(e) => handleRequestOrder(e, pharmacy.id)} // Pass the pharmacy ID to handleRequestOrder
+                      onClick={(e) => handleRequestOrder(e, pharmacy.id)} 
                     >
                       Request Order
                     </Button>

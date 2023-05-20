@@ -6,10 +6,10 @@ const PharmacyArray = ({id,pharmacies}) => {
     <div className="row">
             {pharmacies && pharmacies.map((pharmacy) => (
               <div className="col-xs-6 col-sm-6 col-md-3 col-lg-2 mx-5 my-4" key={pharmacy.id}>
-                <Link to={`/Pharmacy?id=${pharmacy.id}&pid=${pharmacy.pharmacyManagerID}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
+                <Link to={`/Pharmacy?pid=${pharmacy._id}&cid=${id}`} style={{textDecoration: 'none', color: 'white'}} >
                   <PharmacyCard
-                    name={pharmacy.name}
-                    location={pharmacy.location}
+                    name={pharmacy.pharmacy}
+                    location={pharmacy.address}
                     image={pharmacy.imageURL}
                     color= {'#EB006F'}
                   />

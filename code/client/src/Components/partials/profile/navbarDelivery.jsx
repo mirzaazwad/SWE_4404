@@ -31,7 +31,7 @@ const NavbarDelivery=({user})=>{
           >
             <Nav.Link href={`/profileDelivery`}>Profile</Nav.Link>
             <Nav.Link href={`/deliveries`}>Delivery Tracker</Nav.Link>
-            <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
+            <Button className='btn customButton' onClick={handleLogout}>Log Out</Button>
             
           </Nav>
           <div>
@@ -40,7 +40,7 @@ const NavbarDelivery=({user})=>{
          </Button>
           </div>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">
-            <Button className='customButton' onClick={handleLogout}>Log Out</Button>
+          <Button className='btn customButton' onClick={handleLogout}>Log Out</Button>
           </Form>
         </Navbar.Collapse>
       </Container>

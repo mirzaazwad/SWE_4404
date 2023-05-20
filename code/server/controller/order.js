@@ -64,9 +64,7 @@ const postOrder = async (req, res) => {
     let order = await Order.findOne({
       userId: userId
     });
-    const pharmacy = await Pharmacy.findOne({
-      pharmacyManagerID: req.body.customer_data.pharmacyManagerID
-    });
+    const pharmacy = await Pharmacy.findById(req.body.customer_data.pharmacyManagerID);
     if (order) {
       order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescriptionBasedOrder);
     } else {
@@ -88,7 +86,6 @@ const postOrder = async (req, res) => {
 const getOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
-    console.log(userId);
     const order = await Order.findOne({
       userId: userId
     });

@@ -12,7 +12,7 @@ class pharmacyManager {
     this.coordinates={lat:null,lng:null};
   }
 
-  async retrieveUserInformation() {
+  async fetchUserInformation(){
     const result = await axios
       .get("/api/profile/seller/" + this._id, {
         headers: {
@@ -24,6 +24,12 @@ class pharmacyManager {
       .catch(() => {
         window.location.href="/error500"
       });
+      return result;
+  }
+
+  async retrieveUserInformation() {
+      const result = await this.fetchUserInformation();
+      console.log(result);
       this.username=result.username?result.username:this.username;
       this.email=result.email;
       this.coordinates=(result.hasOwnProperty('coordinates'))?result.coordinates:this.coordinates;
@@ -31,6 +37,8 @@ class pharmacyManager {
       this.pharmacy=result.pharmacy?result.pharmacy:this.pharmacy;
       this.address=result.address;
       this.imageURL=result.imageURL;
+      this.Inventory=result.Inventory!==undefined?result.Inventory:[];
+      this.Orders=result.Orders!==undefined?result.Orders:[];
       return this;
   }
 
@@ -103,7 +111,9 @@ class pharmacyManager {
           address: this.address,
           coordinates: this.coordinates,
           pharmacy:this.pharmacy,
-          phone:this.phone
+          phone:this.phone,
+          Inventory:this.Inventory,
+          Orders:this.Orders
         },
         {
           headers: {

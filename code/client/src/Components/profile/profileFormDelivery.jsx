@@ -3,7 +3,6 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { InputGroup } from "react-bootstrap";
 import PhoneVerify from "./PhoneVerification/phoneVerify";
-import Map from "../partials/Map/map";
 import ConfirmPasswordModal from "./confirmPasswordModal";
 import phoneOTP from "../../Library/OTPHandler/otpPhone";
 import deliveryUser from "../../Library/User/delivery-man";

@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const medicineDetailsSchema=require('./medicine-details-schema')
 
 const medicineSchema = new Schema({
-  medicineDetailsSchema
+  ...medicineDetailsSchema.obj
 });
 
 medicineSchema.statics.addNewMedicine = async function(medicine){

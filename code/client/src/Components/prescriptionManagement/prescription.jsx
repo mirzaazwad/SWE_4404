@@ -95,7 +95,7 @@ const Prescription = ({ currentUser }) => {
           <Card.Header className='prescription-card-header'></Card.Header>
           <Card.Body>
             <div className='d-flex justify-content-between'>
-          <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none"}}>
+          <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none", color:"black"}}>
               <div>
               <Card.Title>Prescription Name: {prescription.name}</Card.Title>
             <Card.Text> Uploaded on: 

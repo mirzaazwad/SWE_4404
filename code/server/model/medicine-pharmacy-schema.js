@@ -4,7 +4,7 @@ const stockSchema=require('./stock-schema');
 const Schema = mongoose.Schema;
 
 const medicinePharmacySchema = new Schema({
-  medicineDetailsSchema,
+  ...medicineDetailsSchema.obj,
   Stock: stockSchema
 });
 

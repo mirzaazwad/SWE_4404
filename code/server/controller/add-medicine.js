@@ -1,7 +1,7 @@
 const medicineCategory = require("../model/medicine-category");
 const medicineModel = require("../model/medicine");
 const medicineType = require("../model/medicine-type");
-const pharmacyModel = require("../model/seller");
+const pharmacy = require("../model/seller");
 
 const getAllCategories = async(req,res)=>{
   try{
@@ -26,7 +26,7 @@ const getAllTypes = async(req,res)=>{
 const addMedicine = async(req,res)=>{
   const _id=req.params.id;
   try{
-    const result=await pharmacyModel.addMedicine(_id,req.body);
+    const result=await pharmacy.addMedicine(_id,req.body);
     res.status(200).json(result);
   }
   catch(err){
@@ -58,7 +58,6 @@ const addType=async(req,res)=>{
 const addGlobalMedicine=async(req,res)=>{
   try{
     const result=await medicineModel.addNewMedicine(req.body);
-    console.log(result);
     res.status(200).json(result);
   }
   catch(err){
