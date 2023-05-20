@@ -3,7 +3,7 @@ import PharmacyCard from "./pharmacyCard";
 import Pagination from "react-bootstrap/Pagination";
 import { useState } from "react";
 
-const PharmacyArray = ({ id, pharmacies }) => {
+const PharmacyArray = ({ pharmacies }) => {
   const itemsPerPage = 8; // Number of items per page
   const totalPages = Math.ceil(pharmacies.length / itemsPerPage); // Total number of pages
   const [currentPage, setCurrentPage] = useState(1); // Current active page
@@ -24,7 +24,7 @@ const PharmacyArray = ({ id, pharmacies }) => {
               key={pharmacy.id}
             >
               <Link
-                to={`/Pharmacy?pid=${pharmacy._id}&cid=${id}`}
+                to={`/Pharmacy/${pharmacy._id}`}
                 style={{ textDecoration: "none", color: "white" }}
               >
                 <PharmacyCard

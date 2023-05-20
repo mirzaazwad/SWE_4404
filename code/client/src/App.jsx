@@ -179,7 +179,7 @@ const App=()=> {
               />
               <Route
                 exact
-                path="/Pharmacy"
+                path="/Pharmacy/:id"
                 element={
                   user && user.userType === "buyer"  && user.verified === true ? (
                     <Pharmacy />

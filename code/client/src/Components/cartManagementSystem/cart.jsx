@@ -3,22 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeItem } from '../../Contexts/cartAction.js';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import { setBuyerUser } from "../../Contexts/action";
 import { clearItems } from "../../Contexts/cartAction.js";
 import axios from 'axios';
 import { useToken } from '../../Hooks/useToken.js';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 
 
 export default function Cart() {
   const user=useToken();
   const navigate=useNavigate();
-  const locator=useLocation();
-  const queryParams = new URLSearchParams(locator.search);
-  const paymentStatus = queryParams.get('paymentStatus');
-  const orderId = queryParams.get('oid');
-  const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
   const [customerPhoneNumber,setCustomerNumber]=useState("");
