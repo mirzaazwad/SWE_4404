@@ -8,26 +8,37 @@ import Button from 'react-bootstrap/Button';
 const OrderCard = ({ order }) => {
   const user=useToken();
   const userId = user._id;
+  const [status,setStatus] = useState(order.status);
   const [totalPrice, setTotalPrice] = useState(0);
   const [statusColor, setStatusColor] = useState('warning');
   
   useEffect(() => {
     if (order.status === 'Pending') {
       setStatusColor('warning');
+      setStatus('Pending');
     }
     else if (order.status === 'Approved') {
       setStatusColor('info');
+      setStatus('Approved');
     }
     else if (order.status === 'In progress') {
       setStatusColor('secondary');
+      setStatus('In progress');
     }
     else if (order.status === 'Delivered') {
       setStatusColor('success');
+      setStatus('Delivered');
     } else if (order.status === 'Cancelled') {
       setStatusColor('danger');
+      setStatus('Cancelled');
     }
     else{
       setStatusColor('primary');
+      setStatus('Pending');
+    }
+    if(order.payment_status===true){
+      setStatusColor('secondary');
+      setStatus('In progress');
     }
     let price = 0;
     order.medicines.forEach(item => {
@@ -58,14 +69,14 @@ const OrderCard = ({ order }) => {
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">
-              Status: <Badge bg={statusColor}>{order.status}</Badge>
+              Status: <Badge bg={statusColor}>{status}</Badge>
             </small>
             
             <Button className="btn btn-sm btn-viewDetails mx-2" href={`/orderDetails/${userId}/${order._id}`}  style={{ float: 'right' }}>
               View details
             </Button>
            
-            {order.status === 'Approved' && (
+            {status === 'Approved' && (
             <Button className="btn btn-sm btn-viewDetails mx-2" href={`/checkOutPage?oid=${order._id}`} style={{ float: 'right' }}>
               Go to billing page
             </Button>

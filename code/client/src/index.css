@@ -71,10 +71,20 @@ body {
   box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.5);
   transition: transform 0.3s ease-in-out !important;
 }
+.pharmacy-medicine-card{
+  width: 75%;
+  height: 20%; 
+  background-color: white   !important;
+  box-shadow : 0px 10px 40px -10px rgba(57, 57, 57, 0.3);
+}
+.pharmacy-medicine-card-header{
+  background-color: var(--customMagenta) !important;
+}
 .order-prescription-pharmacy-card{
   width: 300px!important;
   height: 380px!important;
   background-color: var(--customMagenta) !important;
+  color: white !important;
   border-color: white !important;
   transition: transform 0.3s ease-in-out !important;
 }
