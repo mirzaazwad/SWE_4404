@@ -185,7 +185,7 @@ const approveOrder = async (req, res) => {
 
   try {
 
-    const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: userId });
+    const pharmacy = await Pharmacy.findById(userId);
 
     if (!pharmacy) {
       return res.status(404).json({ message: "Pharmacy not found" });
@@ -236,5 +236,7 @@ const approveOrder = async (req, res) => {
 module.exports = {
   postOrder,
   getOrder,
-  getOrderDetails
+  getOrderDetails,
+  billingOrder,
+  approveOrder
 };
