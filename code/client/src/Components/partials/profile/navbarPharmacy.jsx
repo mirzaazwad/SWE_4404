@@ -55,8 +55,8 @@ const NavbarPharmacy=({user}) =>{
             navbarScroll
           >
             <Nav.Link href="#action1" disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Home</Nav.Link>
-            <Nav.Link href={`/profileSeller/${id}`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory/${id}`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
+            <Nav.Link href={`/profileSeller/${user._id}`}>Profile</Nav.Link>
+            <Nav.Link href={`/inventoryManagementSystem/inventory/${user._id}`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
             <Nav.Link href={`/incomingOrders`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
