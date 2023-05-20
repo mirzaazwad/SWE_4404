@@ -2,10 +2,11 @@ const Order = require('../model/order');
 const Pharmacy = require('../model/seller');
 const { MakePayment } = require('../Library/ssl-commerz-make-payment');
 
-const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
+const updateExistingCustomerOrder = async(userId, order,pharmacy,items,customer_data,prescription_image)=>{
   order.order_data.push({
     date: new Date(),
     medicines: items,
+    userID: userId,
     customer_data: customer_data,
     prescription_image: prescription_image,
   });
@@ -15,6 +16,7 @@ const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,pre
     _id : order.order_data[order.order_data.length-1]._id,
     date: new Date(),
     medicines: items,
+    userID: userId,
     customer_data: customer_data,
     prescription_image: prescription_image,
   });
@@ -39,6 +41,7 @@ const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescription_
     order_data: [{
       date: new Date(),
       medicines: items,
+      userID: userId,
       customer_data: customer_data,
       prescription_image: prescription_image,
     }]
@@ -52,6 +55,7 @@ const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescription_
     _id : order.order_data[0]._id,
     date: new Date(),
     medicines: items,
+    userID: userId,
     customer_data: customer_data,
     prescription_image: prescription_image,
   });
@@ -111,7 +115,7 @@ const postOrder = async (req, res) => {
     });
     
     if (order) {
-      order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescription_image);
+      order=await updateExistingCustomerOrder(userId, order,pharmacy,items,customer_data,prescription_image);
       console.log("order updated");
     } else {
       
@@ -182,9 +186,8 @@ const getOrderDetails = async (req, res) => {
 
 const approveOrder = async (req, res) => {
   const { userId, orderId } = req.params;
-
+  const status = req.body.status;
   try {
-
     const pharmacy = await Pharmacy.findById(userId);
 
     if (!pharmacy) {
@@ -199,8 +202,33 @@ const approveOrder = async (req, res) => {
     }
 
     // Update the status of the order in the pharmacy model
-    pharmacyOrder.status = "Approved";
-    const id = pharmacyOrder.medicines[0].id;
+    pharmacyOrder.status = status;
+    const id = pharmacyOrder.userID;
+
+    // Reduce stock amounts from pharmacy's inventory for each medicine in the order
+    if(status==="Approved"){
+      pharmacyOrder.medicines.forEach((orderMedicine) => {
+        const inventoryMedicine = pharmacy.Inventory.find(
+          (inventoryMedicine) => inventoryMedicine._id.toString() === orderMedicine.medicineId
+        );
+  
+        if (inventoryMedicine) {
+          // Subtract the quantities from the inventory stock
+          if(inventoryMedicine.Stock.Strips)
+          {
+            inventoryMedicine.Stock.Strips -= orderMedicine.quantityStrips || 0;
+          }
+          if(inventoryMedicine.Stock.Pcs)
+          {
+            inventoryMedicine.Stock.Pcs -= orderMedicine.quantityPcs || 0;
+          }
+          if(inventoryMedicine.Stock.Boxes)
+          {
+            inventoryMedicine.Stock.Boxes -= orderMedicine.quantityBoxes || 0;
+          }
+        }
+      });
+    }
 
     // Save the updated pharmacy
     await pharmacy.save();
@@ -215,23 +243,19 @@ const approveOrder = async (req, res) => {
     // Update the status of the order in the orders model
     order.order_data.forEach((orderData) => {
       if (orderData._id.toString() === orderId) {
-        orderData.status = "Approved";
+        orderData.status = status;
       }
     });
 
     // Save the updated order in the orders model
     await order.save();
 
-    // Find the pharmacy based on the pharmacyManagerID
-   
     res.status(200).json({ message: "Order approved successfully" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-
 
 module.exports = {
   postOrder,
