@@ -15,22 +15,6 @@ const IncomingOrders = () => {
   const userId = user._id;
 
     useEffect(() => {
-        const retrieveData = async () => {
-          try {
-            const response = await axios.get("/api/profile/user/getUserSellerId/" + userId, {
-              headers: {
-                Authorization: `Bearer ${user.token}`,
-                'idType': user.googleId ? 'google' : 'email',
-              },
-            });
-            const sellerId = response.data._id;
-            setSId(sellerId);
-            fetchOrders(sellerId);
-          } catch (err) {
-            console.log(err);
-          }
-        };
-      
         const fetchOrders = async (sellerId) => {
           try{
             console.log(userId);
@@ -51,8 +35,7 @@ const IncomingOrders = () => {
             }
           }
         };
-      
-        retrieveData();
+        fetchOrders(user._id);
       
       }, []);
   // Calculate the indexes of orders to be displayed on the current page
@@ -66,12 +49,12 @@ const IncomingOrders = () => {
   return (
     <div>
       <div className="mb-5">
-        <NavbarPharmacy id={userId} user={user}/>
+        <NavbarPharmacy user={user}/>
       </div>
       <div className="my-orders d-flex justify-content-center">
         <div className="d-flex flex-column w-50">
           {currentOrders.map((order) => (
-            <OrderCard key={order.index} order={order} sId={sId} />
+            <OrderCard key={order.index} order={order} user={user} />
           ))}
           {orders.length > ordersPerPage && (
             <Pagination className="m-auto py-3">

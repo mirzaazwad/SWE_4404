@@ -51,8 +51,7 @@ const OrderSchema = new Schema(
           required:true
         },
         payment: { 
-          type: String, 
-          required: true 
+          type: String,
         },
       },
       status: {

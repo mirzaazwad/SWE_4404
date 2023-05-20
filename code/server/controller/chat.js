@@ -42,6 +42,7 @@ const getAllSenders = async (req,res) =>{
   try{
     const {id}=req.params;
     const result = await chatSubscriber.find({receiverID:id});
+    console.log(result);
     return res.status(200).json(result);
   }
   catch(err){

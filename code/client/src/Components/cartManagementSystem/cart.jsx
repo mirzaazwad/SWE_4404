@@ -53,7 +53,7 @@ export default function Cart() {
     console.log(cart);
     console.log(customerEmail);
     e.preventDefault();
-    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
+    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${user._id}`, {
       items: cart,
       customer_data: {
         email:customerEmail,
@@ -66,8 +66,9 @@ export default function Cart() {
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
-    }).then(async (result)=>{  
-    });
+    }).then((result)=>{  
+      console.log(result);
+    }).catch(error=>console.log(error));
     
     await dispatch(clearItems());
     navigate('/myOrders');

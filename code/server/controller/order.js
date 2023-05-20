@@ -2,12 +2,12 @@ const Order = require('../model/order');
 const Pharmacy = require('../model/seller');
 const { MakePayment } = require('../Library/ssl-commerz-make-payment');
 
-const updateExistingCustomerOrder = async(userId,order,pharmacy,items,customer_data,prescription_image)=>{
+const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
   order.order_data.push({
     date: new Date(),
     medicines: items,
     customer_data: customer_data,
-    prescriptionBasedOrder: prescriptionBasedOrder
+    prescription_image: prescription_image,
   });
   await order.save();
 
@@ -16,7 +16,7 @@ const updateExistingCustomerOrder = async(userId,order,pharmacy,items,customer_d
     date: new Date(),
     medicines: items,
     customer_data: customer_data,
-    prescriptionBasedOrder: prescriptionBasedOrder
+    prescription_image: prescription_image,
   });
   await pharmacy.save();
   return order;
@@ -33,16 +33,17 @@ const commenceDigitalPayment = async(customer_data,orderID)=>{
   }
 }
 
-const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
-  const newOrder = await new Order({
+const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescription_image)=>{
+  const newOrder = new Order({
     userId,
     order_data: [{
       date: new Date(),
       medicines: items,
       customer_data: customer_data,
-      prescriptionBasedOrder: prescriptionBasedOrder
+      prescription_image: prescription_image,
     }]
   });
+  
   await newOrder.save();
   const order = await Order.findOne({
     userId: userId
@@ -52,14 +53,18 @@ const newCustomerOrder = async(userId,pharmacy,items,customer_data,prescriptionB
     date: new Date(),
     medicines: items,
     customer_data: customer_data,
-    prescriptionBasedOrder: prescriptionBasedOrder
+    prescription_image: prescription_image,
   });
   await pharmacy.save();
   return order;
 }
 
-const postOrder = async (req, res) => {
+const billingOrder = async (req, res) => {
+  const { userId, orderId } = req.params;
+  const { customer_data } = req.body;
+
   try {
+  
     const order = await Order.findOneAndUpdate(
       { userId, "order_data._id": orderId },
       {
@@ -70,7 +75,7 @@ const postOrder = async (req, res) => {
       { new: true }
     );
     const pharmacy = await Pharmacy.findOneAndUpdate(
-      { pharmacyManagerID: customer_data.pharmacyManagerID, "Orders._id": orderId },
+      { _id: customer_data.pharmacyManagerID, "Orders._id": orderId },
       {
         $set: {
           "Orders.$.customer_data": customer_data ,
@@ -80,13 +85,42 @@ const postOrder = async (req, res) => {
     );
     cashResponse={paymentSuccessful:false,type:'cash',url:null}
     if(customer_data.payment==="Digital Payment"){
-      const result=await commenceDigitalPayment(customer_data,order.order_data[order.order_data.length-1]._id.toString());
+      const result=await commenceDigitalPayment(customer_data,orderId);
       return result.paymentSuccessful?res.status(200).json(result):res.status(400).json(result);
     }
     else{
       return res.status(200).json(cashResponse);
     }
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
+
+
+const postOrder = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const {items,customer_data,prescription_image}=req.body;
+    
+    let order = await Order.findOne({
+      userId: userId
+    });
+    const pharmacy = await Pharmacy.findOne({
+      _id: req.body.customer_data.pharmacyManagerID
+    });
+    
+    if (order) {
+      order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescription_image);
+      console.log("order updated");
+    } else {
+      
+      order=await newCustomerOrder(userId,pharmacy,items,customer_data,prescription_image);
+      console.log("new order created");
+    }
+    return res.status(200).json(order);
   } catch (err) {
+    console.log(err);
     return res.status(400).json({error: err.message});
   }
 };
@@ -94,6 +128,7 @@ const postOrder = async (req, res) => {
 const getOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
+    console.log(userId);
     const order = await Order.findOne({
       userId: userId
     });
@@ -117,7 +152,7 @@ const getOrder = async (req, res) => {
 const getOrderDetails = async (req, res) => {
   const {
     userId,
-    orderId
+    orderId,
   } = req.params;
 
   try {
@@ -130,7 +165,7 @@ const getOrderDetails = async (req, res) => {
         message: 'Order not found'
       });
     }
-
+    
     // Get the specific order data that matches the order ID
     const orderData = order.order_data.find(data => data._id.toString() === orderId);
     console.log(orderData);
@@ -150,7 +185,7 @@ const approveOrder = async (req, res) => {
 
   try {
 
-    const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: userId });
+    const pharmacy = await Pharmacy.findById(userId);
 
     if (!pharmacy) {
       return res.status(404).json({ message: "Pharmacy not found" });
@@ -202,5 +237,6 @@ module.exports = {
   postOrder,
   getOrder,
   getOrderDetails,
-  billingOrder,approveOrder
+  billingOrder,
+  approveOrder
 };

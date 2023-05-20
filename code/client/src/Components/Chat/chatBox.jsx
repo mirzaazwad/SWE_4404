@@ -10,6 +10,8 @@ const ChatBox = (props) => {
   useEffect(()=>{
     setIsLoading(true);
     async function retrieveMessages(){
+      console.log(props.senderID);
+      console.log(props.id);
       setIsLoading(true);
       const value=await axios.post("/api/profile/chat/messages",{
         senderID:props.senderID,

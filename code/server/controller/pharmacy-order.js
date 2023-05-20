@@ -1,11 +1,11 @@
-const Pharmacy = require('../model/pharmacy');
+const Pharmacy = require('../model/seller');
 
 const getOrder = async (req, res) => {
     const { userId } = req.params;
     console.log(userId);
     try {
       // Find the pharmacy based on the pharmacyManagerID matching the user ID
-      const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: userId });
+      const pharmacy = await Pharmacy.findById(userId);
   
       if (!pharmacy) {
         return res.status(404).json({ message: "Pharmacy not found" });
@@ -26,7 +26,7 @@ const getOrder = async (req, res) => {
   
     try {
       // Find the pharmacy based on the pharmacyManagerID matching the user ID
-      const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: userId });
+      const pharmacy = await Pharmacy.findById(userId);
 
       if (!pharmacy) {
         return res.status(404).json({ message: "Pharmacy not found" });

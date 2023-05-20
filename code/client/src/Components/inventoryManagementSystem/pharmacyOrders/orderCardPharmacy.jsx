@@ -6,9 +6,7 @@ import { Link } from 'react-router-dom';
 import { useToken } from '../../../Hooks/useToken';
 import Button from 'react-bootstrap/Button';
 
-const OrderCard = ({ order, sId }) => {
-  const user=useToken();
-  const userId = user._id;
+const OrderCard = ({ order, user }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [statusColor, setStatusColor] = useState('warning');
   
@@ -62,7 +60,7 @@ const OrderCard = ({ order, sId }) => {
               Status: <Badge bg={statusColor}>{order.status}</Badge>
             </small>
             
-            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/getOrderDetails/${sId}/${order._id}`}  style={{ float: 'right' }}>
+            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/getOrderDetails/${user._id}/${order._id}`}  style={{ float: 'right' }}>
               View details
             </Button>
           </Card.Footer>
