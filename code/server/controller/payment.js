@@ -10,7 +10,7 @@ const successfulPayment=async (req,res)=>{
     { $set: { 'order_data.$.payment_status': true }}
   );
   const result=await Pharmacy.findOneAndUpdate(
-    { 'pharmacyManagerID': pharmacyId, 'Orders._id': orderId },
+    { '_id': pharmacyId, 'Orders._id': orderId },
     { $set: { 'Orders.$.payment_status': true }}
   );
   return res.redirect(`http://localhost:3000/checkOutPage?paymentStatus=success&oid=${orderId}&pid=${pharmacyId}&cname=${value.cname}&address=${value.address}`);

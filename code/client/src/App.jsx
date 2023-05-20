@@ -25,6 +25,7 @@ import OrderByPrescription from "./Components/prescriptionManagement/orderByPres
 import IncomingOrdersCard from "./Components/inventoryManagementSystem/pharmacyOrders/incomingOrders";
 import PharmacyOrderDetails from "./Components/inventoryManagementSystem/pharmacyOrders/pharmacyOrderDetails";
 import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
+import Account from "./Components/accounts/account";
 
 const App=()=> {
   let user = useSelector((state) => state.userState.user);
@@ -205,6 +206,7 @@ const App=()=> {
               <Route exact path="/checkOutPage" element={user && user.userType === "buyer"  && user.verified === true ? (<CheckOutPage />): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderDetails/:userId/:orderId" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderDetailsCard />): (<Navigate to = "/"/>) }/>
               <Route exact path="/prescription" element={user && user.userType === "buyer"  && user.verified === true ? (<Prescription/>): (<Navigate to = "/"/>) }/>
+              <Route exact path='/account' element={user && user.userType === "seller"  && user.verified === true ? (<Account/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/orderByPrescription/:prop1/:prop2" element={user && user.userType === "buyer"  && user.verified === true ? (<OrderByPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/viewPrescription/:prop1/:prop2/:prop3" element={user && user.userType === "buyer"  && user.verified === true ? (<ViewPrescription/>): (<Navigate to = "/"/>) }/>
               <Route exact path="/incomingOrders" element={user && user.userType === "seller"  && user.verified === true ? (<IncomingOrdersCard />): (<Navigate to = "/"/>) }/>
