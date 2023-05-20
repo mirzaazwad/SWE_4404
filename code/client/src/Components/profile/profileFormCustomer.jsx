@@ -1,81 +1,60 @@
-import axios from "axios";
 import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { InputGroup } from "react-bootstrap";
-import { useDispatch, useSelector } from "react-redux";
-import { setBuyerUser } from "../../Contexts/action";
-import CryptoJS from "crypto-js";
 import PhoneVerify from "./PhoneVerification/phoneVerify";
 import Map from "../partials/Map/map";
 import ConfirmPasswordModal from "./confirmPasswordModal";
+import phoneOTP from "../../Library/OTPHandler/otpPhone";
+import buyerUser from "../../Library/User/buyer";
 
-const ProfileFormCustomer = (id) => {
-  const _id = id;
-  const buyer = useSelector((state) => state.userState.buyerState);
-  const user = id.user;
-  const socket=id.socket;
-  const dispatch = useDispatch();
+const ProfileFormCustomer = ({socket,user}) => {
   const [isDisabled, setIsDisabled] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
-  const [isLocked, setisLocked] = useState(false);
-  const [username, setUsername] = useState("");
-  const [phone, setPhone] = useState("");
-  const [error,setError]=useState("");
+  const [isLocked , setisLocked] = useState(false);
   const [currentPasswordVisibility, setCurrentPasswordVisibility] =useState(false);
-  const [password, setPassword] = useState(null);
-  const [loaded,setLoaded] = useState(false);
   const [showPhoneVerify,setShowPhoneVerify]=useState(false);
   const [phoneNumberChanged,setPhoneNumberChanged] = useState(false);
-  const [address,setAddress]=useState("");
-  const [location,setLocation]=useState(null);
   const [showMAP,setShowMAP]=useState(false);
   const [stopDropDown,setStopDropDown]=useState(false);
+  const [otpHandler,setOTPHandler]=useState(null);
+  const [buyer,setBuyer]=useState(null);
+  const [error,setError]=useState("");
+
+  useEffect(()=>{
+    if(user instanceof buyerUser){
+      setBuyer(user);
+    }
+  },[user])
+
   const handleClosePhoneVerify=()=>{
     setShowPhoneVerify(false);
   }
+  
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  const handleShow = (e) => {
-    if(user.googleId){
+  const handleShow = async(e) => {
+    if(buyer.googleId){
       handleSubmit(e);
     }
     else{
+      const validNumber=await buyer.validatePhoneNumber();
+        if(!validNumber){
+          setError("Mobile Number is invalid");
+          return;
+        }
       setShow(true);
-
     }
   }
-  useEffect(() => {
-    setUsername(buyer.username);
-    setPhone(buyer.phone);
-    setAddress(buyer.address);
-    setLocation(buyer.coordinates);
-    setLoaded(true);
-  }, [buyer]);
 
   const turnOnEdit = (data) => {
     setIsDisabled(false);
     setIsEditing(data);
-  };
-
+  }
   const turnOffEdit = () => {
     setIsDisabled(true);
     setIsEditing(false);
-  };
-
-  const verify = async (_id,password) => {
-    const result=await axios.post("/api/profile/user/verify", {_id,password}, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email',
-      },
-    }).then((result)=>{
-      return result.data.success;
-    }).catch((error)=>{
-      return error.response.data.success;
-    })
-    return result;
-  };
+  }
 
   const setPhoneNumber=(phone)=>{
     setPhoneNumberChanged(true);
@@ -85,69 +64,94 @@ const ProfileFormCustomer = (id) => {
     else{
       setError("");
     }
-    setPhone(phone);
+    let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+    obj.phone=phone;
+    setBuyer(obj);
+  }
+
+  const setAddress=(address)=>{
+    let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+    obj.address=address;
+    setBuyer(obj);
+  }
+
+  const setUsername=(e)=>{
+    let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+    obj.username=e.target.value;
+    setBuyer(obj);
+  }
+
+  const setLocation=(coordinates)=>{
+    let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+    obj.coordinates=coordinates;
+    setBuyer(obj);
+  }
+
+  const setPassword=(password)=>{
+    let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+    obj.password=password;
+    setBuyer(obj);
   }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     turnOffEdit();
     setisLocked(true);
-    setError("");
-    if(!user.googleId){
-      await verify(_id.id,CryptoJS.SHA512(password).toString());
+    if(!buyer.hasOwnProperty('coordinates')){
+      setError("Location must be provided for pharmacy");
+      return;
     }
-    if(user.googleId || await verify(_id.id,CryptoJS.SHA512(password).toString())){
+    if(buyer.googleId){
       if(!phoneNumberChanged){
-        await axios
-      .patch(
-        "/api/profile/user/updateUser/" + _id.id,
-        {
-          username: username,
-          address:address,
-          coordinates: location
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        }
-      )
-      .then((result) => {
-        handleClose();
-        dispatch(setBuyerUser(result.data));
-      })
+        console.log(buyer);
+        let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+        await obj.update();
+        console.log(obj);
+        setBuyer(obj);
       }
       else{
         handleClose();
-        let OTP = Math.floor(100000 + Math.random() * 900000).toString();
-        let currentDate=new Date();
-        socket.emit('OTP',{phone:phone,otp:OTP,sendingTime:currentDate});
-        await axios.post('/api/mobile/OTPsend',{
-          phone:phone,
-          otp:OTP,
-          sendingTime:currentDate
-        },{
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        }).then(()=>{
-          console.log('comes here');
+        const OTPService=new phoneOTP(buyer.phone,buyer.token,buyer.googleId,socket);
+        setOTPHandler(OTPService);
+        if(OTPService.sendOTP()){
           setShowPhoneVerify(true);
-        }).catch((err)=>{
-          setError(err.response.data.error);
-        })
+        }
+        else{
+          setError(OTPService.error);
+        }
+        setPhoneNumberChanged(false);
       }
     }
     else{
-      console.log('comes here');
-      setError("Password is incorrect");
+      if(!phoneNumberChanged){
+        let obj = Object.create(Object.getPrototypeOf(buyer), Object.getOwnPropertyDescriptors(buyer));
+        await obj.update();
+        setBuyer(obj);
+        if(!obj.error){
+          handleClose();
+        }
+      }
+      else{
+        const invalid=await buyer.verifyPassword();
+        if(invalid){
+          return;
+        }
+        handleClose();
+        const OTPService=new phoneOTP(buyer.phone,buyer.token,buyer.googleId,socket);
+        setOTPHandler(OTPService);
+        if(OTPService.sendOTP()){
+          setShowPhoneVerify(true);
+        }
+        else{
+          setError(OTPService.error);
+        }
+        setPhoneNumberChanged(false);
+      }
     }
     setIsEditing(false);
     setisLocked(false);
   };
-  if(loaded===true){
+  if(buyer){
     return (
       <div>
         <div className="profileInfo d-flex justify-content-between">
@@ -162,27 +166,27 @@ const ProfileFormCustomer = (id) => {
         </div>
         <Form>
         <div className="error" style={{color:"red"}}>{error}</div>
-        <Map currentLocation={location} address={address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+        <Map currentLocation={buyer.coordinates} address={buyer.address} setAddress={setAddress} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
           <Form.Group className="mb-3">
             <Form.Label>Name</Form.Label>
             <Form.Control
               type="text"
               placeholder="Enter your name"
               disabled={isDisabled}
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
+              value={buyer.username}
+              onChange={setUsername}
             />
           </Form.Group>
           <Form.Group className="mb-3">
           <Form.Label>Contact No.</Form.Label>
           <InputGroup>
           <InputGroup.Text>+880</InputGroup.Text>
-          <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled} value ={phone} onChange={(e)=>setPhoneNumber(e.target.value)} />
+          <Form.Control type="email" placeholder="Enter contact no." disabled={isDisabled} value ={buyer.phone} onChange={(e)=>setPhoneNumber(e.target.value)} />
           </InputGroup>
         </Form.Group>
         <Form.Group className="mb-3" controlId="formBasicEmail">
           <Form.Label>Home Address</Form.Label>
-          <Form.Control type="address" placeholder="Address" value={address} onChange={(e)=>setAddress(e.target.value)} disabled={true}/>
+          <Form.Control type="address" placeholder="Address" value={buyer.address} onChange={(e)=>setAddress(e.target.value)} disabled={isDisabled} onClick={()=>isEditing && setShowMAP(true)}/>
         </Form.Group>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <Form.Label>Email address</Form.Label>
@@ -194,7 +198,6 @@ const ProfileFormCustomer = (id) => {
             />
           </Form.Group>
           <InputGroup className="mb-3" controlId="formBasicPassword">
-        {isEditing && (<Button onClick={()=>setShowMAP(true)}>Add/Change Location Information</Button>)}
           {!buyer.googleId && isEditing &&(<a href={"changePassword/" + user._id} style={{marginLeft:"75%"}}>Change Password</a>)}
         </InputGroup>
         {isEditing && (
@@ -203,8 +206,8 @@ const ProfileFormCustomer = (id) => {
           </Button>
         )}
       </Form>
-      <ConfirmPasswordModal show={show} handleClose={handleClose} handleSubmit={handleSubmit} error={error} passwordVisibility={{currentPasswordVisibility,setCurrentPasswordVisibility}} password={{password,setPassword}}/>
-      <PhoneVerify _id={_id.id} user={user} data={{email:buyer.email,phone:phone,username:username,address:address,coordinates:location}} show={showPhoneVerify} handleClose={handleClosePhoneVerify} socket={socket}/>
+      <ConfirmPasswordModal show={show} handleClose={handleClose} handleSubmit={handleSubmit} error={buyer.errorMessage} passwordVisibility={{currentPasswordVisibility,setCurrentPasswordVisibility}} password={{password:buyer.password,setPassword:setPassword}}/>
+      <PhoneVerify user={{user:buyer,setUser:setBuyer}} otpHandler={{otpHandler:otpHandler,setOTPHandler:setOTPHandler}} show={{show:showPhoneVerify,handleClose:handleClosePhoneVerify}} socket={socket}/>
       </div>
     );
   }

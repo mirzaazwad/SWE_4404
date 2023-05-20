@@ -5,127 +5,74 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const NonStripsForm = (props) => {
-  const user = props.user;
-  const types=props.types;
-  const categories=props.categories;
-  const _id=props._id;
+const NonStripsForm = ({currentValue,user,onError,medicineType}) => {
   const navigate=useNavigate();
-  const sellerId=props.sellerId;
-  const [medicineName, setMedicineName] = useState(props.currentValue.medicineName);
-  const [genericName, setGenericName] = useState(props.currentValue.genericName);
-  const [description, setDescription] = useState(props.currentValue.description);
-  const [sellingPrice, setSellingPrice] = useState(props.currentValue.sellingPrice);
-  const [pcsPerBox, setPcsPerBox] = useState(props.currentValue.pcsPerBox);
-  const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
-  const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
-  const [medicineType,setMedicineType]=useState(props.medicineType);
+  const [medicineName, setMedicineName] = useState(currentValue.currentValue.medicineName);
+  const [genericName, setGenericName] = useState(currentValue.currentValue.genericName);
+  const [description, setDescription] = useState(currentValue.currentValue.description);
+  const [sellingPrice, setSellingPrice] = useState(currentValue.currentValue.sellingPrice);
+  const [pcsPerBox, setPcsPerBox] = useState(currentValue.currentValue.pcsPerBox);
+  const [manufacturer, setManufacturer] = useState(currentValue.currentValue.manufacturer);
+  const [purchasePrice, setPurchasePrice] = useState(currentValue.currentValue.purchasePrice);
   const [image,setImage]=useState(null);
-  const [imageURL,setImageURL] = useState(props.currentValue.imageURL);
+  const [imageURL,setImageURL] = useState(currentValue.currentValue.imageURL);
   const [prescription,setPrescription]=useState(false);
   const [locked,isLocked]=useState(false);
-  const [medicineCategory, setMedicineCategory] = useState(null);
-
-  const setError=(error)=>{
-    props.onError(error);
-  }
-
-  useEffect(()=>{
-    setMedicineType(props.medicineType)
-  },[props])
+  const [medicineCategory, setMedicineCategory] = useState(currentValue.currentValue.medicineCategory);
 
   const handleMedicineType=(data)=>{
-    setMedicineType(data);
-    props.handleCurrentValue({
+    medicineType.setMedicineType(data);
+    currentValue.handleCurrentValue({
       medicineName:medicineName,
       genericName:genericName,
       description:description,
       pcsPerBox:pcsPerBox,
       sellingPrice:sellingPrice,
-      stripsPerBox:props.currentValue.stripsPerBox,
-      pcsPerStrip:props.currentValue.pcsPerStrip,
+      stripsPerBox:currentValue.currentValue.stripsPerBox,
+      pcsPerStrip:currentValue.currentValue.pcsPerStrip,
       manufacturer:manufacturer,
       purchasePrice:purchasePrice,
       medicineCategory:medicineCategory,
       imageURL:imageURL,
-      prescription:prescription
+      prescription:prescription,
+      medicineCategory:medicineCategory
     });
-    props.onHandleType(data);
+    medicineType.onHandleType(data);
   }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
     isLocked(true);
-    if (medicineType === null) {
-      setError("Medicine Type is required");
+    if (medicineType.medicineType === null) {
+      onError("Medicine Type is required");
       return;
     }
     if (medicineCategory ===null) {
-      setError("Medicine Category is required");
+      onError("Medicine Category is required");
       return;
     }
-    if(image){
-      const formData = new FormData();
-        formData.append("file", image);
-        formData.append("upload_preset", "med_guard");
-        const dataRes = await axios.post(
-          "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
-          formData
-        );
-      setImageURL(dataRes.data.url);
+    const medicineInformation={
+      MedicineName: medicineName,
+      GenericName: genericName,
+      Type: medicineType.medicineType,
+      Category: medicineCategory,
+      PcsPerBox: pcsPerBox,
+      Manufacturer: manufacturer,
+      SellingPrice: sellingPrice,
+      PurchasePrice: purchasePrice,
+      Description: description,
+      imageURL:imageURL,
+      prescription:prescription
     }
-    await axios
-      .post(
-        "/api/profile/addMedicine/addNewGlobalMedicine",
-        {
-          MedicineName: medicineName,
-          GenericName: genericName,
-          Type: medicineType,
-          Category: medicineCategory,
-          PcsPerBox: pcsPerBox,
-          Manufacturer: manufacturer,
-          SellingPrice: sellingPrice,
-          PurchasePrice: purchasePrice,
-          Description: description,
-          imageURL:imageURL,
-          prescription:prescription
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        }
-      )
-      .catch((err) => console.log(err));
-    await axios
-      .patch(
-        "/api/profile/addMedicine/addNewMedicine/" + sellerId,
-        {
-          MedicineName: medicineName,
-          GenericName: genericName,
-          Type: medicineType,
-          Category: medicineCategory,
-          PcsPerBox: pcsPerBox,
-          Manufacturer: manufacturer,
-          SellingPrice: sellingPrice,
-          PurchasePrice: purchasePrice,
-          Description: description,
-          imageURL:imageURL,
-          prescription:prescription
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        }
-      )
-      .then(() => {
-        return navigate("/inventoryManagementSystem/inventory/" + _id);
-      })
-      .catch((err) => console.log(err));
+    if(image){
+      await user.addNewMedicine(medicineInformation,image);
       isLocked(false);
+      navigate("/inventoryManagementSystem/inventory");
+    }
+    else{
+      isLocked(false);
+      onError("Image of medicine is required");
+    }
   };
   return (
     <Form onSubmit={handleSubmit}>
@@ -141,14 +88,14 @@ const NonStripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
-              value={medicineType===null?"default":medicineType._id}
+              value={medicineType.medicineType===null?"default":medicineType.medicineType._id}
               onChange={(e) => {
-                handleMedicineType(types.find(element => element._id === e.target.value));
+                handleMedicineType(user.types.find(element => element._id === e.target.value));
               }}
             >
               <option value="default" key="default">Select an option</option>
-              {types.length !== 0 &&
-                types.map((medicines) => (
+              {user.types && user.types.length !== 0 &&
+                user.types.map((medicines) => (
                   <option value={medicines._id} key={medicines._id}>{medicines.Name}</option>
                 ))}
             </Form.Select>
@@ -163,11 +110,11 @@ const NonStripsForm = (props) => {
               aria-label="Select an option"
               placeholder="Select an option"
               value={medicineCategory===null?"default":medicineCategory._id}
-              onChange={(e) => setMedicineCategory(categories.find(element => element._id === e.target.value))}
+              onChange={(e) => setMedicineCategory(user.categories.find(element => element._id === e.target.value))}
             >
               <option value="default" key="default">Select an option</option>
-              {categories.length !== 0 &&
-                categories.map((category) => (
+              {user.categories && user.categories.length !== 0 &&
+                user.categories.map((category) => (
                   <option value={category._id} key={category._id}>{category.category}</option>
                 ))}
             </Form.Select>

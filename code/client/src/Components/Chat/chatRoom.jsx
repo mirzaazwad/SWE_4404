@@ -10,119 +10,54 @@ import {
 } from "mdb-react-ui-kit";
 import { Search } from "react-bootstrap-icons";
 import NavbarPharmacy from "../partials/profile/navbarPharmacy";
-import { useParams } from "react-router-dom";
 import ChatTile from "./chatsTile";
-import axios from "axios";
-import io from "socket.io-client";
 import ChatBox from "./chatBox";
 import SendMessageChatRoom from "./chatSendMessage";
 import { useToken } from "../../Hooks/useToken";
-import TimeElapsed from "../../Library/CustomDateTimeLibrary/TimeElapsed";
+import chatPharmacy from "../../Library/Chat/chatPharmacy";
 
 const ChatPage = () => {
-  const { id } = useParams();
   const user = useToken();
-  const socket = io("http://localhost:4110");
-  const [receiver, setReceiver] = useState({});
   const [currentSender, setCurrentSender] = useState({});
   const [currentSenderID, setCurrentSenderID] = useState("");
   const [loading, setLoading] = useState(false);
-  const [senders, setSenders] = useState([]);
+  const [chatUser,setChatUser]=useState(null);
   const [filteredValues,setFilter]=useState([]);
   const [searchValue,setSearchValue]=useState("");
   const [toggle,setToggle]=useState(false);
-  const [messagesMap,setMessagesMap]=useState(new Map());
   const [newMessage,setNewMessage]=useState(null);
-  const [noSubscriber,setNoSubscriber]=useState(false);
 
   const changeContacts = (input) =>{
     console.log(input);
     setSearchValue(input);
     if(input!==""){
-      setFilter(senders.filter(sender=>sender.senderName.toLowerCase().includes(input.toLowerCase())));
+      setFilter(chatUser.senders.filter(sender=>sender.senderName.toLowerCase().includes(input.toLowerCase())));
     }
     else{
-      setFilter(senders);
+      setFilter(chatUser.senders);
     }
-  }
-
-  const retrieveUsers = async () => {
-    setLoading(true);
-    const value = await axios.get("/api/profile/chat/senders/" + id, {
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'
-      },
-    });
-    setSenders(value.data)
-    setFilter(value.data);
-    value.data.forEach((sent)=>messagesMap.set(sent.senderID,{lastMessage:sent.lastMessage,lastMessageTime:sent.lastMessageTime}));
-    if(value.data.length===0){
-      setNoSubscriber(true);
-    }
-    setLoading(false);
-  };
-
-  socket.on("message",(message)=>{
-    setNewMessage(message);
-    if(message.receiverID===id){
-      messagesMap.set(message.senderID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
-    }
-    else if(message.senderID===id){
-      messagesMap.set(message.receiverID,{lastMessage:message.messageContent,lastMessageTime:message.SentTime});
-    }
-  })
-
-  useEffect(() => {
-    setLoading(true);
-    socket.emit("join room", id);
-    const getReceiver = async () => {
-      await axios
-        .get("/api/profile/user/getUser/" + id, {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        })
-        .then((result) => {
-          setReceiver(result.data);
-        });
-    };
-    getReceiver();
-    retrieveUsers();
-  }, [noSubscriber]);
-
-  const ToggleChat = async(sent) =>{
-    setCurrentSender(sent);
-    setCurrentSenderID(sent.senderID);
-    console.log("Current Sender ID:",currentSenderID);
-    await axios.post('/api/profile/chat/toggleRead',{
-      senderID:id,
-      receiverID:sent.senderID
-    },{
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email',
-      },
-    }).then(()=>{
-      setToggle(toggle^true);
-    });
   }
 
   useEffect(()=>{
-    if(senders.length>0){
-      ToggleChat(senders[0]);
-    }
-  },[senders])
+    const retrieveUsers = async () => {
+      setLoading(true);
+      const chat=new chatPharmacy(user._id,user.token,user.googleId);
+      await chat.retrieveMessages();
+      setChatUser(chat);
+      setLoading(false);
+      setFilter(chat.senders);
+    };
+    retrieveUsers();
+  },[user])
 
-  if (!loading) {
+  if (chatUser!==null) {
     return (
       <MDBContainer
         fluid
         className="py-5"
         style={{ backgroundColor: "#3354a9", height: "100vh" }}
       >
-        <NavbarPharmacy id={id} toggle={toggle} user={user}/>
+        <NavbarPharmacy toggle={toggle} user={user}/>
         <MDBRow>
           <MDBCol md="12">
             <MDBCard
@@ -159,18 +94,18 @@ const ChatPage = () => {
                       >
                         <MDBTypography listUnStyled className="mb-0">
                           {filteredValues.map((sent, index) => (
-                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>ToggleChat(sent)}>
+                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>chatUser.ToggleChat(sent)}>
                             <ChatTile
                             sender={sent}
-                            time={new TimeElapsed(messagesMap.get(sent.senderID).lastMessageTime).getTimeElapsed()}
+                            time={chatUser.getTime(sent.senderID)}
                             messageCount={newMessage}
-                            id={id}
+                            id={chatUser._id}
                             imageURL={sent.senderImageURL}
-                            message={messagesMap.get(sent.senderID).lastMessage}
+                            message={chatUser.getLastMessage(sent.senderID)}
                             index={index}
                             user={user}
                             currentSender={currentSenderID}
-                            noSubscriber={noSubscriber}
+                            noSubscriber={chatUser.noSubscriber}
                           /></button>
                           ))}
                         </MDBTypography>
@@ -178,8 +113,8 @@ const ChatPage = () => {
                     </div>
                   </MDBCol>
                   <MDBCol md="6" lg="7" xl="8">
-                    <ChatBox handleReload={setNoSubscriber}  noSubscriber={noSubscriber} id={id} senderID={currentSenderID} receiverImageURL={receiver.imageURL} senderImageURL={currentSender.senderImageURL} user={user} socket={socket} message={newMessage}/>
-                    <SendMessageChatRoom noSubscriber={noSubscriber} user={user} receiverID={id} imageURL={receiver.imageURL} senderID={currentSender.senderID} socket={socket} />
+                    <ChatBox id={chatUser._id}  handleReload={chatUser.noSubscriber}  noSubscriber={chatUser.noSubscriber} id={chatUser._id} senderID={currentSenderID} receiverImageURL={chatUser.imageURL} senderImageURL={currentSender.senderImageURL} user={chatUser} message={newMessage}/>
+                    <SendMessageChatRoom noSubscriber={chatUser.noSubscriber} user={user} receiverID={chatUser._id} imageURL={chatUser.imageURL} senderID={currentSender.senderID} />
                   </MDBCol>
                 </MDBRow>
               </MDBCardBody>

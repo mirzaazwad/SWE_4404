@@ -3,11 +3,10 @@ const LandingImage = () => {
   return (
     <div className="LandingImage">
       <Image
-      src="LandingImage.jpg"
+      src="background.jpg"
       className="mt-5"
       alt="bootstrap"
       fluid
-      opacity="0.5"
     />
     </div>
   );

@@ -3,22 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import { removeItem } from '../../Contexts/cartAction.js';
 import Button from 'react-bootstrap/Button';
 import Table from 'react-bootstrap/Table';
-import { setBuyerUser } from "../../Contexts/action";
 import { clearItems } from "../../Contexts/cartAction.js";
 import axios from 'axios';
 import { useToken } from '../../Hooks/useToken.js';
-import { useLocation, useNavigate } from 'react-router-dom';
+import {useNavigate } from 'react-router-dom';
 
 
 
 export default function Cart() {
   const user=useToken();
   const navigate=useNavigate();
-  const locator=useLocation();
-  const queryParams = new URLSearchParams(locator.search);
-  const paymentStatus = queryParams.get('paymentStatus');
-  const orderId = queryParams.get('oid');
-  const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
   const [customerPhoneNumber,setCustomerNumber]=useState("");
@@ -59,7 +53,7 @@ export default function Cart() {
     console.log(cart);
     console.log(customerEmail);
     e.preventDefault();
-    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${userId}`, {
+    const response =  axios.post(`http://localhost:4000/api/order/postOrder/${user._id}`, {
       items: cart,
       customer_data: {
         email:customerEmail,
@@ -72,8 +66,9 @@ export default function Cart() {
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
-    }).then(async (result)=>{  
-    });
+    }).then((result)=>{  
+      console.log(result);
+    }).catch(error=>console.log(error));
     
     await dispatch(clearItems());
     navigate('/myOrders');

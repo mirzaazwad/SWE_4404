@@ -1,5 +1,5 @@
 const SSLCommerzPayment = require('sslcommerz').SslCommerzPayment;
-const pharmacyModel = require('../model/pharmacy');
+const pharmacyModel = require('../model/seller');
 
 class MakePayment{
   constructor(customer,orderID,currency){
@@ -50,7 +50,6 @@ class MakePayment{
     const paymentData={...this.customer,...this.order,...this.product,...this.routes,...this.shipping};
     const sslcommer = new SSLCommerzPayment('testbox', 'qwerty', false); //true for live default false for sandbox
     const result=await sslcommer.init(paymentData);
-    console.log(result);
     if(result?.GatewayPageURL){
       return result.GatewayPageURL;
     }
