@@ -3,9 +3,11 @@ import { useState } from "react";
 import { Send } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
 import CustomDateString from "../../Library/CustomDateTimeLibrary/CustomDateString";
+import { useNavigate } from "react-router";
 
 const SendMessageChatRoom = (props) => {
   const [message, setMessage] = useState("");
+  const navigate=useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     let msg = {
@@ -14,6 +16,7 @@ const SendMessageChatRoom = (props) => {
       SentTime: new CustomDateString(new Date()).getDateString(),
       messageContent: message,
     };
+    setMessage("");
     if (message) {
       props.socket.emit("send_message", msg);
       msg.readStatus = "sender";
@@ -22,9 +25,7 @@ const SendMessageChatRoom = (props) => {
           Authorization: `Bearer ${props.user.token}`,
           'idType':props.user.googleId?'google':'email',
         },
-      });
-      setMessage("");
-      console.log('doesnt come here');
+      }).catch(()=>navigate('/error500'));
     }
   };
   return (

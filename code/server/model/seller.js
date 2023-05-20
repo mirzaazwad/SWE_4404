@@ -21,7 +21,6 @@ const sellerSchema = new Schema({
       ...OrderDetailsSchema.obj
     },
   ]
-
 },{timestamps:true});
 
 sellerSchema.statics.signup=async function(username,email,password){
