@@ -1,6 +1,6 @@
-const userModel = require('./user');
 const mongoose = require('mongoose');
 const Schema=mongoose.Schema;
+const userById=require('../Library/userById');
 
 const chatSchema = new Schema({
   senderID:{
@@ -43,8 +43,10 @@ const chatSchema = new Schema({
 
 chatSchema.statics.addChat = async function(senderID,receiverID,messageContent,sentTime,readStatus){
   try{
-    const sender=await userModel.findById(senderID);
-    const receiver=await userModel.findById(receiverID);
+    const senderObject=new userById(senderID);
+    const receiverObject=new userById(receiverID);
+    const sender=await senderObject.findById();
+    const receiver=await receiverObject.findById();
     if(!sender || !receiver){
       throw Error('Message came from unknown sender or receiver');
     }

@@ -64,7 +64,7 @@ class CustomDateTime {
     const timeSplit = timeString.split(":");
     if ((timeSplit[0] !== "12" && timeMeridian === "AM") ||(timeSplit[0] === "12" && timeMeridian === "PM")) {
       
-      return this[leadingZero](timeString);
+      return this[leadingZero](timeSplit[0])+':'+this[leadingZero](timeSplit[1]);
     } else if (timeSplit[0] === "12" && timeMeridian === "AM") {
       return "00:" + timeSplit[1];
     } else {
