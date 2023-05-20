@@ -11,6 +11,4 @@ router.post('/postOrder/:userId', orderController.postOrder);
 router.get('/getOrder/:userId', orderController.getOrder);
 
 router.get('/getOrderDetails/:userId/:orderId', orderController.getOrderDetails);
-router.patch('/billingOrder/:userId/:orderId', orderController.billingOrder);
-
 module.exports = router;

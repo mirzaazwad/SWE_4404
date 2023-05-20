@@ -1,11 +1,13 @@
 import { useLoadScript } from "@react-google-maps/api";
 import Loading from "../../partials/Map/mapLoading";
 import SearchMapModal from "./searchMapModal";
+const libraries=[`${process.env.REACT_APP_LIBRARY}`];
+
 
 const SearchMap = (props) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMPKEY,
-    libraries: [`${process.env.REACT_APP_LIBRARY}`],
+    libraries,
   });
   if (!isLoaded) {
     return (<Loading show={props.show} handleClose={()=>props.setShow(false)}></Loading>)

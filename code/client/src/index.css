@@ -14,6 +14,28 @@ body {
   /* font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif; */
+  background-color: whitesmoke !important;
+}
+
+.Landing{
+  background-image: url("../public/LandingImage.jpg") !important;
+  background-repeat: no-repeat !important;
+  background-size: cover !important;
+  background-position: center !important;
+  height: 100vh !important;
+  width: 100% !important;
+}
+.login-card{
+  opacity: 0.9 !important;
+  box-shadow: 0px 10px 40px -10px rgba(255, 255, 255, 1) !important;
+  background-color: var(--customDarkBlue) !important;
+  color: white !important;
+}
+.signup-card{
+  opacity: 0.9 !important;
+  box-shadow: 0px 10px 40px -10px rgba(255, 255, 255, 1) !important;
+  background-color: var(--customDarkBlue) !important;
+  color: white !important;
 }
 .Landing{
   background-image: url("../public/LandingImage.jpg") !important;
@@ -86,9 +108,11 @@ body {
 .medicine-card
 {
   width: 150% !important;
+  width: 150% !important;
   background-color: var(--customMagenta) !important;
   height: 12rem !important;
   transition: transform 0.3s ease-in-out !important;
+  border-color: whitesmoke !important;
   border-color: whitesmoke !important;
 }
 .medicine-card:hover{
@@ -124,17 +148,20 @@ code {
   margin-right: 20px !important;
 }
 
+
 .btn.customButton{
   background-color: var(--customMagenta) !important;
   color: white !important;
   height: 40px;
 }
+
 .customButton:hover{
   background-color: var(--customBlue) !important;
 }
 .navbar-nav{
   background-color: var(--customDarkBlue);
 }
+
 .btn.btn-editProfile {
   display: flex;
   align-items: center;
@@ -151,6 +178,8 @@ code {
   width: 50%;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -160,14 +189,14 @@ code {
   vertical-align: middle;
   --bs-btn-bg: var(--customBlue)!important;
   color: white !important;
+  --bs-btn-bg: var(--customBlue)!important;
+  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
 .btn.btn-viewDetails{
   height: 100% !important;
   vertical-align: middle;
-  --bs-btn-bg: var(--customBlue)!important;
-  color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
@@ -229,6 +258,7 @@ code {
 .medicine-details-card{
   margin-top: 70px;
   height: 90% !important;
+  width: 70% !important;
   width: 70% !important;
 }
 .billing-details-card{
@@ -309,10 +339,12 @@ width: 75%;
   width: 100%;
 
 }
+
 .search-input{
   width: 50%;
   margin-bottom: 3%;
 }
+
 .btn.btn-save{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
@@ -341,8 +373,29 @@ width: 75%;
   --bs-btn-hover-bg: var(--customBlue)!important;
   --bs-btn-hover-border-color : var(--customBlue)!important;
 }
+.btn.btn-delete-cart
+{
+  --bs-btn-bg: var(--customMagenta) !important;
+  color: white !important;
+  align-items: center;
+  height: 20%;
+  width: 50%;
+  --bs-btn-hover-bg: var(--customBlue)!important;
+  --bs-btn-hover-border-color : var(--customBlue)!important;
+}
 .btn.btn-increase{
   --bs-btn-bg: var(--customDarkBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
+}
+.btn.btn-decrease{
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
@@ -385,6 +438,7 @@ width: 75%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+
 .btn.btn-prescription-upload{
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
@@ -394,6 +448,7 @@ width: 75%;
   --bs-btn-hover-bg: var(--customMagenta)!important;
   --bs-btn-hover-border-color : var(--customMagenta)!important;
 }
+
 .btn.btn-add i {
   margin-left: 5px;
   vertical-align: middle;
@@ -402,6 +457,7 @@ width: 75%;
 .btn.btn-add:hover{
   text-decoration: none !important;
 }
+
 .btn.btn-buyMore{
   width: 60%;
   --bs-btn-bg: var(--customBlue) !important;
@@ -416,6 +472,11 @@ width: 75%;
 }
 .btn.btn-addCart{
   width: 60%;
+  --bs-btn-bg: var(--customBlue) !important;
+  color: white !important;
+  --bs-btn-hover-bg: var(--customMagenta)!important;
+  --bs-btn-hover-border-color : var(--customMagenta)!important;
+  --bs-btn-active-bg: var(--customMagenta) !important;
   --bs-btn-bg: var(--customBlue) !important;
   color: white !important;
   --bs-btn-hover-bg: var(--customMagenta)!important;
@@ -438,7 +499,7 @@ width: 75%;
 .profile-picture-container img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
   border-radius: 50%; /* set the border radius to 50% to match the parent container */
 }
 
@@ -461,6 +522,10 @@ width: 75%;
   color: white !important;
 }
 .btn-primary{
+  --bs-btn-bg: white !important;
+  --bs-btn-active-bg: var(--customBlue) !important;
+  color: rgb(0, 0, 0) !important;
+  --bs-btn-active-color: white !important;
   --bs-btn-bg: white !important;
   --bs-btn-active-bg: var(--customBlue) !important;
   color: rgb(0, 0, 0) !important;
@@ -847,18 +912,7 @@ width: 75%;
 .inventory-section{
   margin-top: 6%;
 }
-/* @media only screen and (max-width: 767px) {
-  .login-container {
-    width: 100%;
-    max-width: none;
-  }
 
-  .container-1,
-  .container-2,
-  .container-3 {
-    width: 100%;
-  }
-} */
 thead {
   background-color: var(--customBlue);
   color: #fff;

@@ -1,43 +1,24 @@
 import { Switch } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import FormControlLabel from "@mui/material/FormControlLabel";
 
-const Type = (props) => {
+const Type = ({showType,user}) => {
   const [typename,setTypeName]=useState("");
   const [typeDescription,setTypeDescription]=useState("");
-  const [showType, setShowType] = useState(false);
   const [typeStrip,setTypeStrip]=useState(false);
-  const user=props.user;
-  const handleCloseType = () => {
-    props.onClosing(false);
-    setShowType(false);
-  }
 
-  useEffect(()=>{
-    setShowType(props.showType);
-  },[props.showType])
-
-  const handleType = (e) =>{
-    handleCloseType();
+  const handleType = async(e) =>{
     e.preventDefault();
-    axios.post('/api/profile/addMedicine/addType',{
-      name:typename,
-      description:typeDescription,
-      strips:typeStrip
-    },{
-      headers: {
-        Authorization: `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email',
-      },
-    }).then(result=>console.log(result));
-    window.location.reload();
+    let obj = Object.create(Object.getPrototypeOf(user.medicines), Object.getOwnPropertyDescriptors(user.medicines));
+    await obj.addType(typename,typeDescription,typeStrip);
+    user.setMedicines(obj);
+    showType.onClosing(false);
   }
 
   return (
     <Form onSubmit={handleType}>
-      <Modal show={showType} onHide={handleCloseType}>
+      <Modal show={showType.show} onHide={()=>showType.onClosing(false)}>
         <Modal.Header closeButton>
           <Modal.Title>Add Medicine Type</Modal.Title>
         </Modal.Header>
@@ -73,7 +54,7 @@ const Type = (props) => {
           />
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleCloseType}>
+          <Button variant="secondary" onClick={()=>showType.onClosing(false)}>
             Close
           </Button>
           <Button className="btn btn-add" type="submit" onClick={handleType}>

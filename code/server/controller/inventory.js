@@ -1,9 +1,9 @@
-const pharmacyModel = require("../model/pharmacy");
+const pharmacy = require("../model/seller");
 const medicineType = require("../model/medicine-type");
 const getMedicine=async (req,res)=>{
   const id=req.params.id;
   try{
-    const result=await pharmacyModel.findOne({pharmacyManagerID:id}).select('Inventory');
+    const result=await pharmacy.findById(id).select('Inventory');
     res.status(200).json(result);
   }
   catch(err){
@@ -43,9 +43,9 @@ const addToStock = async(req,res)=>{
     if(req.body.amount<0){
       return res.status(400).json({error:"Cannot be negative"});
     }
-    const result=await pharmacyModel.findOneAndUpdate({_id:id},
+    const result=await pharmacy.findByIdAndUpdate(id,
         { $set: { [field]: req.body.amount } });
-    const inventory=await pharmacyModel.findById(id);
+    const inventory=await pharmacy.findById(id);
     return res.status(200).json(inventory);
   }
   catch(err){

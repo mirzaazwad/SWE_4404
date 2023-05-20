@@ -1,9 +1,9 @@
-import NavbarLanding from "./partials/landing/navbarLanding";
+import NavbarLanding from "../partials/landing/navbarLanding";
 import { Image } from "react-bootstrap";
 
 const Error404 = () => {
   return ( 
-    <div className="error404">
+    <div className="error">
       <NavbarLanding/>
       <div className="innerContent">
         <h1 style={{marginTop:'5%',marginLeft:'5%'}}>Error 404</h1>
