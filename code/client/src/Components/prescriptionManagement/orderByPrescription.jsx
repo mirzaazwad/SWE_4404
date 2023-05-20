@@ -13,9 +13,30 @@ const OrderByPrescription = () => {
   const navigate=useNavigate();
   const { id, prop1, prop2 } = useParams();
   const [medicine, setMedicine] = useState([]);
+  const [location,setLocation]=useState(null);
+  const [customerEmail,setCustomerEmail]=useState("");
+  const [customerPhoneNumber,setCustomerNumber]=useState("");
+  const [fullName, setFullName] = useState();
+  const [address, setAddress] = useState();
+  const [payment, setPayment] = useState(null);
   const [selectedPharmacyId, setSelectedPharmacyId] = useState(null); // Added state for selected pharmacy ID
 
   useEffect(() => {
+    const retrieveUser = async () => {
+      await axios.get('/api/profile/buyer/' + user._id, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
+        setLocation(result.data.coordinates);
+        setAddress(result.data.address);
+        setFullName(result.data.username);
+        setCustomerNumber(result.data.phone);
+        setCustomerEmail(result.data.email);
+      });
+    };
+    retrieveUser();
     const fetchData = async () => {
       try {
         const response = await axios.get("http://localhost:4000/api/pharmacies/", {
@@ -44,12 +65,11 @@ const OrderByPrescription = () => {
         {
           items: medicine,
           customer_data: {
-            email: "customerEmail",
-            phone: "customerPhoneNumber",
+            email: customerEmail,
+            phone: customerPhoneNumber,
             pharmacyManagerID: pharmacyId,
-            fullName: "fullName",
-            address: "address",
-            payment: "Cash On Delivery",
+            fullName: fullName,
+            address: address,
             amount: 0,
           },
           prescription_image: `http://res.cloudinary.com/dzerdaaku/image/upload/${prop1}/${prop2}`,
