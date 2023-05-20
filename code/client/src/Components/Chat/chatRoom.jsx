@@ -38,11 +38,17 @@ const ChatPage = () => {
     }
   }
 
+  const toggleChat=async(sent)=>{
+    let obj = Object.create(Object.getPrototypeOf(chatUser), Object.getOwnPropertyDescriptors(chatUser));
+    await obj.ToggleChat(sent);
+    setChatUser(obj);
+  }
+
   useEffect(()=>{
     const retrieveUsers = async () => {
       setLoading(true);
       const chat=new chatPharmacy(user._id,user.token,user.googleId);
-      await chat.retrieveMessages();
+      await chat.retrieveChatInformation();
       setChatUser(chat);
       setLoading(false);
       setFilter(chat.senders);
@@ -94,18 +100,13 @@ const ChatPage = () => {
                       >
                         <MDBTypography listUnStyled className="mb-0">
                           {filteredValues.map((sent, index) => (
-                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>chatUser.ToggleChat(sent)}>
+                            <button style={{marginLeft:"0vh",paddingLeft:"0vh",border:"none",backgroundColor:sent.senderID===currentSender.senderID?"#ECECEC":"transparent",width:"60vh"}} onClick={()=>toggleChat(sent)}>
                             <ChatTile
+                            user={chatUser}
                             sender={sent}
                             time={chatUser.getTime(sent.senderID)}
-                            messageCount={newMessage}
-                            id={chatUser._id}
-                            imageURL={sent.senderImageURL}
                             message={chatUser.getLastMessage(sent.senderID)}
                             index={index}
-                            user={user}
-                            currentSender={currentSenderID}
-                            noSubscriber={chatUser.noSubscriber}
                           /></button>
                           ))}
                         </MDBTypography>
@@ -113,7 +114,7 @@ const ChatPage = () => {
                     </div>
                   </MDBCol>
                   <MDBCol md="6" lg="7" xl="8">
-                    <ChatBox id={chatUser._id}  handleReload={chatUser.noSubscriber}  noSubscriber={chatUser.noSubscriber} id={chatUser._id} senderID={currentSenderID} receiverImageURL={chatUser.imageURL} senderImageURL={currentSender.senderImageURL} user={chatUser} message={newMessage}/>
+                    <ChatBox user={chatUser} />
                     <SendMessageChatRoom noSubscriber={chatUser.noSubscriber} user={user} receiverID={chatUser._id} imageURL={chatUser.imageURL} senderID={currentSender.senderID} />
                   </MDBCol>
                 </MDBRow>

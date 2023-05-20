@@ -34,7 +34,7 @@ const OrderByPrescription = () => {
 
   const handleRequestOrder = async (e, pharmacyId) => {
    
-  
+    console.log(pharmacyId,'is pharmacy ID');
     setSelectedPharmacyId(pharmacyId);
     const user = JSON.parse(localStorage.getItem("user"));
   
@@ -91,13 +91,13 @@ const OrderByPrescription = () => {
                     className="pharmacy-card-image"
                   />
                   <Card.Body className="order-prescription-pharmacy-card-body">
-                    <Card.Title>{pharmacy.name}</Card.Title>
-                    <Card.Text style={{ display: "block" }}>{pharmacy.location}</Card.Text>
+                    <Card.Title>{pharmacy.pharmacy}</Card.Title>
+                    <Card.Text style={{ display: "block" }}>{pharmacy.address}</Card.Text>
                   </Card.Body>
                   <Card.Footer className="order-prescription-pharmacy-footer">
                     <Button
                       className="btn btn-confirm-pharmacy"
-                      onClick={(e) => handleRequestOrder(e, pharmacy.id)} 
+                      onClick={(e) => handleRequestOrder(e, pharmacy._id)} 
                     >
                       Request Order
                     </Button>

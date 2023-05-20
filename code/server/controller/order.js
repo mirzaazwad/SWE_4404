@@ -110,9 +110,7 @@ const postOrder = async (req, res) => {
     let order = await Order.findOne({
       userId: userId
     });
-    const pharmacy = await Pharmacy.findOne({
-      _id: req.body.customer_data.pharmacyManagerID
-    });
+    const pharmacy = await Pharmacy.findById(req.body.customer_data.pharmacyManagerID);
     
     if (order) {
       order=await updateExistingCustomerOrder(userId, order,pharmacy,items,customer_data,prescription_image);
@@ -249,6 +247,7 @@ const approveOrder = async (req, res) => {
 
     // Save the updated order in the orders model
     await order.save();
+
 
     res.status(200).json({ message: "Order approved successfully" });
   } catch (error) {
