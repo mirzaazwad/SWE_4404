@@ -1,8 +1,7 @@
-const Pharmacy = require('../model/pharmacy');
-const MedicineType = require('../model/medicine-type');
+const Pharmacy = require('../model/seller');
 const MedicineCategory = require('../model/medicine-category');
 
-exports.getAllCategories = async (req, res) => {
+const getAllCategories = async (req, res) => {
   try {
     const medicineCategories =  MedicineCategory.find() ;
     console.log(medicineCategories);
@@ -11,17 +10,31 @@ exports.getAllCategories = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: 'Failed to get medicine categories',
-      error: err,
+      error: error.message,
+    });
+  }
+};
+
+const getAllTypes = async (req, res) => {
+
+  try {
+    const medicineTypes = await MedicineType.find();
+    res.status(200).json(medicineTypes);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      message: 'Failed to get medicine categories',
+      error: error.message,
     });
   }
 };
 
 
-exports.getMedicine = async (req, res, next) => {
-  const pharmacyId = req.params.id;
+const getMedicine = async (req, res, next) => {
+  const _id = req.params.id;
   const medicineId = req.params.medicineId;
   try {
-    const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: pharmacyId });
+    const pharmacy = await Pharmacy.findById(_id);
 
     // Find the medicine in the inventory array
     const medicine = pharmacy.Inventory.find(m => m._id.toString() === medicineId);
@@ -39,3 +52,5 @@ exports.getMedicine = async (req, res, next) => {
     });
   }
 };
+
+module.exports = {getAllCategories, getMedicine, getAllTypes}

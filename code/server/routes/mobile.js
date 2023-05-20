@@ -6,5 +6,6 @@ router.use(requireAuth);
 
 router.post('/OTPsend',OTPHandler.sendOTP);
 router.post('/OTPverify',OTPHandler.verifyOTP);
+router.get('/verify/:phone',OTPHandler.validPhoneNumber)
 
 module.exports = router;

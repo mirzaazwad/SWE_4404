@@ -20,8 +20,8 @@ const Login = () => {
   console.log(errorGoogle);
 
   return (
-    <div className="login-container"  style={{ marginTop: '15%' }}>
-      <Card className="d-flex justify-items-center w-75" >
+    <div className="login-container"  style={{ marginTop: '15%' , opacity: '1'}}>
+      <Card className="login-card d-flex justify-items-center w-75 m-auto" >
         <Card.Body>
           <Card.Title style={{ textAlign: "center" }}>Login</Card.Title>
           <Card.Text>
@@ -86,7 +86,7 @@ const Login = () => {
                 to='/signup'
                 style={{
                   all: "unset",
-                  color: "#3354a9",
+                  color: "white",
                   textDecoration: "underline",
 
                 }}
@@ -99,7 +99,7 @@ const Login = () => {
                 to='/forgotPassword'
                 style={{
                   all: "unset",
-                  color: "#3354a9",
+                  color: "white",
                   textDecoration: "underline",
                 }}
               >

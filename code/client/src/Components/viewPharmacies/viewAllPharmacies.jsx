@@ -52,8 +52,8 @@ const PharmacyPage = () => {
     }
   };
 
-  const retrieveUser=async (id)=>{
-    await axios.get('/api/profile/user/getUser/'+id,{
+  const retrieveUser=async ()=>{
+    await axios.get('/api/profile/buyer/'+user._id,{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
     }).then((result)=>{
@@ -63,7 +63,7 @@ const PharmacyPage = () => {
 
   useEffect(()=>{
     const retrieve=async ()=>{
-      await retrieveUser(user._id);
+      await retrieveUser();
       await fetchPharmacies();
     }
     retrieve();
@@ -93,15 +93,15 @@ const PharmacyPage = () => {
   if(pharmacies && location){
     return (
       <div>
-        <NavbarCustomer id={id} />
+        <NavbarCustomer user={user} />
         <section>
-        <SearchMap customerId={id} currentLocation={location} pharmacies={pharmacies} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
+        <SearchMap customerId={user._id} currentLocation={location} pharmacies={pharmacies} startDropDown={setStopDropDown} dropdown={stopDropDown}  show={showMAP} setShow={setShowMAP} setLocation={setLocation}/>
           <div className="container-fluid pharmacy-container">
             <div className="d-flex">
               <p style={{marginLeft:'25%',fontSize:"14px",paddingRight:"5px"}}>Search By: </p>
-              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("pharmacy")} style={{backgroundColor:searchCriteria==="pharmacy"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Pharmacy Name</Button>
-              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Medicine Name</Button>
-              <Button size="sm" variant="primary" onClick={()=>setSearchCriteria("generic")} style={{backgroundColor:searchCriteria==="generic"?"#EB006F":"#3b6ce7",border:"none"}}>Medicine Generic Name</Button>
+              <Button className='btn btn-search btn-sm' onClick={()=>setSearchCriteria("pharmacy")} style={{backgroundColor:searchCriteria==="pharmacy"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Pharmacy Name</Button>
+              <Button className='btn btn-search btn-sm' onClick={()=>setSearchCriteria("medicine")} style={{backgroundColor:searchCriteria==="medicine"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Medicine Name</Button>
+              <Button className='btn btn-search btn-sm' onClick={()=>setSearchCriteria("generic")} style={{backgroundColor:searchCriteria==="generic"?"#EB006F":"#3b6ce7",border:"none"}}>Medicine Generic Name</Button>
             </div>
             <div className="d-flex justify-content-center" style={{paddingBottom:"0px"}}>
               <Form className="search-input d-flex">
@@ -115,9 +115,9 @@ const PharmacyPage = () => {
                 />
                 <Button className="btn btn-search h-100">Search</Button>
               </Form>
-              <Button style={{marginLeft:"5px"}} onClick={()=>setShowMAP(!showMAP)}>Search By Location</Button>
+              <Button className='btn btn-search' style={{marginLeft:"5px"}} onClick={()=>setShowMAP(!showMAP)}>Search By Location</Button>
             </div>
-            <PharmacyArray id={id} pharmacies={filteredPharmacy}/>
+            <PharmacyArray id={user._id} pharmacies={filteredPharmacy}/>
           </div>
         </section>
       </div>

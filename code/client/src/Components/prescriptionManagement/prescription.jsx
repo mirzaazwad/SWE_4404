@@ -13,6 +13,8 @@ const Prescription = ({ currentUser }) => {
   const userId = JSON.parse(user)._id;
   const userToken=useToken();
   const handleSubmit = async(e) =>{
+    setImage(null);
+    setPrescriptionName("");
     e.preventDefault();
     console.log("paise");
     if (image) {
@@ -63,7 +65,7 @@ const Prescription = ({ currentUser }) => {
         <div className='d-flex justify-content-center'>
         <Form.Group className="mb-3 w-75" controlId="formBasicEmail">
           <Form.Label>Prescription Name: </Form.Label>
-          <Form.Control type="prescriptionName" placeholder="Enter name of your prescription" onChange={(e)=>setPrescriptionName(e.target.value)}/>
+          <Form.Control type="prescriptionName" placeholder="Enter name of your prescription" onChange={(e)=>setPrescriptionName(e.target.value)} required/>
         </Form.Group>
         </div>
         <div className='d-flex flex-column justify-content-center w-75 m-auto'>
@@ -75,7 +77,7 @@ const Prescription = ({ currentUser }) => {
           <Form.Control type="file" name="file"
                       accept="image/*"
                       id="imageFileProfile"
-                      onChange={(e) => setImage(e.target.files[0])}/>
+                      onChange={(e) => setImage(e.target.files[0])} required/>
         <Button className='btn btn-prescription-upload ms-2' type="submit">Upload</Button>
         </Form.Group>
         </div>
@@ -95,7 +97,7 @@ const Prescription = ({ currentUser }) => {
           <Card.Header className='prescription-card-header'></Card.Header>
           <Card.Body>
             <div className='d-flex justify-content-between'>
-          <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none"}}>
+          <Link to={`/viewPrescription/${prop1}/${prop2}/${prescription.name}`} className="card-link" key={prescription._id} style={{textDecoration:"none", color:"black"}}>
               <div>
               <Card.Title>Prescription Name: {prescription.name}</Card.Title>
             <Card.Text> Uploaded on: 

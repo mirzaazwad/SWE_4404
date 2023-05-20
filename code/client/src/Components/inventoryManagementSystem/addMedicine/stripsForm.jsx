@@ -5,39 +5,25 @@ import { Button, Form, InputGroup } from "react-bootstrap";
 import { Switch } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-const StripsForm = (props) => {
+const StripsForm = ({currentValue,user,onError,medicineType}) => {
   const navigate=useNavigate();
-  const _id=props._id;
-  const sellerId=props.sellerId;
-  const user = props.user;
-  const types=props.types;
-  const categories=props.categories;
-  const [medicineName, setMedicineName] = useState(props.currentValue.medicineName);
-  const [genericName, setGenericName] = useState(props.currentValue.genericName);
-  const [description, setDescription] = useState(props.currentValue.description);
-  const [stripsPerBox, setStripsPerBox] = useState(props.currentValue.stripsPerBox);
-  const [sellingPrice, setSellingPrice] = useState(props.currentValue.sellingPrice);
-  const [pcsPerStrip, setPcsPerStrip] = useState(props.currentValue.pcsPerStrip);
-  const [manufacturer, setManufacturer] = useState(props.currentValue.manufacturer);
-  const [purchasePrice, setPurchasePrice] = useState(props.currentValue.purchasePrice);
-  const [medicineType,setMedicineType]=useState(props.medicineType);
-  const [image,setImg]=useState(null);
-  const [imageURL,setImageURL] = useState(props.currentValue.imageURL);
-  const [prescription,setPrescription]=useState(props.currentValue.setPrescription);
+  const [medicineName, setMedicineName] = useState(currentValue.currentValue.medicineName);
+  const [genericName, setGenericName] = useState(currentValue.currentValue.genericName);
+  const [description, setDescription] = useState(currentValue.currentValue.description);
+  const [stripsPerBox, setStripsPerBox] = useState(currentValue.currentValue.stripsPerBox);
+  const [sellingPrice, setSellingPrice] = useState(currentValue.currentValue.sellingPrice);
+  const [pcsPerStrip, setPcsPerStrip] = useState(currentValue.currentValue.pcsPerStrip);
+  const [manufacturer, setManufacturer] = useState(currentValue.currentValue.manufacturer);
+  const [purchasePrice, setPurchasePrice] = useState(currentValue.currentValue.purchasePrice);
+  const [image,setImage]=useState(null);
+  const [imageURL,setImageURL] = useState(currentValue.currentValue.imageURL);
+  const [prescription,setPrescription]=useState(currentValue.currentValue.setPrescription);
   const [locked,isLocked]=useState(false);
-  const [medicineCategory, setMedicineCategory] = useState(null);
-
-  const setError=(error)=>{
-    props.onError(error);
-  }
-
-  useEffect(()=>{
-    setMedicineType(props.medicineType)
-  },[props])
+  const [medicineCategory, setMedicineCategory] = useState(currentValue.currentValue.medicineCategory);
 
   const handleMedicineType=(data)=>{
-    setMedicineType(data);
-    props.handleCurrentValue({
+    medicineType.setMedicineType(data);
+    currentValue.handleCurrentValue({
       medicineName:medicineName,
       genericName:genericName,
       description:description,
@@ -47,94 +33,46 @@ const StripsForm = (props) => {
       manufacturer:manufacturer,
       purchasePrice:purchasePrice,
       medicineCategory:medicineCategory,
-      pcsPerBox:props.currentValue.pcsPerBox,
+      pcsPerBox:currentValue.currentValue.pcsPerBox,
       imageURL:imageURL,
       prescription:prescription
     });
-    props.onHandleType(data);
-  }
-
-  const setImage=async(e)=>{
-    setImg(e);
-    if(e){
-      isLocked(true);
-      const formData = new FormData();
-        formData.append("file", e);
-        formData.append("upload_preset", "med_guard");
-        const dataRes = await axios.post(
-          "https://api.cloudinary.com/v1_1/dzerdaaku/image/upload",
-          formData
-        );
-      setImageURL(dataRes.data.url);
-      isLocked(false);
-    }
+    medicineType.onHandleType(data);
   }
 
   const handleSubmit = async(e) => {
     isLocked(true);
     e.preventDefault();
-    if (medicineType === null) {
-      setError("Medicine Type is required");
+    if (medicineType.medicineType === null) {
+      onError("Medicine Type is required");
       return;
     }
     if (medicineCategory === null) {
-      setError("Medicine Category is required");
+      onError("Medicine Category is required");
       return;
     }
-    await axios
-      .post(
-        "/api/profile/addMedicine/addNewGlobalMedicine",
-        {
-          MedicineName: medicineName,
-            GenericName: genericName,
-            Type: medicineType,
-            Category: medicineCategory,
-            StripsPerBox: stripsPerBox,
-            PcsPerStrip: pcsPerStrip,
-            Manufacturer: manufacturer,
-            SellingPrice: sellingPrice,
-            PurchasePrice: purchasePrice,
-            Description: description,
-            imageURL:imageURL,
-            prescription:prescription
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${user.token}`,
-            'idType':user.googleId?'google':'email',
-          },
-        }
-      )
-      .catch((err) => console.log(err));
-      await axios
-        .patch(
-          "/api/profile/addMedicine/addNewMedicine/" + sellerId,
-          {
-            MedicineName: medicineName,
-            GenericName: genericName,
-            Type: medicineType,
-            Category: medicineCategory,
-            StripsPerBox: stripsPerBox,
-            PcsPerStrip: pcsPerStrip,
-            Manufacturer: manufacturer,
-            SellingPrice: sellingPrice,
-            PurchasePrice: purchasePrice,
-            Description: description,
-            imageURL:imageURL,
-            prescription:prescription
-          },
-          {
-            headers: {
-              Authorization: `Bearer ${user.token}`,
-              'idType':user.googleId?'google':'email',
-            },
-          }
-        )
-        .then(() => {
-          return navigate("/inventoryManagementSystem/inventory/" + _id);
-        })
-        .catch((err) => console.log(err));
-        isLocked(false);
+    const medicineInformation={
+      MedicineName: medicineName,
+      GenericName: genericName,
+      Type: medicineType.medicineType,
+      Category: medicineCategory,
+      StripsPerBox: stripsPerBox,
+      PcsPerStrip: pcsPerStrip,
+      Manufacturer: manufacturer,
+      SellingPrice: sellingPrice,
+      PurchasePrice: purchasePrice,
+      Description: description,
+      prescription:prescription
+    }
+    if(image){
+      await user.addNewMedicine(medicineInformation,image);
+      isLocked(false);
+      navigate("/inventoryManagementSystem/inventory");
+    }
+    else{
+      isLocked(false);
+      onError("Image of medicine is required");
+    }
   };
 
   return (
@@ -151,14 +89,14 @@ const StripsForm = (props) => {
             <Form.Select
               aria-label="Select an option"
               placeholder="Select an option"
-              value={medicineType===null?"default":medicineType._id}
+              value={medicineType.medicineType===null?"default":medicineType.medicineType._id}
               onChange={(e) => {
-                handleMedicineType(types.find(element => element._id === e.target.value));
+                handleMedicineType(user.types.find(element => element._id === e.target.value));
               }}
             >
               <option value="default" key="default">Select an option</option>
-              {types.length !== 0 &&
-                types.map((medicines) => (
+              {user.types && user.types.length !== 0 &&
+                user.types.map((medicines) => (
                   <option value={medicines._id} key={medicines._id}>{medicines.Name}</option>
                 ))}
             </Form.Select>
@@ -173,11 +111,11 @@ const StripsForm = (props) => {
               aria-label="Select an option"
               placeholder="Select an option"
               value={medicineCategory===null?"default":medicineCategory._id}
-              onChange={(e) => setMedicineCategory(categories.find(element => element._id === e.target.value))}
+              onChange={(e) => setMedicineCategory(user.categories.find(element => element._id === e.target.value))}
             >
               <option value="default" key="default">Select an option</option>
-              {categories.length !== 0 &&
-                categories.map((category) => (
+              {user.categories && user.categories.length !== 0 &&
+                user.categories.map((category) => (
                   <option value={category._id} key={category._id}>{category.category}</option>
                 ))}
             </Form.Select>
@@ -359,7 +297,6 @@ const StripsForm = (props) => {
       <div className="d-flex justify-content-center">
         <Button
           className="btn btn-addMedicine w-25"
-          variant="primary"
           type="submit"
           disabled={locked}
         >

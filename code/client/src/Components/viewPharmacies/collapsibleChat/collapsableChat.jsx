@@ -157,19 +157,34 @@ const CollapsibleChat = (props) => {
         className="py-5"
         style={{
           width: "50vh",
-          position: "absolute",
+          position: "fixed",
           zIndex: "5",
-          marginRight: "0%",
-          marginTop: "0%",
+          marginRight: "2%",
+          marginBottom: "2%",
+          bottom: "2%",
+          right: "2%",
         }}
       >
-        <MDBBtn onClick={toggleShow} size="sm" block>
+        <MDBBtn onClick={toggleShow} size="sm" style={{
+          right: "2%",
+          position: "fixed",
+          zIndex: "5",
+          marginRight: "2%",
+          marginBottom: "2%",
+          bottom: "2%",
+          height: "10%",
+          width: "5%",
+          borderRadius: "50%",
+          backgroundColor: "#3F51B5",
+          color: "#FFFFFF",
+          boxShadow: "0px 0px 10px 0px rgba(0,0,0,0.5)",
+        }} block>
           <div class="d-flex">
           {notifications>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {notifications}
             </span>:""}
-            <span>Chat</span>
-            <ArrowDownCircle />
+            <span style={{color: "white"}}>Chat</span>
+            <ArrowDownCircle style={{color: "white"}} />
           </div>
         </MDBBtn>
         <MDBCollapse show={showShow} className="mt-3">
