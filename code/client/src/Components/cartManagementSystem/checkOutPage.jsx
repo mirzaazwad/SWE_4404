@@ -10,13 +10,13 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MapModal from '../partials/Map/map.jsx';
 import ErrorModal from '../partials/errorModal.jsx';
 
-const CheckOutPage = ({}) => {
+const CheckOutPage = () => {
   const user=useToken();
   const navigate=useNavigate();
   const locator=useLocation();
   const queryParams = new URLSearchParams(locator.search);
   const paymentStatus = queryParams.get('paymentStatus');
-  const {orderId} = useParams();
+  const orderId = queryParams.get('oid');
   const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
@@ -55,41 +55,45 @@ const CheckOutPage = ({}) => {
     }
   },[paymentStatus,orderId,pharmacyId])
 
-  
-
-
   useEffect(() => {
-    const retrieveUser=async ()=>{
-      await axios.get('/api/profile/user/getUser/'+user._id,{
-        headers:{'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'}
-      }).then((result)=>{
+    const retrieveUser = async () => {
+      await axios.get('/api/profile/buyer/' + user._id, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
         setLocation(result.data.coordinates);
         setAddress(result.data.address);
         setFullName(result.data.username);
         setCustomerNumber(result.data.phone);
         setCustomerEmail(result.data.email);
-      })
-    }
-    retrieveUser();
-    const retreieveOrder = async ()=>{
-      await axios.get(`/api/order/getOrderDetails/${userId}/${orderId}`,{
-        headers:{'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'}
-      }).then((result)=>{
+      });
+    };
+  
+    const retreieveOrder = async () => {
+      await axios.get(`/api/order/getOrderDetails/${userId}/${orderId}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
         const { order } = result.data;
-      setItems(order.medicines);
-      setPharmacyManagerID(order.customer_data.pharmacyManagerID);
-      })
-    }
+        setItems(order.medicines);
+        setPharmacyManagerID(order.customer_data.pharmacyManagerID);
+  
+        let price = 0;
+        order.medicines.forEach(item => {
+          price += item.price;
+        });
+        setTotalPrice(price);
+      });
+    };
+  
+    retrieveUser();
     retreieveOrder();
-    let price = 0;
-    items.forEach(item => {
-      price += item.price;
-    });
-    setTotalPrice(price);
-
   }, [customerEmail]);
+  
 
   // useEffect(()=>{
   //   if(items.length===0){
@@ -98,8 +102,9 @@ const CheckOutPage = ({}) => {
   // },[items])
 
   const handleCheckOut = async (e) => {
+    e.preventDefault();
     setDisabled(true);
-    const response =  axios.patch(`http://localhost:4000/api/order/billingOrder/${userId}/${orderId}`, {
+    const response = await axios.patch(`http://localhost:4000/api/order/billingOrder/${userId}/${orderId}`, {
       customer_data: {
         email:customerEmail,
         phone:customerPhoneNumber,
@@ -113,10 +118,14 @@ const CheckOutPage = ({}) => {
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
-    }).then(async (result)=>{
-    });
-    navigate('/myOrders');
-    
+    }).then( result=>result.data)
+    .catch(()=>window.location.href='/error500');
+    if(response.type==='cash'){
+      navigate('/myOrders');
+    }
+    else{
+      window.location.replace(response.url);
+    }
   };
 
 

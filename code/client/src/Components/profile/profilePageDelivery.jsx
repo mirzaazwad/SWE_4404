@@ -16,18 +16,19 @@ const  ProfilePageForDelivery = () => {
   useEffect(() => {
     const fetchUserInformation = async () => {
       const delivery = new deliveryUser(user._id, user.token, user.googleId);
-      console.log(delivery);
       await delivery.retrieveUserInformation();
       setDelivery(delivery);
       setIsLoading(false);
     };
-    fetchUserInformation();
-  }, [user]);
+    if(user){
+      fetchUserInformation();
+    }
+  }, [user.googleId]);
 
     if(!isLoading){
       return (     
         <div>
-          <NavbarDelivery user={user}/>
+          <NavbarDelivery/>
           <section>
           <div className="container h-100">
             <div className="pt-5">

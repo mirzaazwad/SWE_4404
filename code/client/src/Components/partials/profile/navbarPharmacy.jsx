@@ -46,7 +46,7 @@ const NavbarPharmacy=() =>{
   return (
     <Navbar className='customNavbar fixed-top ' variant="dark" expand="lg">
       <Container fluid className='navbarContents px-0 px-lg-5 d-flex justify-content-between' >
-        <Navbar.Brand className='px-2'  href={`/profileSeller/${user._id}`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
+        <Navbar.Brand className='px-2'  href={`/profileSeller`}  style={{fontsize: '400px'}}>M e d G u a r d</Navbar.Brand>
         <Navbar.Toggle className='px-2' aria-controls="navbarScroll" />
         
         
@@ -56,7 +56,6 @@ const NavbarPharmacy=() =>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1" >Home</Nav.Link>
             <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
             <Nav.Link href={`/inventoryManagementSystem/inventory`}>Inventory</Nav.Link>
             <Nav.Link href={`/incomingOrders`}>Orders
@@ -64,7 +63,7 @@ const NavbarPharmacy=() =>{
             {orderMessages}
             </span>:""}
             </Nav.Link>
-            <Nav.Link href=""  >Accounts</Nav.Link>
+            <Nav.Link href="/account"  >Accounts</Nav.Link>
             <Nav.Link href={`/profileSeller/chats`}  >Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}

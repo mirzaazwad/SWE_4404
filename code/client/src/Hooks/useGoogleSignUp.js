@@ -3,10 +3,12 @@ import axios from "axios";
 import { useState } from "react";
 import { LOGIN } from "../Contexts/action";
 import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 export const useGoogleSignUp = (userType) =>{
   const [error,setError] = useState(null);
   const [isLoading, setisLoading] = useState(null);
+  const navigate=useNavigate();
   const dispatch = useDispatch();
   const googleSignUp=useGoogleLogin({
     onSuccess: async ({ code }) => {
@@ -19,6 +21,18 @@ export const useGoogleSignUp = (userType) =>{
         console.log(user);
         dispatch(LOGIN({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
         localStorage.setItem('user',JSON.stringify({_id:user._id,userType:user.userType,token:user.token,verified:user.verified,googleId:user.googleId}));
+        if(user.userType==="seller"){
+          navigate('/profileSeller');
+        }
+        else if(user.userType==="buyer"){
+          navigate('/profileBuyer');
+        }
+        else if(user.userType==="delivery"){
+          navigate('/profileDelivery');
+        }
+        else{
+          navigate('/');
+        }
         setisLoading(false);
       }).catch(()=>{
         setError("Google Sign Up Failed");
