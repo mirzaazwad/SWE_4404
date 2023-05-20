@@ -55,41 +55,45 @@ const CheckOutPage = () => {
     }
   },[paymentStatus,orderId,pharmacyId])
 
-  
-
-
   useEffect(() => {
-    const retrieveUser=async ()=>{
-      await axios.get('/api/profile/buyer/'+user._id,{
-        headers:{'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'}
-      }).then((result)=>{
+    const retrieveUser = async () => {
+      await axios.get('/api/profile/buyer/' + user._id, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
         setLocation(result.data.coordinates);
         setAddress(result.data.address);
         setFullName(result.data.username);
         setCustomerNumber(result.data.phone);
         setCustomerEmail(result.data.email);
-      })
-    }
-    retrieveUser();
-    const retreieveOrder = async ()=>{
-      await axios.get(`/api/order/getOrderDetails/${userId}/${orderId}`,{
-        headers:{'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'}
-      }).then((result)=>{
+      });
+    };
+  
+    const retreieveOrder = async () => {
+      await axios.get(`/api/order/getOrderDetails/${userId}/${orderId}`, {
+        headers: {
+          'Authorization': `Bearer ${user.token}`,
+          'idType': user.googleId ? 'google' : 'email'
+        }
+      }).then((result) => {
         const { order } = result.data;
-      setItems(order.medicines);
-      setPharmacyManagerID(order.customer_data.pharmacyManagerID);
-      })
-    }
+        setItems(order.medicines);
+        setPharmacyManagerID(order.customer_data.pharmacyManagerID);
+  
+        let price = 0;
+        order.medicines.forEach(item => {
+          price += item.price;
+        });
+        setTotalPrice(price);
+      });
+    };
+  
+    retrieveUser();
     retreieveOrder();
-    let price = 0;
-    items.forEach(item => {
-      price += item.price;
-    });
-    setTotalPrice(price);
-
   }, [customerEmail]);
+  
 
   // useEffect(()=>{
   //   if(items.length===0){
