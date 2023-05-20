@@ -1,57 +1,37 @@
-const userModel = require("../model/user");
-const tokenModel = require("../model/token");
+const emailVerification = require("../model/email-verification");
+const smtp=require('../Library/smtp');
+const user=require('../Library/userByEmail');
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
-const nodemailer = require("nodemailer");
-const bcrypt = require("bcryptjs");
+const buyerModel=require('../model/buyer');
+const sellerModel=require('../model/seller');
+const deliveryModel=require('../model/delivery');
 
 const createToken = (_id) => {
   return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "2d" });
 };
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  secure: false,
-  auth: {
-    user: process.env.SMTP_LOGIN,
-    pass: process.env.SMTP_PASSWORD,
-  },
-});
-
-const generateMailAndOTP = async (email) => {
-  let OTP = Math.floor(100000 + Math.random() * 900000).toString();
-  await tokenModel.addRecord(email, OTP);
-  const mailOptions = {
-    from: 'mirzaazwad23931@gmail.com',
-    to: email,
-    subject: "Your OTP for verification",
-    text: `Your OTP is ${OTP}`,
-  };
-  return mailOptions;
-};
-
-const sendVerificationMail = async(email) => {
-  const mailOptions = await generateMailAndOTP(email);
-  transporter.sendMail(mailOptions, function (error, info) {
-    console.log(info);
-    if (error) {
-      throw Error('SMTP Client Error');
-    }
-  });
-};
-
 const signUpUser = async (req, res) => {
-  const { userType, username, email, password,verified } = req.body;
+  const { userType, username, email, password } = req.body;
   try {
-    const user = await userModel.signUp(userType, username, email, password,verified);
-    const _id = user.user._id;
-    const token = createToken(_id);
-    if ("buyer" in user) {
-      res.status(200).json({ _id, userType: "buyer",token:token });
-    } else {
-      res.status(200).json({ _id, userType: "seller",token:token });
+    let result={};
+    if(userType==="buyer"){
+      const buyer=await buyerModel.signup(username, email, password);
+      result={ _id:buyer._id, userType: "buyer" };
     }
+    else if(userType==="seller"){
+      const seller=await sellerModel.signup(username, email, password);
+      console.log(seller);
+      result={_id:seller. _id, userType: "seller" };
+    }
+    else{
+      const delivery=await deliveryModel.signup(username, email, password);
+      result={ delivery:delivery._id, userType: "delivery"};
+    }
+    result.token = createToken(result._id);
+    console.log(result);
+    return res.status(200).json(result);
+
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -60,15 +40,12 @@ const signUpUser = async (req, res) => {
 const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await userModel.login(email, password);
-    const _id = user.user._id;
-    const token = createToken(_id);
-    if ("buyer" in user) {
-      res.status(200).json({ _id, userType: "buyer", token ,verified:user.user.verified});
-    } else {
-      res.status(200).json({ _id, userType: "seller", token ,verified:user.user.verified});
-    }
+    const userObject=new user(email);
+    const result=await userObject.login(password);
+    const token = createToken(result._id);
+    return res.status(200).json({ _id:result._id, userType: result.userType,verified:result.verified,token:token});
   } catch (err) {
+    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };
@@ -76,8 +53,8 @@ const loginUser = async (req, res) => {
 const forgot = async (req, res) => {
   const { email } = req.params;
   try {
-    const user = await userModel.getEmail(email);
-    const result= await sendVerificationMail(user.email);
+    await (new user(email)).findByEmail();
+    const result=await (new smtp(email)).sendVerificationMail();
     res.status(200).json(result);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -87,20 +64,23 @@ const forgot = async (req, res) => {
 const verifyEmail = async(req,res) =>{
   const {email}=req.params;
   try{
-    const result =await sendVerificationMail(email);
-    const token=createToken(email);
-    res.status(200).json({result,success:true,token:token});
+    const userObject=new user(email);
+    const mailer=new smtp(email);
+    await mailer.generateMail();
+    await mailer.sendVerificationMail();
+    const result=await userObject.findByEmail();
+    console.log(result);
+    res.status(200).json({result,success:true});
   }
   catch(error){
     res.status(400).json({error:error.message});
   }
-
 }
 
 const verifyOTP = async(req,res) =>{
   const {email,OTP}=req.body;
   try{
-    const result=await tokenModel.verifyOTP(email,OTP);
+    await emailVerification.verifyOTP(email,OTP);
     res.status(200).json({success:true});
   }
   catch(error){
@@ -111,11 +91,9 @@ const verifyOTP = async(req,res) =>{
 const verifySignUpInformation = async(req,res) =>{
   const {email} = req.params;
   try{
-    console.log(email);
-    const result=await userModel.findOneAndUpdate({email},{
-      ...req.body
-    })
-    return res.status(200).json({result});
+    const userObject=new user(email);
+    const result=await userObject.verifyEmail(req.body.verified);
+    return res.status(200).json(await userObject.findByEmail());
   }
   catch(error){
     return res.status(400).json({error:error.message});
@@ -125,7 +103,7 @@ const verifySignUpInformation = async(req,res) =>{
 const deleteOTP = async(req,res) =>{
   const {email}=req.params;
   try{
-    const result=await tokenModel.findOneAndDelete({email},{ "sort": { "_id": -1 } });
+    await emailVerification.findOneAndDelete({email},{ "sort": { "_id": -1 } });
     res.status(200).json({success:true});
   }
   catch(err){
@@ -137,14 +115,7 @@ const updatePassword = async(req,res)=>{
   const {email}=req.params;
   try{
     const password=req.body.password;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const result=await userModel.findOneAndUpdate({email},{
-      password:hashedPassword
-    }).catch((err)=>{
-      console.log(err);
-      throw Error('Password could not be updated')
-    })
+    const result=await (new user(email)).updatePassword(password);
     res.status(200).json({result,success:true});
   }
   catch(err){
