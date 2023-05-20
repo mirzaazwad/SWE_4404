@@ -58,14 +58,14 @@ const NavbarPharmacy=() =>{
           >
             <Nav.Link href="#action1" >Home</Nav.Link>
             <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
-            <Nav.Link href={`/inventoryManagementSystem/inventory`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Inventory</Nav.Link>
-            <Nav.Link href={`/incomingOrders`} disabled={user.pharmacy===null || user.phone===null || user.address===null || user.username===null || user.phone==="" || user.address==="" || user.username==="" || user.pharmacy===""}>Orders
+            <Nav.Link href={`/inventoryManagementSystem/inventory`}>Inventory</Nav.Link>
+            <Nav.Link href={`/incomingOrders`}>Orders
             {orderMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {orderMessages}
             </span>:""}
             </Nav.Link>
             <Nav.Link href=""  >Accounts</Nav.Link>
-            <Nav.Link href={`/profileSeller/chats/${user._id}`}  >Chats
+            <Nav.Link href={`/profileSeller/chats`}  >Chats
             {chatMessages>0?<span style={{verticalAlign:"super",display:"inline-block",lineHeight:"12px",textAlign:"center",fontSize:"12px",width:"12px",height:"12px",color:"#FFFFFF",backgroundColor:"red",borderRadius:"50%"}}> 
             {chatMessages}
             </span>:""}

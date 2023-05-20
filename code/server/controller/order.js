@@ -2,7 +2,7 @@ const Order = require('../model/order');
 const Pharmacy = require('../model/seller');
 const { MakePayment } = require('../Library/ssl-commerz-make-payment');
 
-const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescriptionBasedOrder)=>{
+const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescription_image)=>{
   order.order_data.push({
     date: new Date(),
     medicines: items,
@@ -106,9 +106,7 @@ const postOrder = async (req, res) => {
     let order = await Order.findOne({
       userId: userId
     });
-    const pharmacy = await Pharmacy.findOne({
-      _id: req.body.customer_data.pharmacyManagerID
-    });
+    const pharmacy = await Pharmacy.findById(req.body.customer_data.pharmacyManagerID);
     
     if (order) {
       order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescription_image);
