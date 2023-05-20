@@ -10,13 +10,13 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MapModal from '../partials/Map/map.jsx';
 import ErrorModal from '../partials/errorModal.jsx';
 
-const CheckOutPage = ({}) => {
+const CheckOutPage = () => {
   const user=useToken();
   const navigate=useNavigate();
   const locator=useLocation();
   const queryParams = new URLSearchParams(locator.search);
   const paymentStatus = queryParams.get('paymentStatus');
-  const {orderId} = useParams();
+  const orderId = queryParams.get('oid');
   const pharmacyId=queryParams.get('pid');
   const userId=user._id;
   const [customerEmail,setCustomerEmail]=useState("");
@@ -60,7 +60,7 @@ const CheckOutPage = ({}) => {
 
   useEffect(() => {
     const retrieveUser=async ()=>{
-      await axios.get('/api/profile/user/getUser/'+user._id,{
+      await axios.get('/api/profile/buyer/'+user._id,{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       }).then((result)=>{
@@ -98,8 +98,9 @@ const CheckOutPage = ({}) => {
   // },[items])
 
   const handleCheckOut = async (e) => {
+    e.preventDefault();
     setDisabled(true);
-    const response =  axios.patch(`http://localhost:4000/api/order/billingOrder/${userId}/${orderId}`, {
+    const response = await axios.patch(`http://localhost:4000/api/order/billingOrder/${userId}/${orderId}`, {
       customer_data: {
         email:customerEmail,
         phone:customerPhoneNumber,
@@ -113,10 +114,14 @@ const CheckOutPage = ({}) => {
     },{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
-    }).then(async (result)=>{
-    });
-    navigate('/myOrders');
-    
+    }).then( result=>result.data)
+    .catch(()=>window.location.href='/error500');
+    if(response.type==='cash'){
+      navigate('/myOrders');
+    }
+    else{
+      window.location.replace(response.url);
+    }
   };
 
 

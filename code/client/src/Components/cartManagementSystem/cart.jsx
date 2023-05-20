@@ -30,7 +30,7 @@ export default function Cart() {
   const [disabled,setDisabled]=useState(false);
   useEffect(() => {
     const retrieveUser=async ()=>{
-      await axios.get('/api/profile/user/getUser/'+userId,{
+      await axios.get('/api/profile/buyer/'+userId,{
         headers:{'Authorization': `Bearer ${user.token}`,
         'idType':user.googleId?'google':'email'}
       }).then((result)=>{
