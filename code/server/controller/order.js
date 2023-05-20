@@ -2,7 +2,7 @@ const Order = require('../model/order');
 const Pharmacy = require('../model/pharmacy');
 const { MakePayment } = require('../Library/ssl-commerz-make-payment');
 
-const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,prescription_image)=>{
+const updateExistingCustomerOrder = async(userId,order,pharmacy,items,customer_data,prescription_image)=>{
   order.order_data.push({
     date: new Date(),
     medicines: items,
@@ -10,6 +10,7 @@ const updateExistingCustomerOrder = async(order,pharmacy,items,customer_data,pre
     prescription_image: prescription_image,
   });
   await order.save();
+
   pharmacy.Orders.push({
     _id : order.order_data[order.order_data.length-1]._id,
     date: new Date(),
@@ -110,7 +111,7 @@ const postOrder = async (req, res) => {
     });
     
     if (order) {
-      order=await updateExistingCustomerOrder(order,pharmacy,items,customer_data,prescription_image);
+      order=await updateExistingCustomerOrder(userId,order,pharmacy,items,customer_data,prescription_image);
       console.log("order updated");
     } else {
       
@@ -179,11 +180,62 @@ const getOrderDetails = async (req, res) => {
   }
 };
 
+const approveOrder = async (req, res) => {
+  const { userId, orderId } = req.params;
+
+  try {
+
+    const pharmacy = await Pharmacy.findOne({ pharmacyManagerID: userId });
+
+    if (!pharmacy) {
+      return res.status(404).json({ message: "Pharmacy not found" });
+    }
+
+    // Find the order in the pharmacy's Orders array
+    const pharmacyOrder = pharmacy.Orders.find((order) => order._id.toString() === orderId);
+
+    if (!pharmacyOrder) {
+      return res.status(404).json({ message: "Order not found in the pharmacy" });
+    }
+
+    // Update the status of the order in the pharmacy model
+    pharmacyOrder.status = "Approved";
+    const id = pharmacyOrder.medicines[0].id;
+
+    // Save the updated pharmacy
+    await pharmacy.save();
+
+    // Find the order in the orders model
+    const order = await Order.findOne({ userId: id, "order_data._id": orderId });
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    // Update the status of the order in the orders model
+    order.order_data.forEach((orderData) => {
+      if (orderData._id.toString() === orderId) {
+        orderData.status = "Approved";
+      }
+    });
+
+    // Save the updated order in the orders model
+    await order.save();
+
+    // Find the pharmacy based on the pharmacyManagerID
+   
+    res.status(200).json({ message: "Order approved successfully" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server Error" });
+  }
+};
+
 
 
 module.exports = {
   postOrder,
   getOrder,
   getOrderDetails,
-  billingOrder
+  billingOrder,approveOrder
 };
