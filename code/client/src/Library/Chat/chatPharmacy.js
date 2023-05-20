@@ -2,6 +2,7 @@ import axios from "axios";
 import pharmacyManager from "../User/pharmacy-manager";
 import TimeElapsed from "../CustomDateTimeLibrary/TimeElapsed";
 import io from "socket.io-client";
+import CustomDateString from "../CustomDateTimeLibrary/CustomDateString";
 
 class chatPharmacy extends pharmacyManager{
   constructor(_id,token,googleId){
@@ -104,6 +105,24 @@ class chatPharmacy extends pharmacyManager{
         window.location.href = "/error500";
       });
       this.notificationMap.set(sent,this.messageCount);
+  }
+
+  async sendMessage(msg){
+      const message={
+        senderID: this.currentSender.senderID,
+        receiverID: this._id,
+        SentTime: new CustomDateString(new Date()).getDateString(),
+        messageContent: msg
+      }
+      this.socket.emit("send_message", message);
+      msg.readStatus = "sender";
+      await axios.post("/api/profile/chat/send", message, {
+        headers: {
+          Authorization: `Bearer ${this.token}`,
+          'idType':this.googleId?'google':'email',
+        },
+      });
+      this.message.push(message);
   }
 
 

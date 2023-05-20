@@ -66,7 +66,7 @@ const OrderCard = ({ order }) => {
             </Button>
            
             {order.status === 'Approved' && (
-            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/checkOutPage/${order._id}`} style={{ float: 'right' }}>
+            <Button className="btn btn-sm btn-viewDetails mx-2" href={`/checkOutPage?oid=${order._id}`} style={{ float: 'right' }}>
               Go to billing page
             </Button>
           )}

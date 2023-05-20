@@ -28,10 +28,10 @@ const commenceDigitalPayment = async(customer_data,orderID)=>{
   try{
     const makePayment=new MakePayment(customer_data,orderID,'BDT');
     const result=await makePayment.makePaymentRequest();
-    return {paymentSuccessful:true,url:result};
+    return {paymentSuccessful:true,url:result,type:'digital'};
   }
   catch(error){
-    return {paymentSuccessful:false,url:result};
+    return {paymentSuccessful:false,url:result,type:'digital'};
   }
 }
 

@@ -56,7 +56,6 @@ const NavbarPharmacy=() =>{
             style={{ maxHeight: '150px' }}
             navbarScroll
           >
-            <Nav.Link href="#action1" >Home</Nav.Link>
             <Nav.Link href={`/profileSeller`}>Profile</Nav.Link>
             <Nav.Link href={`/inventoryManagementSystem/inventory`}>Inventory</Nav.Link>
             <Nav.Link href={`/incomingOrders`}>Orders
