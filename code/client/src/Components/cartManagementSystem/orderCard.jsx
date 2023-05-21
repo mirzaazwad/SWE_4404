@@ -25,9 +25,9 @@ const OrderCard = ({ order }) => {
       setStatusColor('secondary');
       setStatus('In progress');
     }
-    else if (order.status === 'Delivered') {
+    else if (order.status === 'Delivering') {
       setStatusColor('success');
-      setStatus('Delivered');
+      setStatus('Delivering');
     } else if (order.status === 'Cancelled') {
       setStatusColor('danger');
       setStatus('Cancelled');

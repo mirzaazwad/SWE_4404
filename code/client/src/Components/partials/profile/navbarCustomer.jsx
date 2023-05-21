@@ -12,7 +12,7 @@ import '../../../index.css';
 import Modal from '../Modal';
 import Cart from '../../cartManagementSystem/cart';
 
-const NavbarCustomer=({user})=>{
+const NavbarCustomer=()=>{
   const {logout} = useLogout();
   const[cartView, setCartView] = useState(false);
   const cart = useSelector(state => state.cartState);

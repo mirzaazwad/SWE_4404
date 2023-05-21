@@ -10,5 +10,6 @@ router.get('/:id',delivery.getDeliveryById);
 router.patch('/:id',delivery.patchDeliveryById);
 router.get('/ongoing/:id',ongoing.onGoingDeliveries);
 router.get('/history/:id',history.deliveryHistory);
+router.get('/getdelivery/:id',delivery.getDeliveryByOrderID);
 
 module.exports = router;

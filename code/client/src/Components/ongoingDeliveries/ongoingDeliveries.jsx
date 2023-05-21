@@ -5,12 +5,13 @@ import MapDelivery from "./Map/mapCard";
 import Loader from "../partials/loader";
 import axios from "axios";
 import DeliveryArray from "./deliveryArray";
-import { Cpu } from "react-bootstrap-icons";
+import CollapsibleChat from '../viewPharmacies/collapsibleChat/collapsableChat';
 
 const OngoingDeliveries = () => {
   const user = useToken();
   const [location, setLocation] = useState(null);
   const [orders, setOrders] = useState(null);
+  const [routeLocation,setRouteLocation]=useState(null);
 
   useEffect(() => {
     const getUserLocation = () => {
@@ -57,9 +58,18 @@ const OngoingDeliveries = () => {
             location={location}
             setLocation={setLocation}
             orders={orders}
+            routeLocation={routeLocation}
           />
         </div>
-        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>
+        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user} setRouteLocation={setRouteLocation}/>
+        <div className="chatOption" style={{display:'flex'}}>
+          <div className="deliveryChat" style={{width:'50%'}}>
+          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
+          </div>
+          <div className="deliveryChatFixing" style={{width:'50%'}}>
+          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
+          </div>
+          </div>
       </div>
     );
   } else {

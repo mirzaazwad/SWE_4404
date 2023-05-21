@@ -8,7 +8,7 @@ const MapDelivery = ({location,setLocation,orders}) => {
     googleMapsApiKey: process.env.REACT_APP_GMPKEY,
     libraries,
   });
-  if (!isLoaded) {
+  if (!isLoaded || location===null || location===undefined) {
     return (<Loading></Loading>)
   } 
   else{
