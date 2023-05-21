@@ -59,7 +59,7 @@ const MedicineDetails = () => {
       let pcsPrice = 0,
         stripsPrice = 0,
         boxesPrice = 0;
-      if (medicine.Stock.Strips != null) {
+      if (medicine?.Stock?.Strips) {
         pcsPrice =
           (medicine.SellingPrice * quantityPcs) /
           (medicine.PcsPerStrip * medicine.StripsPerBox);
@@ -73,8 +73,10 @@ const MedicineDetails = () => {
       var totalPrice = pcsPrice + stripsPrice + boxesPrice;
       var truncatedPrice = Math.round(totalPrice);
       setPrice(truncatedPrice);
-
-      setLoaded(true);
+      if(medicine?.Stock)
+      {
+        setLoaded(true);
+      }
     };
 
     calculatePrice();
