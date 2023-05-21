@@ -25,7 +25,7 @@ const  ProfilePageForCustomers = () => {
     if(!isLoading){
       return (     
         <div>
-          <NavbarCustomer user={user}/>
+          <NavbarCustomer/>
           <section>
           <div className="container h-100">
             <div className="pt-5">
