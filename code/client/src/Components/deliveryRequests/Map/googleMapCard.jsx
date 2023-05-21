@@ -7,12 +7,17 @@ const MapCard = (props)=>{
   const center = useMemo(() => (props.currentLocation!==null?props.currentLocation:{lat:null,lng:null}), [props.currentLocation]);
   const [markerPosition, setMarkerPosition] = useState(center);
   const [error,setError]=useState("");
-  const [isValid,setIsValid]=useState(false);
   const [directions,setDirections]=useState(null);
 
   useEffect(()=>{
     setMarkerPosition(props.currentLocation);
   },[props.currentLocation])
+
+  useEffect(()=>{
+    if(props.currentLocation!==null && props.currentLocation!==undefined && props.routeLocation!==null && props.routeLocation!==undefined){
+      calculateRoute(props.currentLocation,props.routeLocation);
+    }
+  },[props.routeLocation])
 
 
   const iconStyle = {

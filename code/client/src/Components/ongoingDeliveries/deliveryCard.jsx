@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-const DeliveryCard = ({ order,user }) => {
+const DeliveryCard = ({ order,user,setRouteLocation }) => {
   const [error,setError]=useState("");
   const navigate=useNavigate();
   const handleOrder = async (e) => {
@@ -47,6 +47,12 @@ const DeliveryCard = ({ order,user }) => {
           </Button>
           <Button className="btn btn-danger" style={{ marginLeft: "1%" }}>
             Failed
+          </Button>
+          <Button className="btn btn-danger" style={{ marginLeft: "1%" }} onClick={()=>{
+            console.log(order.coordinates);
+            setRouteLocation(order.coordinates)
+          }}>
+            Show Route
           </Button>
         </Card.Footer>
       </Card>

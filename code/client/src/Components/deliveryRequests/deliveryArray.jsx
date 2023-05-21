@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import DeliveryCard from "./deliveryCard";
 import Pagination from "react-bootstrap/Pagination";
 
-const DeliveryArray = ({orders,location,setOrders,user}) => {
+const DeliveryArray = ({orders,location,setOrders,user,setRouteLocation}) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [ordersPerPage] = useState(3);
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -40,7 +40,7 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
       width: "50%",
     }}>
           {currentOrders.map((order,index) => (
-            <DeliveryCard order={order} user={user} setOrders={setOrders} orders={orders} index={index}/>
+            order.Orders.length>0 && (<DeliveryCard order={order} user={user} setOrders={setOrders} orders={orders} index={index} setRouteLocation={setRouteLocation}/>)
           ))}
           {orders.length > ordersPerPage && (
             <Pagination className="m-auto py-3">
