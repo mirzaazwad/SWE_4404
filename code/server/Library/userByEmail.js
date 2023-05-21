@@ -77,16 +77,34 @@ class user{
     const user=await this.findByEmail();
     let result={};
     if(user instanceof buyerModel){
-      result=await buyerModel.login(this.email,password);
+      try{
+        result=await buyerModel.login(this.email,password);
+      }
+      catch(error){
+        throw Error('User is not in database')
+      }
       return {...result,userType:'buyer'};
     }
     else if(user instanceof sellerModel){
-      result=await sellerModel.login(this.email,password);
+      try{
+        result=await sellerModel.login(this.email,password);
+      }
+      catch(error){
+        throw Error('User is not in database')
+      }
       return {...result,userType:'seller'};
     }
-    else{
-      result=await deliveryModel.login(this.email,password);
+    else if(user instanceof sellerModel){
+      try{
+        result=await deliveryModel.login(this.email,password);
+      }
+      catch(error){
+        throw Error('User is not in database')
+      }
       return {...result,userType:'delivery'};
+    }
+    else{
+      throw Error('User not in database');
     }
   }
 

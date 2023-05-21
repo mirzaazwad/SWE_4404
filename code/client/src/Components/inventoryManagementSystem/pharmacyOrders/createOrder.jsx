@@ -111,7 +111,11 @@ const CreateOrder = () => {
           Authorization: `Bearer ${user.token}`,
           idType: user.googleId ? 'google' : 'email',
         },
-      });
+      }).then((result)=>{
+        console.log(result);
+      }).catch(error=>{
+        console.log(error);
+      })
       // Handle any additional logic or UI updates after order approval
     } catch (error) {
       console.error(error);
@@ -129,12 +133,12 @@ const CreateOrder = () => {
             idType: user.googleId ? 'google' : 'email',
           },
         }
-      );
+      ).then(async(result)=>{
+        await handleOrderApproval();
+        navigate(`../`);
+        return result;
+      }).catch((error)=>console.log(error));
       console.log(response);
-  
-      // The axios request is completed, now proceed with handleOrderApproval() and navigation
-      handleOrderApproval();
-      navigate(`/getOrderDetails/${user._id}/${orderId}`);
       // Handle any additional logic or UI updates after order approval
     } catch (error) {
       console.error(error);

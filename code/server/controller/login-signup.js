@@ -45,7 +45,6 @@ const loginUser = async (req, res) => {
     const token = createToken(result._id);
     return res.status(200).json({ _id:result._id, userType: result.userType,verified:result.verified,token:token});
   } catch (err) {
-    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };

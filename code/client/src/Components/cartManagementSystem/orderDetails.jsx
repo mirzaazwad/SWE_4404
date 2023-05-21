@@ -6,6 +6,7 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import {Table} from 'react-bootstrap';
 import { useToken } from "../../Hooks/useToken";
 import Loader from "../partials/loader";
+import DeliveryManInformation from "./deliveryComponent";
 const OrderDetailsCard = () => {
   const user=useToken();
   const { userId, orderId } = useParams();
@@ -44,6 +45,7 @@ if(!loader){
           <NavbarCustomer />
         </div>
         <div>
+        {(order.status==="Delivering" && (<DeliveryManInformation  user={user} orderID={orderId}/>))||(order.status==="Delivered" && (<DeliveryManInformation  user={user} orderID={orderId}/>))}
         <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
@@ -145,6 +147,7 @@ if(!loader){
       </Card.Body>
     </Card>
         </div>
+        <DeliveryManInformation user={user} orderID={orderId}/>
     </div>
     );
   }
