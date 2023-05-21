@@ -12,6 +12,7 @@ import ViewPrescription from "./Components/prescriptionManagement/viewPrescripti
 import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
 import Error404 from "./Components/errors/error404";
 
+
 const CustomerRoutes = () => {
   return (
     <Routes>
@@ -42,7 +43,10 @@ const CustomerRoutes = () => {
         path="/viewPrescription/:prop1/:prop2/:prop3"
         element={<ViewPrescription />}
       />
+      
       <Route path="*" element={<Error404/>}></Route>
+      <Route path="*" element={<Error404/>}></Route>
+      
     </Routes>
   );
 };
