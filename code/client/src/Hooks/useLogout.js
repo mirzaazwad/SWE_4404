@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { LOGOUT } from "../Contexts/action";
-import { useNavigate } from "react-router-dom";
+import { redirect, useNavigate } from "react-router-dom";
 
 export const useLogout = () =>{
   const dispatch = useDispatch();
@@ -8,9 +8,7 @@ export const useLogout = () =>{
   const logout = () =>{
     localStorage.removeItem('user');
     dispatch(LOGOUT());
-    navigate('/');
-    window.location.reload();
-    return;
+    return redirect('/');
   }
 
   return {logout};
