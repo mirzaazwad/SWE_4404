@@ -32,10 +32,17 @@ import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
 import DeliveryRequest from "./Components/deliveryRequests/deliveryRequest";
 import OngoingDeliveries from "./Components/ongoingDeliveries/ongoingDeliveries";
 import DeliveryHistory from "./Components/deliveryHistory/deliveryRequest";
+import { useDispatch, useSelector } from "react-redux";
+import { LOGIN } from "./Contexts/action";
 
 
 const App = () => {
-  const user = useToken();
+  let user = useSelector((state) => state.userState.user);
+  const dispatch = useDispatch();
+  if (user === null) {
+    user = JSON.parse(localStorage.getItem("user"));
+    dispatch(LOGIN(user));
+  }
   return (
     <Router>
       <div className="App">
@@ -45,26 +52,15 @@ const App = () => {
               exact
               path="/"
               element={
-                !user ? (
-                  <Landing data={"login"} />
-                ) : (user.userType!=="seller" && user.userType!=="delivery") ? (
-                  <Navigate to={"/profileBuyer/"} />
-                ) : (
-                  <Navigate to={"/profileSeller/"} />
-                )
-              }
-            />
+                !user ? (<Landing data={"login"} />) : user.userType==="buyer" ? (<Navigate to={"/profileBuyer/"} />) : user.userType==="seller" ?(<Navigate to={"/profileSeller/"} />):(<Navigate to={"/profileDelivery/"} />)
+              } />
             <Route
               exact
               path="/signup"
               element={
                 !user ? (
                   <Landing data={"signup"} />
-                ) : (user.userType!=="seller" && user.userType!=="delivery") ? (
-                  <Navigate to={"/profileBuyer"} />
-                ) : (
-                  <Navigate to={"/profileSeller"} />
-                )
+                ) : user.userType==="buyer" ? (<Navigate to={"/profileBuyer/"} />) : user.userType==="seller" ?(<Navigate to={"/profileSeller/"} />):(<Navigate to={"/profileDelivery/"}/>)
               }
             />
             <Route
