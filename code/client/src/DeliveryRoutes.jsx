@@ -1,7 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import ChangePassword from "./Components/profile/changePassword";
 import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
-import Error404 from "./Components/errors/error404";
 import DeliveryRequest from "./Components/deliveryRequests/deliveryRequest";
 import OngoingDeliveries from "./Components/ongoingDeliveries/ongoingDeliveries";
 import DeliveryHistory from "./Components/deliveryHistory/deliveryRequest";
@@ -34,7 +33,6 @@ const DeliveryRoutes = () => {
         path="/deliveryHistory"
         element={<DeliveryHistory/>}
       />
-      <Route path="*" element={<Error404/>}></Route>
     </Routes>
   );
 };
