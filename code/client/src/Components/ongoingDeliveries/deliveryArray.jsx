@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import DeliveryCard from "./deliveryCard";
 import Pagination from "react-bootstrap/Pagination";
-import CollapsibleChat from '../viewPharmacies/collapsibleChat/collapsableChat';
 
 const DeliveryArray = ({orders,location,setOrders,user}) => {
   const [currentPage, setCurrentPage] = useState(1);
@@ -80,14 +79,6 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
               />
             </Pagination>
           )}
-          <div className="chatOption">
-          <div className="deliveryChat">
-          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
-          </div>
-          <div className="deliveryChatFixing">
-          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
-          </div>
-          </div>
           
     </div>
    );

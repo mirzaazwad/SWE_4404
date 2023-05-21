@@ -47,7 +47,6 @@ const AccountCard = ({ order, user }) => {
             </small>
           </Card.Footer>
         </Card>
-      
   );
 };
 

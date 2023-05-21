@@ -5,8 +5,18 @@ const orderModel=require('../model/order');
 
 const getOrdersToDeliver=async(req,res)=>{
   try{
-    const orders=await pharmacy.find({'Orders.status': 'Approved'});
-    return res.status(200).json({result:orders});
+    const orders=await pharmacy.find();
+    let orderResult=[];
+    orders.forEach((pharmacy)=>{
+      let pharmacyResult=[];
+      pharmacy.Orders.forEach((order)=>{
+        if(order.status==='Approved'){
+          pharmacyResult.push({_id:order._id,customer_data:order.customer_data,status:order.status});
+        }
+      })
+      orderResult.push({Orders:pharmacyResult,pharmacy:pharmacy.pharmacy,coordinates:pharmacy.coordinates,address:pharmacy.address})
+    })
+    return res.status(200).json({result:orderResult});
   }
   catch(err){
     res.status(400).json({message:err.message});
@@ -23,19 +33,16 @@ const addOrder=async(req,res)=>{
     await pharmacy.findOneAndUpdate(
       { 'Orders._id': orderID },
       { $set: { 'Orders.$.status': "Delivering" }}
-    ).then((result)=>{
-      console.log(result.nModified);
-    })
+    )
     await orderModel.findOneAndUpdate(
       { 'order_data._id': orderID },
       { $set: { 'order_data.$.status': "Delivering" }}
-    ).then((result)=>{
-      console.log(result.nModified);
-    })
+    )
     const result=await delivery.addOrder(_id,customer_info,pharmacyName,orderID);
     return res.status(200).json({_id:result._doc._id,success:true});
   }
   catch(err){
+    console.log(err);
     res.status(400).json({message:err.message});
   }
 }

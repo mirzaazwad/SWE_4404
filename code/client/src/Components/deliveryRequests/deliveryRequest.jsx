@@ -38,6 +38,7 @@ const DeliveryRequest = () => {
           },
         })
         .then((result) => result.data.result);
+        console.log(result);
       setOrders(result);
     };
     intervalId();

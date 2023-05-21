@@ -8,6 +8,10 @@ const DeliveryCard = ({ order,user,setOrders,orders,index }) => {
   const navigate=useNavigate();
   const handleOrder = async (e) => {
     setError("");
+    if(order.Orders.length===0){
+      setError("There are no orders remaining for this pharmacy");
+      return;
+    }
     e.preventDefault();
     const result=await axios
       .patch("/api/delivery/addOrder/"+user._id,{
