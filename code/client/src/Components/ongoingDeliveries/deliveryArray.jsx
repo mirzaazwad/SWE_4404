@@ -84,7 +84,7 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
           <div className="deliveryChat">
           <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
           </div>
-          <div className="deliveryChat delivery-chat-wrapper">
+          <div className="deliveryChatFixing">
           <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
           </div>
           </div>

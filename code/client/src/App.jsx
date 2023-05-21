@@ -14,10 +14,10 @@ const App=()=> {
       <Router>
         <div className="App">
           <div className="content">
+            {((user===null || user===undefined) && (<GeneralRoutes user={user}/>) || ((user===null || user===undefined) && user.verified===false) && (<GeneralRoutes user={user}/>)) }
             {user && user.verified && user.userType==="buyer" && (<CustomerRoutes/>)}
             {user && user.verified && user.userType==="seller" && (<SellerRoutes/>)}
             {user && user.verified && user.userType==="delivery" && (<DeliveryRoutes/>)}
-            {(!user && (<GeneralRoutes user={user}/>)) || (user && !user.verified && (<GeneralRoutes user={user}/>)) }
             <Routes>
             <Route exact path="/error400" element={<Error400/>} />
             </Routes>
