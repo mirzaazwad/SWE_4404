@@ -158,6 +158,12 @@ code {
   margin-right: 20px !important;
 }
 
+.delivery-chat-wrapper{
+  position:fixed !important;
+  margin-bottom:20px !important;
+  margin-right:40px !important;
+}
+
 
 .btn.customButton{
   background-color: var(--customMagenta) !important;
