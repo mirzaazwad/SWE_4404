@@ -10,6 +10,7 @@ import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
 import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
+import Error404 from "./Components/errors/error404";
 
 
 

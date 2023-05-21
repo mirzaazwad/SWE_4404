@@ -13,22 +13,8 @@ import {
 import ChangePassword from "./Components/profile/changePassword";
 import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
-import Landing from "./Components/LogRegister/Landing";
-import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
-import ForgotPassword from "./Components/LogRegister/forgotPassword";
-import EmailVerification from "./Components/LogRegister/verifyEmail";
-import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
-import {
-  BrowserRouter as Router,
-  Navigate,
-  Route,
-  Routes,
-} from "react-router-dom";
-import ChangePassword from "./Components/profile/changePassword";
-import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
-import Inventory from "./Components/inventoryManagementSystem/inventory";
-import Error404 from "./Components/errors/error404";
 import Error400 from "./Components/errors/error400";
+import Error404 from "./Components/errors/error500";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
 import Pharmacy from "./Components/viewPharmacies/medicinesOfPharmacy";
 import Medicine from "./Components/viewPharmacies/medicineDetails";
@@ -364,5 +350,5 @@ const App = () => {
     </Router>
   );
 };
-
+};
 export default App;
