@@ -45,26 +45,15 @@ const App = () => {
               exact
               path="/"
               element={
-                !user ? (
-                  <Landing data={"login"} />
-                ) : (user.userType!=="seller" && user.userType!=="delivery") ? (
-                  <Navigate to={"/profileBuyer/"} />
-                ) : (
-                  <Navigate to={"/profileSeller/"} />
-                )
-              }
-            />
+                !user ? (<Landing data={"login"} />) : user.userType==="buyer" ? (<Navigate to={"/profileBuyer/"} />) : user.userType==="seller" ?(<Navigate to={"/profileSeller/"} />):(<Navigate to={"/profileDelivery/"} />)
+              } />
             <Route
               exact
               path="/signup"
               element={
                 !user ? (
                   <Landing data={"signup"} />
-                ) : (user.userType!=="seller" && user.userType!=="delivery") ? (
-                  <Navigate to={"/profileBuyer"} />
-                ) : (
-                  <Navigate to={"/profileSeller"} />
-                )
+                ) : user.userType==="buyer" ? (<Navigate to={"/profileBuyer/"} />) : user.userType==="seller" ?(<Navigate to={"/profileSeller/"} />):(<Navigate to={"/profileDelivery/"}/>)
               }
             />
             <Route
