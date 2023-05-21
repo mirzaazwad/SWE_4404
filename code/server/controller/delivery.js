@@ -10,7 +10,7 @@ const getOrdersToDeliver=async(req,res)=>{
     orders.forEach((pharmacy)=>{
       let pharmacyResult=[];
       pharmacy.Orders.forEach((order)=>{
-        if(order.status==='Approved'){
+        if(order.status==='In progress'){
           pharmacyResult.push({_id:order._id,customer_data:order.customer_data,status:order.status});
         }
       })

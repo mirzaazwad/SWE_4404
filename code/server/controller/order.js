@@ -68,7 +68,6 @@ const billingOrder = async (req, res) => {
   const { customer_data } = req.body;
 
   try {
-  
     const order = await Order.findOneAndUpdate(
       { userId, "order_data._id": orderId },
       {
@@ -93,6 +92,24 @@ const billingOrder = async (req, res) => {
       return result.paymentSuccessful?res.status(200).json(result):res.status(400).json(result);
     }
     else{
+      const order = await Order.findOneAndUpdate(
+        { userId, "order_data._id": orderId },
+        {
+          $set: {
+            "order_data.$.status": 'In progress' ,
+          },
+        },
+        { new: true }
+      );
+      const pharmacy = await Pharmacy.findOneAndUpdate(
+        { _id: customer_data.pharmacyManagerID, "Orders._id": orderId },
+        {
+          $set: {
+            "Orders.$.status": 'In progress' ,
+          },
+        },
+        { new: true }
+      );
       return res.status(200).json(cashResponse);
     }
   } catch (error) {
