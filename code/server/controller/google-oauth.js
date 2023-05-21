@@ -55,7 +55,7 @@ const googleAuthGetToken = async (req, res) => {
     }
     else{
       const userObject=new userByEmail(userInfo.email);
-      const result=await userObject.login(userInfo.sub);
+      const result=await userObject.loginGoogle(userInfo.sub);
       res.status(200).json({tokens, result,userInfo});
     }
   } catch (err) {

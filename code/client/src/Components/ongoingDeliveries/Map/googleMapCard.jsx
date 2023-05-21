@@ -14,6 +14,12 @@ const MapCard = (props)=>{
     setMarkerPosition(props.currentLocation);
   },[props.currentLocation])
 
+  useEffect(()=>{
+    if(props.currentLocation!==null && props.currentLocation!==undefined && props.routeLocation!==null && props.routeLocation!==undefined){
+      calculateRoute(props.currentLocation,props.routeLocation);
+    }
+  },[props.routeLocation])
+
 
   const iconStyle = {
     url: '/marker.png',

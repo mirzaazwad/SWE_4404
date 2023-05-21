@@ -132,7 +132,7 @@ const OrderDetailsCard = () => {
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount+50}</td>
+                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount}</td>
                   </tr>
                 </tbody>
               </Table>

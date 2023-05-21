@@ -3,16 +3,16 @@ import MapCard from "./googleMapCard";
 import Loading from "./mapLoading";
 const libraries= [`${process.env.REACT_APP_LIBRARY}`];
 
-const MapDelivery = ({location,setLocation,orders}) => {
+const MapDelivery = ({location,setLocation,orders,routeLocation}) => {
   const { isLoaded } = useLoadScript({
     googleMapsApiKey: process.env.REACT_APP_GMPKEY,
     libraries,
   });
-  if (!isLoaded) {
+  if (!isLoaded || location===null || location===undefined) {
     return (<Loading></Loading>)
   } 
   else{
-    return (<MapCard currentLocation={location} setLocation={setLocation} orders={orders}></MapCard>)
+    return (<MapCard routeLocation={routeLocation} currentLocation={location} setLocation={setLocation} orders={orders}></MapCard>)
   }
 }
 

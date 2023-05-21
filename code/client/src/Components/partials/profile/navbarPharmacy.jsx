@@ -18,7 +18,7 @@ const NavbarPharmacy=() =>{
   const {logout}= useLogout();
   const navigate=useNavigate();
   const user=useToken();
-  let orderMessages=2;
+  let orderMessages=0;
 
   useEffect(()=>{
     const retrieveMessageCount =async()=>{
