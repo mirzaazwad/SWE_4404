@@ -13,6 +13,8 @@
 
 # misc
 .env
+package.json
+package-lock.json
 .DS_Store
 .env.local
 .env.development.local

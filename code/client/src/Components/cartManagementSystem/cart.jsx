@@ -47,6 +47,7 @@ export default function Cart() {
       price += item.price;
     });
     setTotalPrice(price);
+    console.log(price);
   }, [cart]);
 
   const handleCheckOut = async (e) => {
