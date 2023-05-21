@@ -10,6 +10,7 @@ const DeliveryRequest = () => {
   const user = useToken();
   const [location, setLocation] = useState(null);
   const [orders, setOrders] = useState(null);
+  const [routeLocation,setRouteLocation]=useState(null);
 
   useEffect(() => {
     const getUserLocation = () => {
@@ -38,13 +39,9 @@ const DeliveryRequest = () => {
           },
         })
         .then((result) => result.data.result);
-      setOrders(result);
+        setOrders(result);
     };
     intervalId();
-    // Cleanup function to stop the interval when the component unmounts
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
   }, []);
 
   if (orders) {
@@ -59,9 +56,10 @@ const DeliveryRequest = () => {
             location={location}
             setLocation={setLocation}
             orders={orders}
+            routeLocation={routeLocation}
           />
         </div>
-        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>
+        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user} setRouteLocation={setRouteLocation}/>
       </div>
     );
   } else {

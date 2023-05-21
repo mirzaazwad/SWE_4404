@@ -73,19 +73,19 @@ class user{
     }
   }
 
-  async login(password){
+  async login(email,password){
     const user=await this.findByEmail();
     let result={};
     if(user instanceof buyerModel){
-      result=await buyerModel.login(this.email,password);
+      result=await buyerModel.login(email,password);
       return {...result,userType:'buyer'};
     }
     else if(user instanceof sellerModel){
-      result=await sellerModel.login(this.email,password);
+      result=await sellerModel.login(email,password);
       return {...result,userType:'seller'};
     }
     else{
-      result=await deliveryModel.login(this.email,password);
+      result=await deliveryModel.login(email,password);
       return {...result,userType:'delivery'};
     }
   }
@@ -145,7 +145,7 @@ class user{
     }
   }
 
-  async login(sub){
+  async loginGoogle(sub){
     const user=await this.findByEmail();
     if(user instanceof buyerModel){
       const buyer=await buyerModel.loginGoogle(this.email,sub);

@@ -41,11 +41,10 @@ const loginUser = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userObject=new user(email);
-    const result=await userObject.login(password);
+    const result=await userObject.login(email,password);
     const token = createToken(result._id);
     return res.status(200).json({ _id:result._id, userType: result.userType,verified:result.verified,token:token});
   } catch (err) {
-    console.log(err);
     res.status(400).json({ error: err.message });
   }
 };

@@ -26,7 +26,7 @@ const  ProfilePageForPharmacy = () => {
   if(!isLoading){
     return (     
       <div>
-        <NavbarPharmacy user={user}/>
+        <NavbarPharmacy/>
         <section>
         <div className="container h-100">
           <div className="pt-5">

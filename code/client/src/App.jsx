@@ -13,6 +13,20 @@ import {
 import ChangePassword from "./Components/profile/changePassword";
 import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
 import Inventory from "./Components/inventoryManagementSystem/inventory";
+import Landing from "./Components/LogRegister/Landing";
+import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
+import ForgotPassword from "./Components/LogRegister/forgotPassword";
+import EmailVerification from "./Components/LogRegister/verifyEmail";
+import ProfilePageForPharmacy from "./Components/profile/profilePageForPharmacy";
+import {
+  BrowserRouter as Router,
+  Navigate,
+  Route,
+  Routes,
+} from "react-router-dom";
+import ChangePassword from "./Components/profile/changePassword";
+import AddMedicine from "./Components/inventoryManagementSystem/addMedicine/addMedicine";
+import Inventory from "./Components/inventoryManagementSystem/inventory";
 import Error404 from "./Components/errors/error404";
 import Error400 from "./Components/errors/error400";
 import ViewPharmacies from "./Components/viewPharmacies/viewAllPharmacies";
@@ -37,6 +51,13 @@ import { LOGIN } from "./Contexts/action";
 import CreateOrder from "./Components/inventoryManagementSystem/pharmacyOrders/createOrder";
 
 
+const App = () => {
+  let user = useSelector((state) => state.userState.user);
+  const dispatch = useDispatch();
+  if (user === null) {
+    user = JSON.parse(localStorage.getItem("user"));
+    dispatch(LOGIN(user));
+  }
 const App = () => {
   let user = useSelector((state) => state.userState.user);
   const dispatch = useDispatch();

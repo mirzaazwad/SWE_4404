@@ -3,11 +3,15 @@ import { useState } from "react";
 import { Button, Card } from "react-bootstrap";
 import { useNavigate } from "react-router";
 
-const DeliveryCard = ({ order,user,setOrders,orders,index }) => {
+const DeliveryCard = ({ order,user,setOrders,orders,index,setRouteLocation }) => {
   const [error,setError]=useState("");
   const navigate=useNavigate();
   const handleOrder = async (e) => {
     setError("");
+    if(order.Orders.length===0){
+      setError("There are no orders remaining for this pharmacy");
+      return;
+    }
     e.preventDefault();
     const result=await axios
       .patch("/api/delivery/addOrder/"+user._id,{
@@ -60,6 +64,12 @@ const DeliveryCard = ({ order,user,setOrders,orders,index }) => {
           </Button>
           <Button className="btn btn-danger" style={{ marginLeft: "1%" }}>
             Decline
+          </Button>
+          <Button className="btn btn-danger" style={{ marginLeft: "1%" }} onClick={()=>{
+            console.log(order.coordinates);
+            setRouteLocation(order.coordinates)
+          }}>
+            Show Route
           </Button>
         </Card.Footer>
       </Card>
