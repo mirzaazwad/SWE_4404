@@ -61,7 +61,7 @@ const DeliveryRequest = () => {
             orders={orders}
           />
         </div>
-        <DeliveryArray orders={orders} location={location} setOrders={setOrders}/>
+        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>
       </div>
     );
   } else {

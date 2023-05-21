@@ -139,11 +139,14 @@ deliverySchema.statics.loginGoogle = async function(email,googleId){
 deliverySchema.statics.addOrder=async function(_id,customer_info,pharmacyName,orderID){
   try{
     const result = await this.findById(_id);
-    result.Delivery.push({
+    console.log(customer_info);
+    const input={
       orderID:orderID,
       pharmacy:pharmacyName,
       ...customer_info
-    });
+    }
+    console.log(input);
+    result.Delivery.push(input);
     await result.save();
     return await this.findById(_id);
   }

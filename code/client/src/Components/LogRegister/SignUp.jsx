@@ -52,7 +52,7 @@ const SignUp = () => {
   
   const handleSubmit =async (e) =>{
     e.preventDefault();
-    await signup(radioName==='buyer'?'buyer':'seller',username,email,password);
+    await signup(radioName==='buyer'?'buyer':radioName==='seller'?'seller':'delivery',username,email,password);
   }
 
   return (

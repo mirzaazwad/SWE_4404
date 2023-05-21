@@ -1,5 +1,6 @@
 const delivery = require('../model/delivery');
 const pharmacy=require('../model/seller');
+const orderModel=require('../model/order');
 
 
 const getOrdersToDeliver=async(req,res)=>{
@@ -16,13 +17,22 @@ const getOrdersToDeliver=async(req,res)=>{
 
 const addOrder=async(req,res)=>{
   const _id=req.params.id;
-  const {customer_info,pharmacy,orderID}=req.body;
+  const {customer_info,pharmacyName,orderID}=req.body;
   try{
-    const order=await pharmacy.findOne({'Orders.status': 'Approved','Orders._id':orderID});
-    if(!order || order.status!=='Approved'){
-      throw Error('order cannot be delivered');
-    }
-    const result=await delivery.addOrder(_id,customer_info,pharmacy,orderID);
+    console.log('customer information',customer_info);
+    const order=await pharmacy.findOne({'Orders._id':orderID});
+    // if(!order || order.status!=='Approved'){
+    //   throw Error('order cannot be delivered');
+    // }
+    await pharmacy.findOneAndUpdate(
+      { 'Orders._id': orderID },
+      { $set: { 'Orders.$.status': "Delivering" }}
+    );
+    await orderModel.findOneAndUpdate(
+      { 'order_data._id': orderID },
+      { $set: { 'order_data.$.status': "Delivering" }}
+    );
+    const result=await delivery.addOrder(_id,customer_info,pharmacyName,orderID);
     return res.status(200).json(result);
   }
   catch(err){

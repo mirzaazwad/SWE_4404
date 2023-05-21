@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import DeliveryCard from "./deliveryCard";
 
-const DeliveryArray = ({orders,location,setOrders}) => {
+const DeliveryArray = ({orders,location,setOrders,user}) => {
   useEffect(()=>{
     const sortOrders = async() => {
       if(!orders){
@@ -21,7 +21,7 @@ const DeliveryArray = ({orders,location,setOrders}) => {
     };
     sortOrders();
   },[orders,location])
-  
+
   return ( 
     <div className="deliveryArray float-end"
     style={{
@@ -33,7 +33,7 @@ const DeliveryArray = ({orders,location,setOrders}) => {
       width: "50%",
     }}>
       {orders.map((order) => (
-            <DeliveryCard order={order} />
+            <DeliveryCard order={order} user={user}/>
           ))}
     </div>
    );

@@ -74,7 +74,7 @@ const MapCard = (props)=>{
       <Card.Body style={{height:'82vh'}}>
       <div className="errorMessage" style={{color:"red"}}>{error}</div>
       <div className="d-flex" style={{height:'100%'}}>
-      <GoogleMap zoom={16} center={markerPosition} mapContainerClassName="map-container">
+      <GoogleMap zoom={15} center={markerPosition} mapContainerClassName="map-container">
         {markerPosition && (
         <MarkerF
           position={markerPosition}
