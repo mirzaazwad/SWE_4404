@@ -18,6 +18,7 @@ const  ProfilePageForCustomers = () => {
       const buyer = new buyerUser(user._id, user.token, user.googleId);
       await buyer.retrieveUserInformation();
       setBuyer(buyer);
+      if(buyer)
       setIsLoading(false);
     };
     fetchUserInformation();
