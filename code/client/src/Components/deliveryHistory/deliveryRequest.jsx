@@ -6,7 +6,7 @@ import Loader from "../partials/loader";
 import axios from "axios";
 import DeliveryArray from "./deliveryArray";
 
-const DeliveryRequest = () => {
+const DeliveryHistory = () => {
   const user = useToken();
   const [location, setLocation] = useState(null);
   const [orders, setOrders] = useState(null);
@@ -31,20 +31,16 @@ const DeliveryRequest = () => {
   useEffect(() => {
     const intervalId = async () => {
       let result = await axios
-        .get("/api/delivery", {
+        .get("/api/profile/delivery/history/"+user._id, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             idType: user.googleId ? "google" : "email",
           },
         })
-        .then((result) => result.data.result);
+        .then((result) => result.data);
       setOrders(result);
     };
     intervalId();
-    // Cleanup function to stop the interval when the component unmounts
-    // return () => {
-    //   clearInterval(intervalId);
-    // };
   }, []);
 
   if (orders) {
@@ -69,4 +65,4 @@ const DeliveryRequest = () => {
   }
 };
 
-export default DeliveryRequest;
+export default DeliveryHistory;

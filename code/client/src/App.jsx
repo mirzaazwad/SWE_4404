@@ -6,10 +6,10 @@ import DeliveryRoutes from "./DeliveryRoutes";
 import GeneralRoutes from "./General";
 import Error400 from "./Components/errors/error400";
 import { useToken } from "./Hooks/useToken";
+import Error404 from "./Components/errors/error404";
 
 const App=()=> {
   const user=useToken();
-  console.log(user);
   return (
       <Router>
         <div className="App">
@@ -19,7 +19,7 @@ const App=()=> {
             {user && user.verified && user.userType==="delivery" && (<DeliveryRoutes/>)}
             {(!user && (<GeneralRoutes user={user}/>)) || (user && !user.verified && (<GeneralRoutes user={user}/>)) }
             <Routes>
-            <Route path="/error400" element={<Error400/>} />
+            <Route exact path="/error400" element={<Error400/>} />
             </Routes>
           </div>
         </div>

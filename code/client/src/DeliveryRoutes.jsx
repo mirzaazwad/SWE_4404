@@ -1,8 +1,9 @@
 import { Route, Routes } from "react-router-dom";
 import ChangePassword from "./Components/profile/changePassword";
 import ProfilePageForDelivery from "./Components/profile/profilePageDelivery";
-import Error404 from "./Components/errors/error404";
 import DeliveryRequest from "./Components/deliveryRequests/deliveryRequest";
+import OngoingDeliveries from "./Components/ongoingDeliveries/ongoingDeliveries";
+import DeliveryHistory from "./Components/deliveryHistory/deliveryRequest";
 
 const DeliveryRoutes = () => {
   return (
@@ -22,7 +23,16 @@ const DeliveryRoutes = () => {
         path="/deliveries"
         element={<DeliveryRequest/>}
       />
-      <Route path="*" element={<Error404/>}></Route>
+      <Route
+        exact
+        path="/ongoingDeliveries"
+        element={<OngoingDeliveries/>}
+      />
+      <Route
+        exact
+        path="/deliveryHistory"
+        element={<DeliveryHistory/>}
+      />
     </Routes>
   );
 };

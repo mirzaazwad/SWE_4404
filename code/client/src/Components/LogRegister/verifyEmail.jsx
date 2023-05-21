@@ -71,7 +71,7 @@ const EmailVerification = () => {
         if(user){
           const unverified=JSON.parse(localStorage.getItem('user'));
           localStorage.setItem('user',JSON.stringify({_id:unverified._id,userType:unverified.userType,token:unverified.token,verified:user.data.verified}));
-          dispatch(LOGIN({_id:user.data._id,userType:unverified.userType,token:unverified.token,verified:user.data.verified}));
+          dispatch(LOGIN({_id:unverified._id,userType:unverified.userType,token:unverified.token,verified:user.data.verified}));
           if(unverified.userType==="seller"){
             navigate('/profileSeller');
           }
