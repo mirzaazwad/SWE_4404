@@ -34,6 +34,7 @@ import OngoingDeliveries from "./Components/ongoingDeliveries/ongoingDeliveries"
 import DeliveryHistory from "./Components/deliveryHistory/deliveryRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGIN } from "./Contexts/action";
+import CreateOrder from "./Components/inventoryManagementSystem/pharmacyOrders/createOrder";
 
 
 const App = () => {
@@ -300,6 +301,17 @@ const App = () => {
                 )
               }
             />
+            <Route
+        exact
+        path="/createOrder/:customerId/:orderId"
+        element={
+          user && (user.userType !== "buyer" && user.userType!=="delivery") && user.verified === true ? (
+            <CreateOrder />
+          ) : (
+            <Navigate to="/" />
+          )
+        }
+      />
             <Route
               exact
               path="/profileDelivery"
