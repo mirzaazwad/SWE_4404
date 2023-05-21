@@ -8,7 +8,8 @@ const deliverySchema = new Schema({
   Delivery:[{
     orderID:{
       type:String,
-      required:true
+      required:true,
+      unique:true
     },
     pharmacy:{
       type:String,
@@ -50,6 +51,10 @@ const deliverySchema = new Schema({
     },
     payment: { 
       type: String,
+    },
+    status:{
+      type:String,
+      required:true
     }
   }]
 },{timestamps:true});
@@ -143,7 +148,8 @@ deliverySchema.statics.addOrder=async function(_id,customer_info,pharmacyName,or
     const input={
       orderID:orderID,
       pharmacy:pharmacyName,
-      ...customer_info
+      ...customer_info,
+      status:'Delivering'
     }
     console.log(input);
     result.Delivery.push(input);

@@ -29,7 +29,7 @@ const DeliveryRequest = () => {
   }, []);
 
   useEffect(() => {
-    const intervalId = setInterval(async () => {
+    const intervalId = async () => {
       let result = await axios
         .get("/api/delivery", {
           headers: {
@@ -39,12 +39,12 @@ const DeliveryRequest = () => {
         })
         .then((result) => result.data.result);
       setOrders(result);
-    }, 10 * 1000);
-
-    // Cleanup function to stop the interval when the component unmounts
-    return () => {
-      clearInterval(intervalId);
     };
+    intervalId();
+    // Cleanup function to stop the interval when the component unmounts
+    // return () => {
+    //   clearInterval(intervalId);
+    // };
   }, []);
 
   if (orders) {

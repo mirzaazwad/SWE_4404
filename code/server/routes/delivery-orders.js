@@ -6,5 +6,6 @@ const router=express.Router();
 router.use(requireAuth);
 router.get('/',delivery.getOrdersToDeliver);
 router.patch('/addOrder/:id',delivery.addOrder);
+router.patch('/updateOrder/:id',delivery.updateOrder);
 
 module.exports = router;

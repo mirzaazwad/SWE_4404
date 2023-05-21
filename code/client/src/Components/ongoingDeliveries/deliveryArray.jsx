@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import DeliveryCard from "./deliveryCard";
 import Pagination from "react-bootstrap/Pagination";
+import CollapsibleChat from '../viewPharmacies/collapsibleChat/collapsableChat';
 
 const DeliveryArray = ({orders,location,setOrders,user}) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [ordersPerPage] = useState(3);
+  const [ordersPerPage] = useState(2);
   const indexOfLastOrder = currentPage * ordersPerPage;
   const indexOfFirstOrder = indexOfLastOrder - ordersPerPage;
   useEffect(()=>{
@@ -27,7 +28,7 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
     sortOrders();
   },[orders,location])
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
-  const [currentOrders,setCurrentOrders]=useState(orders.slice(indexOfFirstOrder, indexOfLastOrder));
+  const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
   return ( 
     <div className="deliveryArray float-end"
@@ -39,8 +40,8 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
       marginRight: "1%",
       width: "50%",
     }}>
-          {currentOrders.map((order,index) => (
-            <DeliveryCard order={order} user={user} setOrders={setOrders} orders={orders} index={index}/>
+                {currentOrders.map((order) => (
+            <DeliveryCard order={order} user={user}/>
           ))}
           {orders.length > ordersPerPage && (
             <Pagination className="m-auto py-3">
@@ -79,7 +80,16 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
               />
             </Pagination>
           )}
+          <div className="chatOption justify-content-center">
+          <div>
+          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
           </div>
+          <div>
+          <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
+          </div>
+          </div>
+          
+    </div>
    );
 }
  

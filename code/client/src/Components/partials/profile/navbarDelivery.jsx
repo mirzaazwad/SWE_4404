@@ -33,9 +33,9 @@ const NavbarDelivery=()=>{
             <Nav.Link href={`/profileDelivery`}>Profile</Nav.Link>
             <Nav.Link href={`/deliveries`}>Delivery Requests</Nav.Link>
             <Nav.Link href={`/ongoingDeliveries`}>Ongoing Deliveries</Nav.Link>
+            <Nav.Link href={`/deliveryHistory`}>Delivery History</Nav.Link>
           </Nav>
           <div>
-          <Button className='customCart bg-transparent me-3' size="lg" onClick={()=>{}}><BellFill/></Button>
           <Nav.Link className="d-block d-lg-none" onClick={handleLogout}>Log Out</Nav.Link>
           </div>
           <Form className="customLogOut d-none d-lg-flex justify-content-end">

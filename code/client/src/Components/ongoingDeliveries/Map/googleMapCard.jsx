@@ -20,8 +20,14 @@ const MapCard = (props)=>{
     scaledSize: new window.google.maps.Size(30, 40),
     anchor: { x: 20, y: 20 }
   };
+  const iconStyle2 = {
+    url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+    scaledSize: new window.google.maps.Size(30, 40),
+    anchor: { x: 20, y: 20 }
+  };
 
   const calculateRoute = (origin,destination) => {
+    setDirections(null);
     const directionsService = new window.google.maps.DirectionsService();
 
     directionsService.route(
@@ -48,18 +54,29 @@ const MapCard = (props)=>{
           lat: position.coords.latitude,
           lng: position.coords.longitude,
         };
-        props.setLocation(userLocation);
         setMarkerPosition(userLocation);
       });
     } else {
       console.log('cant get location in legacy browser');
     }
   };
+
+  const setLocation=(e)=>{
+    e.preventDefault();
+    if(isValid){
+      setError("");
+      props.setLocation(markerPosition);
+    }
+    else{
+      setError("Address is invalid");
+    }
+  }
   return ( 
-    <Card show={props.show} style={{marginLeft:"0%",height:"100%"}}>
+    <Card show={props.show} onHide={props.handleClose} style={{marginLeft:"0%",height:"100%"}}>
       <Card.Header closeButton>
          <Card.Title>Current Location And Available Orders</Card.Title>
       </Card.Header>
+      <Form onSubmit={setLocation}>
       <Card.Body style={{height:'82vh'}}>
       <div className="errorMessage" style={{color:"red"}}>{error}</div>
       <div className="d-flex" style={{height:'100%'}}>
@@ -77,7 +94,8 @@ const MapCard = (props)=>{
         position={order.coordinates}
         visible={true}
         key={index}
-        label={order.pharmacy}
+        label={order.fullName}
+        icon={iconStyle2}
         onClick={()=>calculateRoute(order.coordinates,markerPosition)}
       >
       </MarkerF>
@@ -89,6 +107,7 @@ const MapCard = (props)=>{
       <Card.Footer><Button onClick={getUserLocation}>Get Current Location</Button>
       {!props.currentLocation && (<p>Enable Location Services and reload to View Map</p>)}
       </Card.Footer>
+      </Form>
     </Card>
    );
 }

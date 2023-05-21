@@ -5,9 +5,8 @@ import MapDelivery from "./Map/mapCard";
 import Loader from "../partials/loader";
 import axios from "axios";
 import DeliveryArray from "./deliveryArray";
-import { Cpu } from "react-bootstrap-icons";
 
-const OngoingDeliveries = () => {
+const DeliveryHistory = () => {
   const user = useToken();
   const [location, setLocation] = useState(null);
   const [orders, setOrders] = useState(null);
@@ -30,20 +29,19 @@ const OngoingDeliveries = () => {
   }, []);
 
   useEffect(() => {
-      const retrieveOrders = async () => {
+    const intervalId = async () => {
       let result = await axios
-        .get("/api/profile/delivery/ongoing/"+user._id, {
+        .get("/api/profile/delivery/history/"+user._id, {
           headers: {
             Authorization: `Bearer ${user.token}`,
             idType: user.googleId ? "google" : "email",
           },
         })
-        .then((result) => result.data.Delivery);
-        console.log(result);
-        setOrders(result);
-    }
-    retrieveOrders();
-  },[]);
+        .then((result) => result.data);
+      setOrders(result);
+    };
+    intervalId();
+  }, []);
 
   if (orders) {
     return (
@@ -67,4 +65,4 @@ const OngoingDeliveries = () => {
   }
 };
 
-export default OngoingDeliveries;
+export default DeliveryHistory;
