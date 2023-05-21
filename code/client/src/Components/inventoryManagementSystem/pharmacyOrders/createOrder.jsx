@@ -126,7 +126,7 @@ const CreateOrder = () => {
     try {
       const response = await axios.patch(
         `http://localhost:4000/api/order/approveCreatedOrder/${customerId}/${orderId}`,
-        { medicines: cart, pharmacyManagerId: user._id },
+        { medicines: cart, pharmacyManagerId: user._id,amount:totalPrice },
         {
           headers: {
             Authorization: `Bearer ${user.token}`,
@@ -134,9 +134,7 @@ const CreateOrder = () => {
           },
         }
       ).then(async(result)=>{
-        await handleOrderApproval();
-        navigate(`../`);
-        return result;
+        
       }).catch((error)=>console.log(error));
       console.log(response);
       // Handle any additional logic or UI updates after order approval
@@ -144,7 +142,7 @@ const CreateOrder = () => {
       console.error(error);
       // Handle error response or display error message to the user
     }
-  
+    navigate(`/getOrderDetails/${user._id}/${orderId}`);
     await dispatch(clearItems());
   };
   

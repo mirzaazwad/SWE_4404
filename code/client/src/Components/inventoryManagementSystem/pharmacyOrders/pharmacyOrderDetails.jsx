@@ -118,7 +118,7 @@ const OrderDetailsCard = () => {
                       <td>{index + 1}</td>
                       <td>{medicine.MedicineName}
                      
-                     <Badge bg="warning" className="ms-2"><a href={medicine.prescriptionImage}>Prescription</a></Badge>
+                     {medicine.prescription && <Badge bg="warning" className="ms-2"><a href={medicine.prescriptionImage}>Prescription</a></Badge>}
                       </td>
                       <td>{medicine.quantityPcs}</td>
                       <td>{medicine.quantityStrips}</td>
@@ -132,7 +132,7 @@ const OrderDetailsCard = () => {
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount}</td>
+                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount+50}</td>
                   </tr>
                 </tbody>
               </Table>
