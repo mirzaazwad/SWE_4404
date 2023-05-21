@@ -73,38 +73,20 @@ class user{
     }
   }
 
-  async login(password){
+  async login(email,password){
     const user=await this.findByEmail();
     let result={};
     if(user instanceof buyerModel){
-      try{
-        result=await buyerModel.login(this.email,password);
-      }
-      catch(error){
-        throw Error('User is not in database')
-      }
+      result=await buyerModel.login(email,password);
       return {...result,userType:'buyer'};
     }
     else if(user instanceof sellerModel){
-      try{
-        result=await sellerModel.login(this.email,password);
-      }
-      catch(error){
-        throw Error('User is not in database')
-      }
+      result=await sellerModel.login(email,password);
       return {...result,userType:'seller'};
     }
-    else if(user instanceof sellerModel){
-      try{
-        result=await deliveryModel.login(this.email,password);
-      }
-      catch(error){
-        throw Error('User is not in database')
-      }
-      return {...result,userType:'delivery'};
-    }
     else{
-      throw Error('User not in database');
+      result=await deliveryModel.login(email,password);
+      return {...result,userType:'delivery'};
     }
   }
 
@@ -163,7 +145,7 @@ class user{
     }
   }
 
-  async login(sub){
+  async loginGoogle(sub){
     const user=await this.findByEmail();
     if(user instanceof buyerModel){
       const buyer=await buyerModel.loginGoogle(this.email,sub);

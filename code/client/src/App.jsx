@@ -1,4 +1,3 @@
-
 import { useToken } from "./Hooks/useToken";
 import Landing from "./Components/LogRegister/Landing";
 import ProfilePageForCustomers from "./Components/profile/profilePageForCustomers";
