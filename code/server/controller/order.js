@@ -101,7 +101,37 @@ const billingOrder = async (req, res) => {
   }
 };
 
+const approveCreatedOrder = async (req, res) => {
+  const { userId, orderId } = req.params;
+  const { medicines, pharmacyManagerId } = req.body;
+  console.log(medicines);
+  console.log(pharmacyManagerId);
 
+  try {
+  
+    const order = await Order.findOneAndUpdate(
+      { userId, "order_data._id": orderId },
+      {
+        $set: {
+          "order_data.$.medicines": medicines ,
+        },
+      },
+      { new: true }
+    );
+    const pharmacy = await Pharmacy.findOneAndUpdate(
+      { _id: pharmacyManagerId, "Orders._id": orderId },
+      {
+        $set: {
+          "Orders.$.medicines": medicines ,
+        },
+      },
+      { new: true }
+    );
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ message: "Server Error" });
+  }
+};
 const postOrder = async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -261,5 +291,6 @@ module.exports = {
   getOrder,
   getOrderDetails,
   billingOrder,
-  approveOrder
+  approveOrder,
+  approveCreatedOrder
 };

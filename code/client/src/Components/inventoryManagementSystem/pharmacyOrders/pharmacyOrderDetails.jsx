@@ -69,7 +69,7 @@ const OrderDetailsCard = () => {
     return <Loader />;
   }
   
-  if(order.prescription_image===""){
+  if(order.medicines.length>0){
     return (
       <div>
         <div className="mb-5">
@@ -181,7 +181,8 @@ const OrderDetailsCard = () => {
       <Card.Img variant="top" src={order.prescription_image}/>
       </Card.Body>
       <Card.Footer>
-            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+
+            <Button className="btn btn-approve-order float-end" href={`/createOrder/${order.userID}/${order._id}`} disabled={(order.status === "Approved" || order.status==="Cancelled")} >Create Order</Button>
             <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
             </Card.Footer>
     </Card>

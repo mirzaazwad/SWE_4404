@@ -11,6 +11,7 @@ import IncomingOrdersCard from "./Components/inventoryManagementSystem/pharmacyO
 import PharmacyOrderDetails from "./Components/inventoryManagementSystem/pharmacyOrders/pharmacyOrderDetails";
 import Account from "./Components/accounts/account";
 import Error404 from "./Components/errors/error404";
+import CreateOrder from "./Components/inventoryManagementSystem/pharmacyOrders/createOrder";
 
 const SellerRoutes = ({ user }) => {
   return (
@@ -38,6 +39,11 @@ const SellerRoutes = ({ user }) => {
         exact
         path="/getOrderDetails/:userId/:orderId"
         element={<PharmacyOrderDetails />}
+      />
+      <Route
+        exact
+        path="/createOrder/:customerId/:orderId"
+        element={<CreateOrder />}
       />
       <Route path="*" element={<Error404/>}></Route>
     </Routes>

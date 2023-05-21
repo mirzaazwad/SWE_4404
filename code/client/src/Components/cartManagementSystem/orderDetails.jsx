@@ -37,7 +37,7 @@ if(!loader){
     <Loader/>
   )
 }
-  if(order.prescription_image===""){
+  if(order.medicines.length>0){
     return (
       <div>
         <div className="mb-5">
