@@ -9,7 +9,6 @@ import { useToken } from "./Hooks/useToken";
 
 const App=()=> {
   const user=useToken();
-  console.log(user);
   return (
       <Router>
         <div className="App">

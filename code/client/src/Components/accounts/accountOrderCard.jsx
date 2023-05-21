@@ -8,21 +8,10 @@ const AccountCard = ({ order, user }) => {
   const [statusColor, setStatusColor] = useState('warning');
   
   useEffect(() => {
-    if (order.status === 'Pending') {
+    if (order.status === 'Approved' && order.payment_status===false) {
       setStatusColor('warning');
     }
-    else if (order.status === 'Approved') {
-      setStatusColor('info');
-    }
-    else if (order.status === 'In progress') {
-      setStatusColor('secondary');
-    }
-    else if (order.status === 'Delivered') {
-      setStatusColor('success');
-    } else if (order.status === 'Cancelled') {
-      setStatusColor('danger');
-    }
-    else{
+    else if(order.status === 'Approved' && order.payment_status===true){
       setStatusColor('primary');
     }
     let price = 0;

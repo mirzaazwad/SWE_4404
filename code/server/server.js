@@ -12,6 +12,7 @@ const inventoryRoutes = require("./routes/inventory");
 const profileRoutesUser = require("./routes/user");
 const profileRoutesBuyer = require("./routes/buyer");
 const profileRoutesDelivery = require("./routes/delivery");
+const deliveryOrderRoutes = require("./routes/delivery-orders");
 const profileRoutesSeller = require("./routes/seller");
 const purchaseRoutes = require("./routes/purchase");
 const pharmaciesRoutes = require("./routes/view-pharmacy");
@@ -44,5 +45,6 @@ app.use("/api/mobile",mobileRoutes);
 app.use("/api/pharmacy",pharmacyRoutes);
 app.use("/api/pharmacyOrders",pharmacyOrdersRoutes);
 app.use("/api/profile/delivery",profileRoutesDelivery);
+app.use("/api/delivery",deliveryOrderRoutes);
 
 module.exports = {app};

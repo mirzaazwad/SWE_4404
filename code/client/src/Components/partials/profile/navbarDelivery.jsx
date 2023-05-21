@@ -32,6 +32,7 @@ const NavbarDelivery=()=>{
           >
             <Nav.Link href={`/profileDelivery`}>Profile</Nav.Link>
             <Nav.Link href={`/deliveries`}>Delivery Requests</Nav.Link>
+            <Nav.Link href={`/ongoingDeliveries`}>Ongoing Deliveries</Nav.Link>
           </Nav>
           <div>
           <Button className='customCart bg-transparent me-3' size="lg" onClick={()=>{}}><BellFill/></Button>
