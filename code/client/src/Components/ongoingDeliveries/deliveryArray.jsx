@@ -80,11 +80,11 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
               />
             </Pagination>
           )}
-          <div className="chatOption justify-content-center">
-          <div>
+          <div className="chatOption">
+          <div className="deliveryChat">
           <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
           </div>
-          <div>
+          <div className="deliveryChat delivery-chat-wrapper">
           <CollapsibleChat senderID={user._id} receiverID={user._id} JWT={user} />
           </div>
           </div>
