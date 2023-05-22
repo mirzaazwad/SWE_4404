@@ -13,6 +13,9 @@ const prescriptionSchema = new mongoose.Schema({
       },
       image_id:{
         type:String
+      },
+      createdAt:{
+        type:Date
       }
 });
 

@@ -47,16 +47,6 @@ const DeliveryHistory = () => {
     return (
       <div className="deliveryRequest" style={{ display: "flex" }}>
         <NavbarDelivery />
-        <div
-          className="showMap"
-          style={{ height: "100%", width: "50%", display: "relative" }}
-        >
-          <MapDelivery
-            location={location}
-            setLocation={setLocation}
-            orders={orders}
-          />
-        </div>
         <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>
       </div>
     );

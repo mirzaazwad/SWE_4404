@@ -10,7 +10,9 @@ const DeliveryCard = ({ order,user,setRouteLocation }) => {
     setError("");
     e.preventDefault();
     const result=await axios
-      .patch("/api/delivery/updateOrder/"+user._id, {orderID:order.orderID},{
+      .patch("/api/delivery/updateorderstatus/"+user._id,{
+        orderID:order.orderID
+      },{
         headers: {
           Authorization: `Bearer ${user.token}`,
           idType: user.googleId ? "google" : "email",
@@ -21,6 +23,7 @@ const DeliveryCard = ({ order,user,setRouteLocation }) => {
         // navigate('/deliveryHistory');
       }
   };
+
   return (
     <div className="deliveryCard">
       <div className="errorValue" style={{color:"red"}}>{error}</div>

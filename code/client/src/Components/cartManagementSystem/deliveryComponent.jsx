@@ -1,37 +1,14 @@
-import axios from "axios";
-import { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import Loader from "../partials/loader";
-import {PersonBadgeFill,Envelope, PhoneFlip, EnvelopeAtFill} from "react-bootstrap-icons";
+import {PersonBadgeFill,PhoneFlip, EnvelopeAtFill} from "react-bootstrap-icons";
 
-const DeliveryManInformation = ({user,orderID}) => {
-  const [delivery,setDelivery]=useState(null);
-
-  useEffect(()=>{
-    const fetchDeliveryMan=async()=>{
-      const result=await axios.get('/api/profile/delivery/getdelivery/'+orderID,{
-        headers:{'Authorization': `Bearer ${user.token}`,
-        'idType':user.googleId?'google':'email'}
-      }).then((result)=>{
-        return result.data;
-      }).catch((error)=>{
-        console.log(error);
-      })
-      setDelivery(result);
-    }
-
-    if(orderID!==null && orderID!==undefined){
-      fetchDeliveryMan();
-    }
-    console.log('delivery',delivery);
-  },[orderID,user])
-
+const DeliveryManInformation = ({delivery}) => {
   if(delivery!==null && delivery!==undefined){
     return ( 
       <div className="deliveryManInformation">
         <Card style={{width:'50%', marginLeft:'25%',marginTop:'5%'}}>
           <Card.Header  style={{backgroundColor: "#EB006F", textAlign: "center", color: "white", fontSize:"1.5rem"}}>
-            Being Delivered By
+            {delivery.status==='Delivered'?(<p>Being Delivered By</p>):(<p>Delivered By</p>)}
           </Card.Header>
           <Card.Body>
           <div className="detailedDeliveryInfo" style={{display:'flex'}}>

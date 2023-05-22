@@ -32,6 +32,10 @@ const OrderCard = ({ order }) => {
       setStatusColor('danger');
       setStatus('Cancelled');
     }
+    else if (order.status === 'Delivered' || order.status === 'Completed') {
+      setStatusColor('primary');
+      setStatus('Delivered');
+    }
     else{
       setStatusColor('primary');
       setStatus('Pending');

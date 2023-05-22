@@ -7,11 +7,15 @@ import {Table} from 'react-bootstrap';
 import { useToken } from "../../Hooks/useToken";
 import Loader from "../partials/loader";
 import DeliveryManInformation from "./deliveryComponent";
+import ConfirmationModal from "./confirmationModal";
+
 const OrderDetailsCard = () => {
   const user=useToken();
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
   const [loader,setLoader]=useState(false);
+  const [delivery,setDelivery]=useState(null);
+  const [show,setShow]=useState(false);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -33,6 +37,43 @@ const OrderDetailsCard = () => {
     };
     fetchOrderDetails();
   }, []);
+
+  
+
+  useEffect(()=>{
+    const fetchDeliveryMan=async()=>{
+      const result=await axios.get('/api/profile/delivery/getdelivery/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then((result)=>{
+        return result.data;
+      }).catch((error)=>{
+        console.log(error);
+      })
+      setDelivery(result);
+    }
+
+    if(orderId!==null && orderId!==undefined){
+      fetchDeliveryMan();
+    }
+    console.log('delivery',delivery);
+  },[orderId,user]);
+
+  useEffect(()=>{
+    const getDeliveryStatus=async()=>{
+      await axios.get('/api/delivery/getstatus/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then( (result)=>{
+        setShow(true);
+      }).catch((error)=>{
+        console.log(error);
+      })
+    }
+    getDeliveryStatus();
+  },[orderId,user])
+
+
 if(!loader){
   return(
     <Loader/>
@@ -45,7 +86,8 @@ if(!loader){
           <NavbarCustomer />
         </div>
         <div>
-        {(order.status==="Delivering" && (<DeliveryManInformation  user={user} orderID={orderId}/>))||(order.status==="Delivered" && (<DeliveryManInformation  user={user} orderID={orderId}/>))}
+        {delivery && (<ConfirmationModal delivery={delivery} user={user} showModal={show} orderID={orderId}/>)}
+        {(order.status==="Delivering" && (<DeliveryManInformation  delivery={delivery}/>))||(order.status==="Delivered" && (<DeliveryManInformation  delivery={delivery}/>))}
         <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
@@ -97,7 +139,7 @@ if(!loader){
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.customer_data.amount}</td>
+                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount}</td>
                   </tr>
                   <Card>
 
@@ -118,7 +160,9 @@ if(!loader){
         <NavbarCustomer />
       </div>
         <div>
-        <Card className="billing-details-card w-50 m-auto py-4">
+      <ConfirmationModal delivery={delivery} user={user} orderID={orderId}/>
+      <DeliveryManInformation delivery={delivery}/>
+      <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
             </Card.Header>
@@ -147,7 +191,6 @@ if(!loader){
       </Card.Body>
     </Card>
         </div>
-        <DeliveryManInformation user={user} orderID={orderId}/>
     </div>
     );
   }

@@ -38,10 +38,28 @@ const MedicineDetails = () => {
             idType: user.googleId ? "google" : "email",
           },
         }
-      );
-      setMedicine(response.data);
+      ).then((result)=>{
+        console.log(result);
+        return result.data;
+      })
+      setMedicine(response);
     } catch (error) {
       console.log(error);
+    }
+  };
+  const updateMedicinePrescription = async (prescriptionURL) => {
+    if(medicine.prescription === true)
+    {const { Stock, ...medicineWithoutStock } = medicine;
+      await dispatch(updatePrescriptionImage({
+        ...medicineWithoutStock,
+        id: id,
+        medicineId: medicineId,
+        quantityPcs: quantityPcs,
+        quantityStrips: quantityStrips,
+        quantityBoxes: quantityBoxes,
+        price: price,
+        prescriptionImage: prescriptionURL,
+      }));
     }
   };
 
@@ -52,26 +70,34 @@ const MedicineDetails = () => {
         "Cart contains medicine from another pharmacy, clear cart before proceeding"
       );
     }
-  }, []);
+  }, [user]);
+ 
 
   useEffect(() => {
     const calculatePrice = async () => {
+      console.log('medicine is: ',medicine);
       let pcsPrice = 0,
         stripsPrice = 0,
         boxesPrice = 0;
-      if (medicine?.Stock?.Strips) {
+      if (medicine?.Stock && medicine.Stock.hasOwnProperty('Strips')) {
         pcsPrice =
-          (medicine.SellingPrice * quantityPcs) /
-          (medicine.PcsPerStrip * medicine.StripsPerBox);
+          (Number(medicine.SellingPrice) * Number(quantityPcs)) /
+          (Number(medicine.PcsPerStrip) * Number(medicine.StripsPerBox));
+          console.log('pcs',pcsPrice);
+          console.log('quantpc',quantityPcs);
+          console.log('pcstrip',medicine.PcsPerStrip);
+          console.log('stripbox',medicine.StripsPerBox);
+          console.log('sp',medicine.SellingPrice);
         stripsPrice =
-          (medicine.SellingPrice * quantityStrips) / medicine.StripsPerBox;
-        boxesPrice = medicine.SellingPrice * quantityBoxes;
+          (Number(medicine.SellingPrice) * Number(quantityStrips)) / Number(medicine.StripsPerBox);
+        boxesPrice = Number(medicine.SellingPrice) * Number(quantityBoxes);
       } else {
-        pcsPrice = (medicine.SellingPrice * quantityPcs) / medicine.PcsPerBox;
-        boxesPrice = medicine.SellingPrice * quantityBoxes;
+        pcsPrice = (Number(medicine.SellingPrice) * Number(quantityPcs)) / Number(medicine.PcsPerBox);
+        boxesPrice = Number(medicine.SellingPrice) * Number(quantityBoxes);
       }
       var totalPrice = pcsPrice + stripsPrice + boxesPrice;
       var truncatedPrice = Math.round(totalPrice);
+      
       setPrice(truncatedPrice);
       if(medicine?.Stock)
       {
@@ -79,7 +105,9 @@ const MedicineDetails = () => {
       }
     };
 
-    calculatePrice();
+    if(medicine!==null && medicine!==undefined){
+      calculatePrice();
+    }
   }, [medicine, quantityPcs, quantityStrips, quantityBoxes]);
 
   const navigate = useNavigate();
@@ -162,6 +190,7 @@ const MedicineDetails = () => {
           console.log("Error uploading image:", error);
         }
       } 
+
       if (prescriptionImage) {
         console.log(prescriptionImage);
         const formData = new FormData();
@@ -198,21 +227,8 @@ const MedicineDetails = () => {
         })
       );
   };
-  const updateMedicinePrescription = async (prescriptionURL) => {
-    if(medicine.prescription === true)
-    {const { Stock, ...medicineWithoutStock } = medicine;
-      await dispatch(updatePrescriptionImage({
-        ...medicineWithoutStock,
-        id: id,
-        medicineId: medicineId,
-        quantityPcs: quantityPcs,
-        quantityStrips: quantityStrips,
-        quantityBoxes: quantityBoxes,
-        price: price,
-        prescriptionImage: prescriptionURL,
-      }));
-    }
-  };
+
+  
   
   const addItemToCart = async (prescriptionURL) => {
       const { Stock, ...medicineWithoutStock } = medicine;
