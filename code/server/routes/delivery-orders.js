@@ -7,5 +7,8 @@ router.use(requireAuth);
 router.get('/',delivery.getOrdersToDeliver);
 router.patch('/addOrder/:id',delivery.addOrder);
 router.patch('/updateOrder/:id',delivery.updateOrder);
+router.get('/getstatus/:id',delivery.GetDeliveryStatus);
+router.patch('/resetStatus/:id',delivery.ResetDeliveryStatus);
+router.patch('/updateorderstatus/:id',delivery.UpdateOrderStatus);
 
 module.exports = router;

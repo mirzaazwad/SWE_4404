@@ -30,14 +30,14 @@ const DeliveryArray = ({orders,location,setOrders,user}) => {
   const [currentOrders]=useState(orders.slice(indexOfFirstOrder, indexOfLastOrder));
 
   return ( 
-    <div className="deliveryArray float-end"
+    <div className="deliveryArray justify-content-center"
     style={{
       height: "100%",
       position: "relative",
       marginTop: "5%",
-      marginLeft: "1%",
+      marginLeft: "15%",
       marginRight: "1%",
-      width: "50%",
+      width: "75%",
     }}>
           {currentOrders.map((order,index) => (
             <DeliveryCard order={order}/>

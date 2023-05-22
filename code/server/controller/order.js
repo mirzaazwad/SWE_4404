@@ -224,7 +224,6 @@ const getOrderDetails = async (req, res) => {
     
     // Get the specific order data that matches the order ID
     const orderData = order.order_data.find(data => data._id.toString() === orderId);
-    console.log(orderData);
     return res.status(200).json({
       order: orderData
     });
