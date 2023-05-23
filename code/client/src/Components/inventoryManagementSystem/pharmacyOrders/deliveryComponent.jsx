@@ -1,13 +1,14 @@
-import { Card } from "react-bootstrap";
-import Loader from "../partials/loader";
-import {PersonBadgeFill,PhoneFlip, EnvelopeAtFill} from "react-bootstrap-icons";
+import { Badge, Card} from "react-bootstrap";
 import Button from "react-bootstrap/Button";
+import Loader from "../../partials/loader";
+import {PersonBadgeFill,PhoneFlip, EnvelopeAtFill} from "react-bootstrap-icons";
 
 const DeliveryManInformation = ({delivery,setShowModal}) => {
+  console.log(delivery);
   if(delivery!==null && delivery!==undefined){
     return ( 
       <div className="deliveryManInformation">
-        <Card style={{width:'50%', marginLeft:'25%',marginTop:'5%'}}>
+        <Card style={{width:'50%', marginLeft:'25%',marginTop:'5%',marginBottom:'2%'}}>
           <Card.Header  style={{backgroundColor: "#EB006F", textAlign: "center", color: "white", fontSize:"1.5rem"}}>
             {delivery.status==='Delivered'?(<p>Being Delivered By</p>):(<p>Delivered By</p>)}
           </Card.Header>
@@ -23,9 +24,12 @@ const DeliveryManInformation = ({delivery,setShowModal}) => {
           <div>
           <span style={{display:'flex'}}><PhoneFlip style={{fontSize:'1.5rem'}}/> <p style={{marginLeft:'3%'}}>{delivery.phone}</p></span>
           </div>
+          <div>
+          Delivery-man Status: <Badge size="sm"  bg={delivery.arr.status==="Delivered"?'success':'primary'}>{delivery.arr.status}</Badge>
           </div>
-          <div className="personImage" style={{width:'50%',marginLeft:'50%'}}>
-            <img src={delivery.imageURL} width="100%" height="100%" style={{borderRadius:'50%'}}/>
+          </div>
+          <div className="personImage" style={{width:'20%',marginLeft:'50%'}}>
+            <img src={delivery.imageURL} width="100%" height="65%" style={{borderRadius:'50%'}}/>
           </div>
           </div>
           <Button variant="primary" onClick={()=>{

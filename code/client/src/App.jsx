@@ -34,6 +34,7 @@ import OngoingDeliveries from "./Components/ongoingDeliveries/ongoingDeliveries"
 import DeliveryHistory from "./Components/deliveryHistory/deliveryRequest";
 import { useDispatch, useSelector } from "react-redux";
 import { LOGIN } from "./Contexts/action";
+import Account from "./Components/accounts/account";
 
 
 const App = () => {
@@ -163,6 +164,17 @@ const App = () => {
               element={
                 user && (user.userType !== "buyer" && user.userType!=="delivery") && user.verified === true ? (
                   <Inventory />
+                ) : (
+                  <Navigate to="/" />
+                )
+              }
+            />
+             <Route
+              exact
+              path="/account"
+              element={
+                user && (user.userType !== "buyer" && user.userType!=="delivery") && user.verified === true ? (
+                  <Account />
                 ) : (
                   <Navigate to="/" />
                 )

@@ -62,9 +62,6 @@ const DeliveryCard = ({ order,user,setOrders,orders,index,setRouteLocation }) =>
           <Button className="btn btn-primary" onClick={handleOrder}>
             Accept
           </Button>
-          <Button className="btn btn-danger" style={{ marginLeft: "1%" }}>
-            Decline
-          </Button>
           <Button className="btn btn-danger" style={{ marginLeft: "1%" }} onClick={()=>{
             console.log(order.coordinates);
             setRouteLocation(order.coordinates)

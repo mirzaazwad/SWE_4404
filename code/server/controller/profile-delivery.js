@@ -18,8 +18,20 @@ const getDeliveryByOrderID=async(req,res)=>{
   try{
     const result=await deliveryModel.findOne({ 'Delivery.orderID': id });
     console.log(result);
-    console.log('comes here finally');
     return res.status(200).json(result);
+  }
+  catch(error){
+    res.status(400).json({ error: error.message });
+  }
+}
+
+const getDeliveryAndManByOrderID=async(req,res)=>{
+  const id=req.params.id;
+  try{
+    const result=await deliveryModel.findOne({ 'Delivery.orderID': id });
+    const deliveryMan={username:result.username,email:result.email,phone:result.phone,imageURL:result.imageURL};
+    const arr=result.Delivery.find((deliver)=>deliver.orderID===id);
+    return res.status(200).json({...deliveryMan,arr});
   }
   catch(error){
     res.status(400).json({ error: error.message });
@@ -71,5 +83,5 @@ const patchDeliveryByEmail = async (req, res) => {
   }
 };
 
-module.exports={getDeliveryByEmail,patchDeliveryByEmail,getDeliveryById,patchDeliveryById,getDeliveryByOrderID}
+module.exports={getDeliveryByEmail,patchDeliveryByEmail,getDeliveryById,patchDeliveryById,getDeliveryByOrderID,getDeliveryAndManByOrderID}
 

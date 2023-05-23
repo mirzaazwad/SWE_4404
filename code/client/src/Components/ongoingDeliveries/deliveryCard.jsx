@@ -20,7 +20,25 @@ const DeliveryCard = ({ order,user,setRouteLocation }) => {
       })
       .then((result) => result.data);
       if(result.success){
-        // navigate('/deliveryHistory');
+        navigate('/deliveryHistory');
+      }
+  };
+
+  const handleFail = async (e) => {
+    setError("");
+    e.preventDefault();
+    const result=await axios
+      .patch("/api/delivery/updateorderfail/"+user._id,{
+        orderID:order.orderID
+      },{
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          idType: user.googleId ? "google" : "email",
+        },
+      })
+      .then((result) => result.data);
+      if(result.success){
+        navigate('/deliveries');
       }
   };
 
@@ -48,7 +66,7 @@ const DeliveryCard = ({ order,user,setRouteLocation }) => {
           <Button className="btn btn-primary" onClick={handleOrder}>
             Successful
           </Button>
-          <Button className="btn btn-danger" style={{ marginLeft: "1%" }}>
+          <Button className="btn btn-danger" style={{ marginLeft: "1%" }}  onClick={handleFail}> 
             Failed
           </Button>
           <Button className="btn btn-danger" style={{ marginLeft: "1%" }} onClick={()=>{

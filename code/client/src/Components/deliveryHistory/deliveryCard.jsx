@@ -1,8 +1,27 @@
+import axios from "axios";
 import { useState } from "react";
-import {Card } from "react-bootstrap";
+import {Button, Card } from "react-bootstrap";
 
-const DeliveryCard = ({ order}) => {
+const DeliveryCard = ({ order,user}) => {
   const [error,setError]=useState("");
+
+  const handleConfirm=async(e)=>{
+    setError("");
+    e.preventDefault();
+    const result=await axios
+      .patch("/api/delivery/updatecompletedstatus/"+user._id,{
+        orderID:order.orderID
+      },{
+        headers: {
+          Authorization: `Bearer ${user.token}`,
+          idType: user.googleId ? "google" : "email",
+        },
+      })
+      .then((result) => result.data);
+      if(result.success){
+        window.location.reload();
+      }
+  }
   
   return (
     <div className="deliveryCard">
@@ -35,6 +54,11 @@ const DeliveryCard = ({ order}) => {
               </div>
           </Card.Text>
         </Card.Body>
+        <Card.Footer className="float-right">
+          <Button className="btn btn-primary" onClick={handleConfirm}>
+            Confirm
+          </Button>
+        </Card.Footer>
       </Card>
     </div>
   );

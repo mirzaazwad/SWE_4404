@@ -1,15 +1,15 @@
 import { useState } from "react";
 import {Button, Modal} from "react-bootstrap";
 import {PersonBadgeFill,PhoneFlip, EnvelopeAtFill} from "react-bootstrap-icons";
-import Loader from "../partials/loader";
+import Loader from "../../partials/loader";
 import axios from "axios";
 
-const ConfirmationModal = ({delivery,user,showModal,setShowModal,orderID}) => {
+const ConfirmationModal = ({delivery,user,show,setShowModal,orderID}) => {
   console.log(orderID);
   console.log(user);
   console.log(delivery);
   const handleConfirmation=async()=>{
-    const result=await axios.patch('/api/delivery/updateOrder/'+delivery._id,
+    const result=await axios.patch('/api/delivery/updateComplete/'+delivery._id,
       {orderID:orderID}
     ,{
       headers:{'Authorization': `Bearer ${user.token}`,
@@ -25,7 +25,7 @@ const ConfirmationModal = ({delivery,user,showModal,setShowModal,orderID}) => {
   }
 
   const handleDecline=async()=>{
-    const result=await axios.patch('/api/delivery/resetStatus/'+delivery._id,{orderID:orderID},{
+    const result=await axios.patch('/api/delivery/resetComplete/'+delivery._id,{orderID:orderID},{
       headers:{'Authorization': `Bearer ${user.token}`,
       'idType':user.googleId?'google':'email'}
     }).then((result)=>{
@@ -41,7 +41,7 @@ const ConfirmationModal = ({delivery,user,showModal,setShowModal,orderID}) => {
   if(delivery!==undefined && delivery!==null){
     return ( 
       <div className="confirmationModal">
-        <Modal show={showModal} onHide={()=>setShowModal(false)}>
+        <Modal show={show} onHide={()=>setShowModal(false)}>
         <Modal.Title className="text-center">Confirm Delivery</Modal.Title>
         <Modal.Header closeButton>Please Confirm That Your Order Has Been Delivered By</Modal.Header>
         <Modal.Body>

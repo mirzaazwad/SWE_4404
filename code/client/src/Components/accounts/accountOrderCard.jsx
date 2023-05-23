@@ -8,10 +8,10 @@ const AccountCard = ({ order, user }) => {
   const [statusColor, setStatusColor] = useState('warning');
   
   useEffect(() => {
-    if (order.status === 'Approved' && order.payment_status===false) {
+    if (order.status === 'Completed') {
       setStatusColor('warning');
     }
-    else if(order.status === 'Approved' && order.payment_status===true){
+    else if(order.status === 'Pending'){
       setStatusColor('primary');
     }
     let price = 0;
@@ -43,7 +43,7 @@ const AccountCard = ({ order, user }) => {
           </Card.Body>
           <Card.Footer>
             <small className="text-muted">
-              Status: <Badge bg={statusColor}>{(order.status==="Approved" && order.payment_status===false && "In Progress")||((order.status==="Approved" && order.payment_status===true && "Done"))}</Badge>
+              Status: <Badge bg={statusColor}>{(order.status==="Approved" && "In Progress")||((order.status==="Completed" && "Done"))}</Badge>
             </small>
           </Card.Footer>
         </Card>

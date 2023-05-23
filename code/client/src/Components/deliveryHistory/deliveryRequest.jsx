@@ -29,6 +29,7 @@ const DeliveryHistory = () => {
   }, []);
 
   useEffect(() => {
+    
     const intervalId = async () => {
       let result = await axios
         .get("/api/profile/delivery/history/"+user._id, {
@@ -37,17 +38,20 @@ const DeliveryHistory = () => {
             idType: user.googleId ? "google" : "email",
           },
         })
-        .then((result) => result.data);
+        .then((result) => {
+          console.log(result);
+          return result.data
+        });
       setOrders(result);
     };
     intervalId();
   }, []);
 
-  if (orders) {
+  if (true) {
     return (
       <div className="deliveryRequest" style={{ display: "flex" }}>
         <NavbarDelivery />
-        <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>
+        {(orders!==undefined && orders!==null) && <DeliveryArray orders={orders} location={location} setOrders={setOrders} user={user}/>}
       </div>
     );
   } else {
