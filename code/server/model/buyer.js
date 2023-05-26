@@ -42,6 +42,7 @@ buyerSchema.statics.login = async function(email,password){
   }
   const match = await bcrypt.compare(password,buyer.password);
   if(!match){
+    console.log('comes here');
     throw Error('Incorrect Password');
   }
   if(buyer.verified===false){

@@ -5,6 +5,58 @@ const bcrypt = require("bcryptjs");
 
 const deliverySchema = new Schema({
   ...userSchema.obj,
+  Delivery:[{
+    orderID:{
+      type:String,
+      required:true,
+      unique:true
+    },
+    pharmacy:{
+      type:String,
+      required:true
+    },
+    fullName: {
+      type: String,
+      required: true,
+    },
+    email:{
+      type: String,
+      required:true
+    },
+    phone:{
+      type:String,
+      required:true
+    },
+    pharmacyManagerID:{
+      type:String,
+      required:true
+    },
+    address: { 
+      type: String, 
+      required: true 
+    },
+    coordinates:{
+      type:{
+        lat:{
+          type:Number
+        },
+        lng:{
+          type:Number
+        }
+      }
+    },
+    amount:{
+      type:Number,
+      required:true
+    },
+    payment: { 
+      type: String,
+    },
+    status:{
+      type:String,
+      required:true
+    }
+  }]
 },{timestamps:true});
 
 deliverySchema.statics.signup=async function(username,email,password){
@@ -86,6 +138,26 @@ deliverySchema.statics.loginGoogle = async function(email,googleId){
   }
   else{
     throw Error("Delivery man Is Not Registered");
+  }
+}
+
+deliverySchema.statics.addOrder=async function(_id,customer_info,pharmacyName,orderID){
+  try{
+    const result = await this.findById(_id);
+    console.log(customer_info);
+    const input={
+      orderID:orderID,
+      pharmacy:pharmacyName,
+      ...customer_info,
+      status:'Delivering'
+    }
+    console.log(input);
+    result.Delivery.push(input);
+    await result.save();
+    return await this.findById(_id);
+  }
+  catch(error){
+    throw Error(error.message);
   }
 }
 

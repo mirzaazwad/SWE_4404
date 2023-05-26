@@ -7,6 +7,8 @@ import NavbarPharmacy from "../../partials/profile/navbarPharmacy";
 import {Badge, Table} from 'react-bootstrap';
 import { useToken } from "../../../Hooks/useToken";
 import Loader from "../../partials/loader";
+import ConfirmationModal from "./confirmationModal";
+import DeliveryManInformation from "./deliveryComponent";
 
 const OrderDetailsCard = () => {
   const user=useToken();
@@ -14,6 +16,8 @@ const OrderDetailsCard = () => {
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
   const [disabled, setDisabled] = useState(false);
+  const [delivery,setDelivery]=useState(null);
+  const [show,setShow]=useState(false);
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -37,6 +41,41 @@ const OrderDetailsCard = () => {
     };
     fetchOrderDetails();
   }, [user]);
+
+  useEffect(()=>{
+    const getCompletedStatus=async()=>{
+      await axios.get('/api/delivery/getcompletedstatus/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then( (result)=>{
+        console.log(result);
+        setShow(true);
+      }).catch((error)=>{
+        console.log(error);
+      })
+    }
+    getCompletedStatus();
+  },[orderId,user])
+
+  useEffect(()=>{
+    const fetchDeliveryMan=async()=>{
+      const result=await axios.get('/api/profile/delivery/getdeliveryAndMan/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then((result)=>{
+        return result.data;
+      }).catch((error)=>{
+        console.log(error);
+      })
+      setDelivery(result);
+    }
+
+    if(orderId!==null && orderId!==undefined){
+      fetchDeliveryMan();
+    }
+    console.log('delivery',delivery);
+  },[orderId,user]);
+
   const handleOrderApproval = async () => {
     try {
       await axios.patch(`http://localhost:4000/api/order/approveOrder/${userId}/${orderId}`, {status:"Approved"}, {
@@ -69,13 +108,15 @@ const OrderDetailsCard = () => {
     return <Loader />;
   }
   
-  if(order.prescription_image===""){
+  if(order.medicines.length>0){
     return (
       <div>
         <div className="mb-5">
         <NavbarPharmacy id={user._id} user={user}/>
         </div>
         <div>
+        {delivery && (<ConfirmationModal delivery={delivery} user={user} show={show} setShowModal={setShow} orderID={orderId}/>)}
+        {((order.status==="Delivered" || order.status==="Completed") && (<DeliveryManInformation  delivery={delivery} setShowModal={setShow}/>))||(order.status==="Delivered" && (<DeliveryManInformation  delivery={delivery} setShowModal={setShow}/>))}
         <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
@@ -118,7 +159,7 @@ const OrderDetailsCard = () => {
                       <td>{index + 1}</td>
                       <td>{medicine.MedicineName}
                      
-                     <Badge bg="warning" className="ms-2"><a href={medicine.prescriptionImage}>Prescription</a></Badge>
+                     {medicine.prescription && <Badge bg="warning" className="ms-2"><a href={medicine.prescriptionImage}>Prescription</a></Badge>}
                       </td>
                       <td>{medicine.quantityPcs}</td>
                       <td>{medicine.quantityStrips}</td>
@@ -132,14 +173,14 @@ const OrderDetailsCard = () => {
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount+50}</td>
+                    <td>{order.payment_status?order.customer_data.amount:order.customer_data.amount}</td>
                   </tr>
                 </tbody>
               </Table>
             </Card.Body>
             <Card.Footer>
-            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
-            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
+            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled" || order.status==="Completed")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+            <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled" || order.status==="Completed")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
             </Card.Footer>
           </Card>
         </div>
@@ -153,6 +194,8 @@ const OrderDetailsCard = () => {
         <NavbarPharmacy />
       </div>
         <div>
+        {delivery && (<ConfirmationModal delivery={delivery} user={user} show={show} setShowModal={setShow}  showModal={show} orderID={orderId}/>)}
+        {(order.status==="Delivering" && (<DeliveryManInformation  delivery={delivery}/>))||(order.status==="Delivered" && (<DeliveryManInformation  delivery={delivery}/>))}
         <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
@@ -181,7 +224,8 @@ const OrderDetailsCard = () => {
       <Card.Img variant="top" src={order.prescription_image}/>
       </Card.Body>
       <Card.Footer>
-            <Button className="btn btn-approve-order float-end" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderApproval}>{order.status === "Approved"?"Approved":"Approve"}</Button>
+
+            <Button className="btn btn-approve-order float-end" href={`/createOrder/${order.userID}/${order._id}`} disabled={(order.status === "Approved" || order.status==="Cancelled")} >Create Order</Button>
             <Button className="float-end me-2" variant="danger" disabled={(order.status === "Approved" || order.status==="Cancelled")} onClick={handleOrderCancellation}>{order.status === "Cancelled"?"Cancelled":"Cancel"}</Button>
             </Card.Footer>
     </Card>

@@ -18,6 +18,7 @@ const  ProfilePageForCustomers = () => {
       const buyer = new buyerUser(user._id, user.token, user.googleId);
       await buyer.retrieveUserInformation();
       setBuyer(buyer);
+      if(buyer)
       setIsLoading(false);
     };
     fetchUserInformation();
@@ -25,7 +26,7 @@ const  ProfilePageForCustomers = () => {
     if(!isLoading){
       return (     
         <div>
-          <NavbarCustomer user={user}/>
+          <NavbarCustomer/>
           <section>
           <div className="container h-100">
             <div className="pt-5">

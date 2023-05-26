@@ -10,7 +10,8 @@ import OrderDetailsCard from "./Components/cartManagementSystem/orderDetails";
 import Prescription from "./Components/prescriptionManagement/prescription";
 import ViewPrescription from "./Components/prescriptionManagement/viewPrescription";
 import OrderByPrescription from "./Components/prescriptionManagement/orderByPrescription";
-import Error404 from "./Components/errors/error404";
+
+
 
 const CustomerRoutes = () => {
   return (
@@ -42,6 +43,7 @@ const CustomerRoutes = () => {
         path="/viewPrescription/:prop1/:prop2/:prop3"
         element={<ViewPrescription />}
       />
+      
       <Route path="*" element={<Error404/>}></Route>
     </Routes>
   );

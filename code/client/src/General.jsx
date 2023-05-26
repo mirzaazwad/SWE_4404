@@ -5,7 +5,6 @@ import {
 import Landing from "./Components/LogRegister/Landing";
 import ForgotPassword from "./Components/LogRegister/forgotPassword";
 import EmailVerification from "./Components/LogRegister/verifyEmail";
-import Error404 from "./Components/errors/error404";
 
 const GeneralRoutes = () => {
   return (
@@ -14,7 +13,6 @@ const GeneralRoutes = () => {
       <Route exact path="/signup" element={<Landing data={"signup"} />} />
       <Route exact path="/forgotPassword" element={<ForgotPassword />} />
       <Route exact path="/emailVerify/:email" element={<EmailVerification />} />
-      <Route path="*" element={<Error404/>}></Route>
     </Routes>
   );
 };

@@ -10,7 +10,7 @@ import AccountDisplay from "./accountDisplay";
 const Account = () => {
   const [orders, setOrders] = useState(null);
   const [filteredOrders,setFilteredOrders]=useState(null);
-  const [transactionStatus,setTransactionStatus] = useState("completed");
+  const [transactionStatus,setTransactionStatus] = useState("Completed");
   const [amountPaid,setAmountPaid]=useState(0);
   const [amountPending,setAmountPending]=useState(0);
   
@@ -32,10 +32,10 @@ const Account = () => {
             let pricePaid = 0,pricePending=0;
             sortedOrders.forEach((order)=>{
             order.medicines.forEach(item => {
-            if(order.status==="Approved" && order.payment_status===true){
+            if(order.status==="Completed"){
               pricePaid+=Number(item.price)
             }
-            if(order.status==="Approved" && order.payment_status===false){
+            if(order.status==="Approved"){
               pricePending+=Number(item.price)
             }
           });
@@ -58,11 +58,11 @@ const Account = () => {
   
       useEffect(()=>{
         if(orders){
-          if(transactionStatus==="pending"){
-            setFilteredOrders(orders.filter(order=>order.status==="Approved" && order.payment_status===false));
+          if(transactionStatus!=="Completed"){
+            setFilteredOrders(orders.filter(order=>order.status==="Approved"));
           }
           else{
-            setFilteredOrders(orders.filter(order=>order.status==="Approved" && order.payment_status===true));
+            setFilteredOrders(orders.filter(order=>order.status==="Completed" ));
           }
         }
       },[transactionStatus,orders])
@@ -80,13 +80,13 @@ const Account = () => {
               Account Information
         </Card.Header>
         <Card.Body>
-          Total Amount {(transactionStatus==="pending" && "Pending")||((transactionStatus==="completed" && "Received"))}: {(transactionStatus==="pending" && amountPending)||((transactionStatus==="completed" && amountPaid))}
+          Total Amount {(transactionStatus==="Pending" && "Pending")||((transactionStatus==="Completed" && "Received"))}: {(transactionStatus==="Pending" && amountPending)||((transactionStatus==="Completed" && amountPaid))}
         </Card.Body>
         </Card>
         <div className="d-flex changeViewButton justify-content-center" style={{marginTop:'0.8%',marginRight:'40%'}}>
         <p style={{marginLeft:'25%',fontSize:"14px",paddingRight:"5px"}}>Transaction Status View: </p>
-        <Button className='btn btn-search btn-sm' onClick={()=>setTransactionStatus("completed")} style={{backgroundColor:transactionStatus==="completed"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Completed</Button>
-        <Button className='btn btn-search btn-sm' onClick={()=>setTransactionStatus("pending")} style={{backgroundColor:transactionStatus==="pending"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Pending</Button>
+        <Button className='btn btn-search btn-sm' onClick={()=>setTransactionStatus("Completed")} style={{backgroundColor:transactionStatus==="Completed"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Completed</Button>
+        <Button className='btn btn-search btn-sm' onClick={()=>setTransactionStatus("Pending")} style={{backgroundColor:transactionStatus==="Pending"?"#EB006F":"#3b6ce7",border:"none",marginRight:"2px"}}>Pending</Button>
         </div>
         </div>
         <AccountDisplay orders={filteredOrders} user={user}/>

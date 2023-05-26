@@ -10,9 +10,12 @@ import ChatPage from "./Components/chat/chatRoom";
 import IncomingOrdersCard from "./Components/inventoryManagementSystem/pharmacyOrders/incomingOrders";
 import PharmacyOrderDetails from "./Components/inventoryManagementSystem/pharmacyOrders/pharmacyOrderDetails";
 import Account from "./Components/accounts/account";
+
 import Error404 from "./Components/errors/error404";
 
-const SellerRoutes = ({ user }) => {
+import CreateOrder from "./Components/inventoryManagementSystem/pharmacyOrders/createOrder";
+
+const SellerRoutes = () => {
   return (
     <Routes>
       <Route exact path="/profileSeller" element={<ProfilePageForPharmacy />} />
@@ -38,6 +41,11 @@ const SellerRoutes = ({ user }) => {
         exact
         path="/getOrderDetails/:userId/:orderId"
         element={<PharmacyOrderDetails />}
+      />
+      <Route
+        exact
+        path="/createOrder/:customerId/:orderId"
+        element={<CreateOrder />}
       />
       <Route path="*" element={<Error404/>}></Route>
     </Routes>

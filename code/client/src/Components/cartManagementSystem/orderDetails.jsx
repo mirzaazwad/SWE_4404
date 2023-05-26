@@ -6,11 +6,20 @@ import NavbarCustomer from "../partials/profile/navbarCustomer";
 import {Table} from 'react-bootstrap';
 import { useToken } from "../../Hooks/useToken";
 import Loader from "../partials/loader";
+import DeliveryManInformation from "./deliveryComponent";
+import ConfirmationModal from "./confirmationModal";
+
 const OrderDetailsCard = () => {
   const user=useToken();
   const { userId, orderId } = useParams();
   const [order, setOrder] = useState({});
   const [loader,setLoader]=useState(false);
+  const [delivery,setDelivery]=useState(null);
+  const [show,setShow]=useState(false);
+
+  useEffect(()=>{
+    console.log('show is run');
+  },[show,setShow])
 
   useEffect(() => {
     const fetchOrderDetails = async () => {
@@ -32,18 +41,58 @@ const OrderDetailsCard = () => {
     };
     fetchOrderDetails();
   }, []);
+
+  
+
+  useEffect(()=>{
+    const fetchDeliveryMan=async()=>{
+      const result=await axios.get('/api/profile/delivery/getdelivery/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then((result)=>{
+        return result.data;
+      }).catch((error)=>{
+        console.log(error);
+      })
+      setDelivery(result);
+    }
+
+    if(orderId!==null && orderId!==undefined){
+      fetchDeliveryMan();
+    }
+    console.log('delivery',delivery);
+  },[orderId,user]);
+
+  
+
+  useEffect(()=>{
+    const getDeliveryStatus=async()=>{
+      const result=await axios.get('/api/delivery/getstatus/'+orderId,{
+        headers:{'Authorization': `Bearer ${user.token}`,
+        'idType':user.googleId?'google':'email'}
+      }).then(result=>result.data).catch((error)=>{
+        return false;
+      })
+      setShow(result);
+    }
+    getDeliveryStatus();
+  },[orderId,user])
+
+
 if(!loader){
   return(
     <Loader/>
   )
 }
-  if(order.prescription_image===""){
+  if(order.medicines.length>0){
     return (
       <div>
         <div className="mb-5">
           <NavbarCustomer />
         </div>
         <div>
+        <ConfirmationModal delivery={delivery} user={user} showModal={show} setShowModal={setShow} orderID={orderId}/>
+        {((order.status==="Delivering" || order.status==="Delivered") && (<DeliveryManInformation  delivery={delivery} setShowModal={setShow}/>))||(order.status==="Delivered" && (<DeliveryManInformation  delivery={delivery} setShowModal={setShow}/>))}
         <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
@@ -95,7 +144,7 @@ if(!loader){
                   </tr>
                   <tr>
                     <td colSpan="5" style={{textAlign: "right"}}>Total</td>
-                    <td>{order.customer_data.amount}</td>
+                    <td>{order.customer_data.payment?order.customer_data.amount:order.customer_data.amount+50}</td>
                   </tr>
                   <Card>
 
@@ -116,7 +165,9 @@ if(!loader){
         <NavbarCustomer />
       </div>
         <div>
-        <Card className="billing-details-card w-50 m-auto py-4">
+      <ConfirmationModal delivery={delivery} user={user} orderID={orderId}/>
+      {((order.status==="Delivering" || order.status==="Delivered") && (<DeliveryManInformation  delivery={delivery} setShow={setShow}/>))||(order.status==="Delivered" && (<DeliveryManInformation  delivery={delivery} setShow={setShow}/>))}
+      <Card className="billing-details-card w-50 m-auto py-4">
             <Card.Header className="billing-details-card-header">
               Billing Details
             </Card.Header>

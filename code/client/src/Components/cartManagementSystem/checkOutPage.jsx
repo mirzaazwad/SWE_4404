@@ -9,6 +9,7 @@ import { useToken } from '../../Hooks/useToken.js';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import MapModal from '../partials/Map/map.jsx';
 import ErrorModal from '../partials/errorModal.jsx';
+import Loader from '../partials/loader';
 
 const CheckOutPage = () => {
   const user=useToken();
@@ -33,6 +34,7 @@ const CheckOutPage = () => {
   const [stopDropDown,setStopDropDown]=useState(false);
   const [error,setError]=useState("");
   const [disabled,setDisabled]=useState(false);
+  const [loader,setLoader]=useState(false);
 
   useEffect(()=>{
     setFullName(queryParams.get('cname'));
@@ -92,6 +94,10 @@ const CheckOutPage = () => {
   
     retrieveUser();
     retreieveOrder();
+    if(location)
+    {
+      setLoader(true);
+    }
   }, [customerEmail]);
   
 
@@ -127,8 +133,9 @@ const CheckOutPage = () => {
       window.location.replace(response.url);
     }
   };
-
-
+if(loader===false){
+  return <Loader />;
+}
       
   return (
     <div className="CheckOutPage">
