@@ -29,7 +29,7 @@ const SearchMapModal = (props)=>{
   };
 
   const iconStyle = {
-    url: '/marker.png',
+    url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
     scaledSize: new window.google.maps.Size(30, 40),
     anchor: { x: 20, y: 20 }
   };
